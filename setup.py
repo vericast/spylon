@@ -23,8 +23,9 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 from distutils.core import setup
+from setuptools import find_packages
 import os
-version = "0.1.1"
+version = "0.1.2"
 
 
 def write_version_py():
@@ -41,7 +42,7 @@ write_version_py()
 
 setup(name='spylon',
       version=version,
-      packages=['spylon'],
+      packages=find_packages(),
       description='Utilities to work with Scala/Java code with py4j',
       maintainer='MaxPoint Interactive',
       maintainer_email='marius.vanniekerk@maxpoint.com',
