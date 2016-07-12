@@ -44,6 +44,7 @@ setup(name='spylon',
       version=version,
       packages=find_packages(),
       description='Utilities to work with Scala/Java code with py4j',
+      long_description=(open('readme.rst').read() if exists('readme.rst') else '')
       maintainer='MaxPoint Interactive',
       maintainer_email='marius.vanniekerk@maxpoint.com',
       author='MaxPoint Interactive',
