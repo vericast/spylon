@@ -27,7 +27,6 @@
 Utility classes for creating and interacting with the java side of pyspark.
 
 """
-
 from __future__ import absolute_import, print_function
 from spylon.common import JVMHelpers
 

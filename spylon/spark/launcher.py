@@ -33,6 +33,7 @@ pyspark.
 
 This is done via minRK's findspark library if you cannot import pyspark directly
 """
+from __future__ import absolute_import, print_function
 
 import logging
 from collections import defaultdict
