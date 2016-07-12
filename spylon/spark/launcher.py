@@ -246,8 +246,9 @@ def _save_documentation(version, base_url="https://spark.apache.org/docs", targe
         target_dir = os.path.dirname(__file__)
     with open(os.path.join(target_dir, "spark_properties_{}.json".format(version)), 'w') as fp:
         all_props = _fetch_documentation(version=version, base_url=base_url)
+        all_props = sorted(all_props, key=lambda x: x[0])
         all_props_d = [{"property": p, "default": d, "description": desc} for p, d, desc in all_props]
-        json.dump(all_props_d, fp)
+        json.dump(all_props_d, fp, indent=2)
 
 
 class _SparkConfHelper(object):

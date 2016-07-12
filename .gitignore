@@ -137,5 +137,4 @@ ENV/
 .ropeproject
 
 spylon/version.py
-spylon/spark/*.json
 MANIFEST
