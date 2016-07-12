@@ -223,13 +223,14 @@ def _fetch_documentation(version, base_url="https://spark.apache.org/docs"):
         "{base_url}/{version}/configuration.html",
         "{base_url}/{version}/sql-programming-guide.html",
         "{base_url}/{version}/monitoring.html",
-        "{base_url}/{version}/spark-standalone.html"
-        "{base_url}/{version}/running-on-mesos.html"
-        "{base_url}/{version}/running-on-yarn.html"
+        "{base_url}/{version}/spark-standalone.html",
+        "{base_url}/{version}/running-on-mesos.html",
+        "{base_url}/{version}/running-on-yarn.html",
     ]
 
     for url in doc_urls:
         doc_url = url.format(version=version, base_url=base_url)
+        print(url)
         log.debug("Loading spark properties from %s", doc_url)
         dfs = pd.read_html(doc_url, header=0)
         for df in dfs:
