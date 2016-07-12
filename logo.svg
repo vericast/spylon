@@ -9,9 +9,9 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="210mm"
-   height="297mm"
-   viewBox="0 0 744.09448819 1052.3622047"
+   width="194.93948mm"
+   height="116.08814mm"
+   viewBox="0 0 690.73045 411.33594"
    id="svg2"
    version="1.1"
    inkscape:version="0.91 r13725"
@@ -26,8 +26,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.7"
-     inkscape:cx="660.07257"
-     inkscape:cy="881.64258"
+     inkscape:cx="633.70148"
+     inkscape:cy="95.182602"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -39,14 +39,20 @@
      inkscape:object-paths="true"
      inkscape:snap-midpoints="true"
      inkscape:snap-to-guides="false"
-     inkscape:window-width="1739"
-     inkscape:window-height="1065"
-     inkscape:window-x="2818"
-     inkscape:window-y="389"
-     inkscape:window-maximized="1">
+     inkscape:window-width="1463"
+     inkscape:window-height="760"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0">
     <inkscape:grid
        type="xygrid"
-       id="grid3358" />
+       id="grid3358"
+       originx="-26.371093"
+       originy="-497.44229" />
   </sodipodi:namedview>
   <metadata
      id="metadata7">
@@ -63,7 +69,8 @@
   <g
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
-     id="layer1">
+     id="layer1"
+     transform="translate(-26.371094,-143.58398)">
     <path
        sodipodi:nodetypes="ccccccccccc"
        inkscape:connector-curvature="0"
@@ -88,8 +95,9 @@
        id="path4494" />
     <path
        style="fill:#aa0000;fill-rule:evenodd;stroke:none;stroke-width:0.82520324px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       d="M 26.371094 187.23633 A 473.94919 473.94919 0 0 0 372.04688 337.45508 A 473.94919 473.94919 0 0 0 717.10156 187.55273 A 585.06598 473.94919 0 0 1 372.04688 279.45508 A 585.06598 473.94919 0 0 1 26.371094 187.23633 z "
-       id="circle4453" />
+       d="M 26.371094,187.23633 A 473.94919,473.94919 0 0 0 372.04688,337.45508 473.94919,473.94919 0 0 0 717.10156,187.55273 585.06598,473.94919 0 0 1 372.04688,279.45508 585.06598,473.94919 0 0 1 26.371094,187.23633 Z"
+       id="circle4453"
+       inkscape:connector-curvature="0" />
     <circle
        r="71.863754"
        cy="327.50507"
