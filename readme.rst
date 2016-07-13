@@ -1,7 +1,7 @@
 Spylon
 ======
 
-|Version Status| |Downloads| Conda Forge [Conda Forge]
+|Version Status| |Downloads| Conda Forge |Conda Forge|
 
 A set of compatibility routines for making it easier to interact with Scala from
 Python.
