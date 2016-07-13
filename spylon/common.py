@@ -122,7 +122,7 @@ class JVMHelpers(object):
         converters = self.import_scala_object("scala.collection.JavaConverters")
         # Since py4j already converts a python list to a Java.util.List<> we can make use of the
         # scala converters
-        return converters.mapAsScalaMapConverter(dict_like).asScala().toMap()
+        return converters.mapAsScalaMapConverter(dict_like).asScala()
 
     def to_scala_list(self, list_like):
         """Converts a python list-like to a scala.collection.List
