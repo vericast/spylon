@@ -1,7 +1,7 @@
 Spylon
 ======
 
-|Version Status| |Downloads|
+|Version Status| |Downloads| Conda Forge [Conda Forge]
 
 A set of compatibility routines for making it easier to interact with Scala from
 Python.
@@ -45,3 +45,5 @@ example of some use cases for Spylon.
    :target: https://pypi.python.org/pypi/spylon/
 .. |Downloads| image:: https://img.shields.io/pypi/dm/spylon.svg
    :target: https://pypi.python.org/pypi/spylon/
+.. |Conda Forge| image:: https://anaconda.org/conda-forge/spylon/badges/version.svg
+   :target: https://anaconda.org/conda-forge/spylon
