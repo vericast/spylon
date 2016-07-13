@@ -29,8 +29,8 @@ from six import add_metaclass, string_types
 
 def _as_iterable(iterable_or_scalar):
     if isinstance(iterable_or_scalar, string_types):
-        return (iterable_or_scalar)
-    elif hasattr("__iter__", iterable_or_scalar):
+        return (iterable_or_scalar,)
+    elif hasattr(iterable_or_scalar, "__iter__"):
         return iterable_or_scalar
     else:
         return (iterable_or_scalar,)
