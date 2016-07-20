@@ -26,7 +26,7 @@ from distutils.core import setup
 from setuptools import find_packages
 from os.path import exists
 import os
-version = "0.1.4"
+version = "0.2.0"
 
 
 def write_version_py():
