@@ -1,7 +1,6 @@
 from __future__ import print_function, absolute_import
 import subprocess
 import os
-import shutil
 import sys
 import yaml
 import shlex
@@ -214,6 +213,8 @@ def launcher(deploy_mode, args, working_dir="."):
     deploy_mode : {"client", "cluster"}
     args : str
         arguments to pass onwards to spark submit
+    working_dir : str
+        path to working directory to use for creating conda environments
 
     Returns
     -------
@@ -278,15 +279,16 @@ def launcher(deploy_mode, args, working_dir="."):
     else:
         raise NotImplementedError()
 
+    args = dict(env_dir=env_dir, env_name=env_name, env_archive=env_archive, args=spark_args)
     if deploy_mode == "client":
-        run_pyspark_yarn_client(env_dir=env_dir, env_name=env_name, env_archive=env_archive, args=spark_args)
+        run_pyspark_yarn_client(**args)
     elif deploy_mode == "cluster":
-        run_pyspark_yarn_cluster(env_dir=env_dir, env_name=env_name, env_archive=env_archive, args=spark_args)
+        run_pyspark_yarn_cluster(**args)
 
 
 def pyspark_conda_yarn_cluster():
     """
-    Endpoint
+    Endpoint for starting a pypark conda job using cluster-mode.
 
     """
     args = sys.argv[1:]
@@ -295,7 +297,7 @@ def pyspark_conda_yarn_cluster():
 
 def pyspark_conda_yarn_client():
     """
-    Endpoint
+    Endpoint for starting a pypark conda job using client-mode.
 
     """
     args = sys.argv[1:]
