@@ -164,6 +164,7 @@ class _AttributedDict(object):
         self._enable_surrogate = old
 
     def __dir__(self):
+        # Hide the various surrogate methods we have on this so that we can get cleaner tab completion in IPython.
         excluded = ['_attr', '_enable_surrogate', '_parent', '_surrogate']
         x = self.__dict__.keys()
         return [e for e in x if e not in excluded]
@@ -306,7 +307,40 @@ class _SparkConfHelper(object):
         self._conf_dict[key] = value
 
     def set(self, key, value):
+        """Set a particular spark property by the string key name.
+
+        This method allows chaining so that i can provide a similar feel to the standard Scala way of setting
+        multiple configurations
+
+        Parameters
+        ----------
+        key : string
+        value : string
+
+        Returns
+        -------
+        self
+        """
         self._conf_dict[key] = value
+        return self
+
+    def set_if_unset(self, key, value):
+        """Set a particular spark property by the string key name if it hasn't already been set.
+
+        This method allows chaining so that i can provide a similar feel to the standard Scala way of setting
+        multiple configurations
+
+        Parameters
+        ----------
+        key : string
+        value : string
+
+        Returns
+        -------
+        self
+        """
+        if key not in self._conf_dict:
+            self.set(key, value)
         return self
 
 
