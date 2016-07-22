@@ -63,7 +63,8 @@ author = 'MaxPoint Interactive'
 # built documents.
 #
 # The short X.Y version.
-version = '0.2.0'
+import spylon
+version = spylon.__version__
 # The full version, including alpha/beta/rc tags.
 release = '0.2.0'
 
