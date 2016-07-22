@@ -26,24 +26,12 @@ from distutils.core import setup
 from setuptools import find_packages
 from os.path import exists
 import os
-version = "0.2.0"
-
-
-def write_version_py():
-    content = """\
-version = '%s'
-""" % version
-
-    filename = os.path.join(os.path.dirname(__file__), 'spylon', 'version.py')
-    with open(filename, 'w') as fo:
-        fo.write(content)
-
-
-write_version_py()
+import versioneer
 
 
 setup(name='spylon',
-      version=version,
+      version=versioneer.get_version(),
+      cmdclass=versioneer.get_cmdclass(),
       packages=find_packages(),
       package_data={"spylon.spark": ["*.json"]},
       description='Utilities to work with Scala/Java code with py4j',
@@ -55,3 +43,5 @@ setup(name='spylon',
       url='https://github.com/maxpoint/spylon',
       license='BSD 3-clause',
       )
+
+
