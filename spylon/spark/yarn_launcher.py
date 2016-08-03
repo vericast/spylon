@@ -39,6 +39,7 @@ __author__ = 'mniekerk'
 
 log = logging.getLogger("spylon.spark.yarn_launcher")
 
+
 def create_conda_env(sandbox_dir, env_name, dependencies, options=()):
     """
     Create a conda environment inside the current sandbox for the given list of dependencies and options.
@@ -150,7 +151,8 @@ def prepare_pyspark_yarn_interactive(env_name, env_archive, spark_conf):
 
 def run_pyspark_yarn_client(env_dir, env_name, env_archive, args):
     """
-    Initializes the requires spark command line options on order to start a python job with the given python environment.
+    Initializes the requires spark command line options on order to start a python job with the given python
+    environment.
 
     Parameters
     ----------

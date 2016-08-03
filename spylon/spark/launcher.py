@@ -452,17 +452,18 @@ class SparkConfiguration(object):
         spark_home = self.spark_home
         python_path = self._python_path
 
-        if _SPARK_INITIALIZED:
-            if spark_home == os.environ["SPARK_HOME"]:
-                # matches with already initialized
-                pass
+        if use_findspark:
+            if _SPARK_INITIALIZED:
+                if spark_home == os.environ["SPARK_HOME"]:
+                    # matches with already initialized
+                    pass
+                else:
+                    # findspark adds two path to the search path.
+                    sys.path.pop(0)
+                    sys.path.pop(0)
+                    findspark.init(spark_home=spark_home, edit_rc=False, edit_profile=False, python_path=python_path)
             else:
-                # findspark adds two path to the search path.
-                sys.path.pop(0)
-                sys.path.pop(0)
                 findspark.init(spark_home=spark_home, edit_rc=False, edit_profile=False, python_path=python_path)
-        else:
-            findspark.init(spark_home=spark_home, edit_rc=False, edit_profile=False, python_path=python_path)
 
         _SPARK_INITIALIZED = True
         self._set_environment_variables()

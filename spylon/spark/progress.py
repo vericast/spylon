@@ -22,7 +22,7 @@
 # WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from __future__ import print_function, absolute_import
+from __future__ import print_function, absolute_import, division
 
 from collections import defaultdict
 import sys
@@ -31,7 +31,7 @@ import time
 import threading
 
 
-def pretty_time_delta(td):
+def _pretty_time_delta(td):
     """A representation for timedelta
 
     Parameters
@@ -60,48 +60,38 @@ def pretty_time_delta(td):
         return '{sign}{seconds:02d}s'.format(**d)
 
 
-def spark_progress_thread_worker(status, timedelta_formatter=pretty_time_delta, bar_width=20, sleep_time=0.5):
-    """
+def _spark_progress_thread_worker(sc, timedelta_formatter=_pretty_time_delta, bar_width=20, sleep_time=0.5):
+    """Non terminating process used inside the progress bar thread
 
     Parameters
     ----------
-    status : :class:`pyspark.status.StatusTracker`
+    sc: :class:`pyspark.context.SparkContext`
+        Spark context to use.
     timedelta_formatter : function
-        callable that converts a timedelta to a string.
+        Callable that converts a timedelta to a string.
     bar_width : int
-        width of the progressbar to print out.
+        Width of the progressbar to print out.
     sleep_time : float
-        Frequency with which to poll spark for new progress information.
+        Frequency in seconds with which to poll Apache Spark for task stage information.
 
     """
     last_status = ''
     start_times = defaultdict(datetime.datetime.now)
-    max_stage_id = 0
+    max_stage_id = -1
 
+    status = sc.statusTracker()
     while True:
+        # SparkContext has been stopped, terminate thread.
+        if sc._jsc is None:
+            return
         stage_ids = status.getActiveStageIds()
         progressbar_list = []
         # Only show first 3
-        for sid in stage_ids[:3]:
-            info = status.getStageInfo(sid)
-            if info:
-                td = datetime.datetime.now() - start_times[sid]
-                dur = timedelta_formatter(td)
-
-                percent = (info.numCompletedTasks * bar_width) // info.numTasks
-                bar = [' '] * bar_width
-                for i in range(bar_width):
-                    char = ' '
-                    if i < percent:
-                        char = '='
-                    if i == percent:
-                        char = '>'
-                    bar[i] = char
-                bar = ''.join(bar)
-
-                s = "[Stage {sid}:{bar} " \
-                    "({info.numCompletedTasks} + {info.numActiveTasks} / {info.numTasks} Dur: {dur}]"\
-                    .format(sid=sid, info=info, dur=dur, bar=bar)
+        for stage_id in stage_ids[:3]:
+            stage_info = status.getStageInfo(stage_id)
+            if stage_info:
+                td = datetime.datetime.now() - start_times[stage_id]
+                s = _format_stage_info(bar_width, stage_info, td, timedelta_formatter)
                 progressbar_list.append(s)
 
         if len(stage_ids):
@@ -123,6 +113,37 @@ def spark_progress_thread_worker(status, timedelta_formatter=pretty_time_delta, 
         time.sleep(sleep_time)
 
 
+def _format_stage_info(bar_width, stage_info, duration, timedelta_formatter=_pretty_time_delta):
+    """
+
+    Parameters
+    ----------
+    bar_width
+    stage_info : :class:`pyspark.status.StageInfo`
+    stage_id : int
+    duration : :class:`datetime.timedelta`
+    timedelta_formatter : callable
+
+    Returns
+    -------
+
+    """
+    dur = timedelta_formatter(duration)
+    percent = (stage_info.numCompletedTasks * bar_width) // stage_info.numTasks
+    bar = [' '] * bar_width
+    for i in range(bar_width):
+        char = ' '
+        if i < percent:
+            char = '='
+        if i == percent:
+            char = '>'
+        bar[i] = char
+    bar = ''.join(bar)
+    return "[Stage {info.stageId}:{bar} " \
+           "({info.numCompletedTasks} + {info.numActiveTasks} / {info.numTasks} Dur: {dur}]" \
+        .format(info=stage_info, dur=dur, bar=bar)
+
+
 _progressbar_thread_started = False
 
 
@@ -138,9 +159,9 @@ def start_spark_progress_bar_thread(sc, **kwargs):
     global _progressbar_thread_started
 
     if _progressbar_thread_started:
-        raise Exception("Spark progress thread already running")
+        raise RuntimeError("Spark progress thread already running")
 
-    status = sc.statusTracker()
-    t = threading.Thread(target=spark_progress_thread_worker, args=[status], kwargs=kwargs)
+    t = threading.Thread(target=_spark_progress_thread_worker, args=[sc], kwargs=kwargs)
     t.start()
     _progressbar_thread_started = True
+
