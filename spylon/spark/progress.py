@@ -75,6 +75,7 @@ def _spark_progress_thread_worker(sc, timedelta_formatter=_pretty_time_delta, ba
         Frequency in seconds with which to poll Apache Spark for task stage information.
 
     """
+    global _progressbar_thread_started
     last_status = ''
     start_times = defaultdict(datetime.datetime.now)
     max_stage_id = -1
@@ -87,23 +88,27 @@ def _spark_progress_thread_worker(sc, timedelta_formatter=_pretty_time_delta, ba
         stage_ids = status.getActiveStageIds()
         progressbar_list = []
         # Only show first 3
-        for stage_id in stage_ids[:3]:
+        stage_counter = 0
+        current_max_stage = max_stage_id
+        for stage_id in stage_ids:
             stage_info = status.getStageInfo(stage_id)
-            if stage_info:
+            if stage_info and stage_info.numTasks > 0:
+                # Set state variables used for flushing later
+                current_max_stage = stage_id
+                stage_counter += 1
                 td = datetime.datetime.now() - start_times[stage_id]
                 s = _format_stage_info(bar_width, stage_info, td, timedelta_formatter)
                 progressbar_list.append(s)
+            if stage_counter == 3:
+                break
 
-        if len(stage_ids):
-            current_max_stage = max(stage_ids[:3])
-
-            # Ensure that when we get a new maximum stage id we print a \n to make the progress bar go on to the next
-            # line.
-            if current_max_stage > max_stage_id:
-                if last_status != '':
-                    sys.stderr.write("\n")
-                sys.stderr.flush()
-                max_stage_id = current_max_stage
+        # Ensure that when we get a new maximum stage id we print a \n to make the progress bar go on to the next
+        # line.
+        if current_max_stage > max_stage_id:
+            if last_status != '':
+                sys.stderr.write("\n")
+            sys.stderr.flush()
+            max_stage_id = current_max_stage
 
         new_status = ' '.join(progressbar_list)
         if new_status != last_status:
@@ -112,13 +117,15 @@ def _spark_progress_thread_worker(sc, timedelta_formatter=_pretty_time_delta, ba
             last_status = new_status
         time.sleep(sleep_time)
 
+    _progressbar_thread_started = False
+
 
 def _format_stage_info(bar_width, stage_info, duration, timedelta_formatter=_pretty_time_delta):
     """
 
     Parameters
     ----------
-    bar_width
+    bar_width : int
     stage_info : :class:`pyspark.status.StageInfo`
     stage_id : int
     duration : :class:`datetime.timedelta`
@@ -126,7 +133,7 @@ def _format_stage_info(bar_width, stage_info, duration, timedelta_formatter=_pre
 
     Returns
     -------
-
+    formatted : str
     """
     dur = timedelta_formatter(duration)
     percent = (stage_info.numCompletedTasks * bar_width) // stage_info.numTasks
@@ -164,4 +171,3 @@ def start_spark_progress_bar_thread(sc, **kwargs):
     t = threading.Thread(target=_spark_progress_thread_worker, args=[sc], kwargs=kwargs)
     t.start()
     _progressbar_thread_started = True
-

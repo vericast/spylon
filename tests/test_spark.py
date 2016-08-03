@@ -1,6 +1,7 @@
 import spylon.spark.progress
 import pyspark.status
 import datetime
+import spylon.spark.launcher as sparklauncher
 
 
 def test_progressbar_formatter():
@@ -14,3 +15,13 @@ def test_progressbar_formatter():
     assert a == '[Stage 4:==>        (20 + 10 / 100 Dur: 1d01h01m:01s]'
 
 
+def test_spark_property():
+
+    c = sparklauncher.SparkConfiguration()
+    c.conf.spark.executor.cores = 5
+
+    assert c.conf._conf_dict.get('spark.executor.cores') == 5
+
+    c.conf.set_if_unset('spark.executor.cores', 10)
+
+    assert c.conf._conf_dict.get('spark.executor.cores') == 5
