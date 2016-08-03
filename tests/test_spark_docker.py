@@ -100,6 +100,16 @@ def test_convert_list(spark, clist):
         assert o.apply(i) == target
 
 
+def test_convert_array(spark):
+    # type: (Spark) -> object
+    clist = [1,2,3,4]
+    o = spark.jvmh.to_scala_array(clist, "java.lang.Integer")
+    # This is the scala type ::
+    assert o.getClass().getName() == "[Ljava.lang.Integer;"
+    for i, target in enumerate(clist):
+        assert o[i] == target
+
+
 def test_convert_set(spark, clist):
     # type: (Spark) -> object
     o = spark.jvmh.to_scala_set(set(clist))

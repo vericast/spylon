@@ -12,4 +12,4 @@ WORKDIR /repo
 
 RUN python setup.py install
 
-CMD coverage run -m pytest tests -vrsx --capture=sys && coverage report -m
+CMD coverage run -m pytest tests -vrsx --capture=sys --color=yes && coverage report -m

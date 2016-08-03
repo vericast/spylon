@@ -129,10 +129,27 @@ class JVMHelpers(object):
         """
         return self.to_scala_seq(list_like).toList()
 
-    def to_scala_array(self, list_like):
+    def get_classtag(self, java_class_name):
+        jclassTagO = self.import_scala_object("scala.reflect.ClassTag")
+        klass = self.classloader.loadClass(java_class_name)
+        return jclassTagO.apply(klass)
+
+    def to_scala_array(self, list_like, java_class_name):
         """Converts a python list-like to a a scala Array
+
+        Parameters
+        ----------
+        list_like : list
+        java_class_name : str
+            Java class name to use for the conversion
+
+        Examples
+        >>> c.to_scala_array([1,2,3,4], "java.lang.Integer")
+        ...
+
         """
-        return self.to_scala_seq(list_like).toArray()
+        jseq = self.to_scala_seq(list_like)
+        return jseq.toArray(self.get_classtag(java_class_name))
 
     def to_scala_set(self, set_like):
         """Converts a python set-like to a scala.collection.Set
