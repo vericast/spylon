@@ -43,7 +43,7 @@ from contextlib import contextmanager
 import pandas as pd
 import json
 from six import iteritems
-from spylon.common import _as_iterable
+from spylon.common import as_iterable
 
 log = logging.getLogger("spylon.spark.launcher")
 
@@ -432,7 +432,7 @@ class SparkConfiguration(object):
         for key, val in self._spark_launcher_args.items():
             if val is None:
                 continue
-            val = list(_as_iterable(val))
+            val = list(as_iterable(val))
             if len(val):
                 if key in self._boolean_args:
                     cmd.append("--{key}".format(key=key))
@@ -547,7 +547,7 @@ def with_spark_context(application_name, conf=None):
     Used within a context manager
     >>> with with_spark_context("MyApplication") as sc:
     ...     # Your Code here
-    ...
+    ...     pass
 
     """
     if conf is None:
@@ -576,7 +576,7 @@ def with_sql_context(application_name, conf=None):
     >>> with with_sql_context("MyApplication") as (sc, sql_context):
     ...     import pyspark
     ...     # Do stuff
-    ...     ...
+    ...     pass
 
     """
     if conf is None:

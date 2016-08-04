@@ -86,6 +86,7 @@ def archive_dir(env_dir):
     subprocess.check_call(["zip", "-r", "-0", "-q", output_filename, env_dir])
     return output_filename
 
+
 #TODO : move this into the SparkConfiguration object
 def prepare_pyspark_yarn_interactive(env_name, env_archive, spark_conf):
     """
@@ -103,7 +104,6 @@ def prepare_pyspark_yarn_interactive(env_name, env_archive, spark_conf):
     >>> conf = SparkConfiguration()
     >>> import spylon.spark.yarn_launcher as yl
     >>> conf = yl.prepare_pyspark_yarn_interactive(
-    ...    env_dir="",
     ...    env_name="yarn-pyspark-env", env_archive="hdfs:///path/to/conda_envs/yarn-pyspark-env.zip",
     ...    spark_conf=conf
     ... )
