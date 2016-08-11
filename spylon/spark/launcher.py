@@ -349,7 +349,16 @@ class SparkConfiguration(object):
     _spark_launcher_arg_names = {
         'master', 'deploy-mode', 'jars', 'packages', 'exclude-packages', 'repositories', 'py-files', 'files',
         'properties-file', 'driver-memory', 'driver-java-options', 'driver-library-path', 'driver-class-path',
-        'driver-cores', 'executor-memory', 'proxy-user', 'verbose', 'executor-cores'
+        'driver-cores', 'executor-memory', 'proxy-user', 'verbose', 'executor-cores',
+        # Standalone and Mesos only
+        'total-executor-cores',
+        # YARN only
+        'driver-cores',
+        'queue',
+        'num-executors',
+        'archives',
+        'principal',
+        'keytab',
     }
     _spark_launcher_arg_sep = {'driver-java-options': ' ',
                                'driver-library-path': ':',
