@@ -12,4 +12,6 @@ WORKDIR /repo
 
 RUN python setup.py install
 
+RUN pip install py4j==0.9
+
 CMD coverage run -m pytest tests -vrsx --capture=sys --color=yes && coverage report -m
