@@ -40,7 +40,10 @@ class SimpleJVMHelpers(JVMHelpers):
 
     @property
     def classloader(self):
-        return self.jvm.java.lang.Thread.getCurrentThread().getContextClassLoader()
+        j = self.jvm.java.lang.Thread
+        jthread = j.currentThread()
+        cl = jthread.getContextClassLoader()
+        return cl
 
     @property
     def jvm(self):
