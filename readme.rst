@@ -47,5 +47,5 @@ example of some use cases for Spylon.
    :target: https://pypi.python.org/pypi/spylon/
 .. |Conda_Forge| image:: https://anaconda.org/conda-forge/spylon/badges/version.svg
    :target: https://anaconda.org/conda-forge/spylon
-.. |Travis| image::https://travis-ci.org/MaxPoint/spylon.svg
+.. |Travis| image:: https://travis-ci.org/MaxPoint/spylon.svg
    :target: https://travis-ci.org/MaxPoint/spylon
