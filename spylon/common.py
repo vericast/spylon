@@ -68,6 +68,8 @@ def as_iterable(iterable_or_scalar):
     else:
         return (iterable_or_scalar,)
 
+# preserve backwards compatibility
+_as_iterable = as_iterable
 
 @add_metaclass(ABCMeta)
 class JVMHelpers(object):
