@@ -32,6 +32,7 @@ import shlex
 import zipfile
 import logging
 import pprint
+import platform
 
 from .launcher import SparkConfiguration
 
@@ -171,7 +172,7 @@ def run_pyspark_yarn_client(env_dir, env_name, env_archive, args):
     archives = env_archive + "#CONDA"
 
     prepend_args = [
-        "--master", "yarn"
+        "--master", "yarn",
         "--deploy-mode", "client",
         "--archives", archives,
     ]
@@ -257,7 +258,8 @@ def launcher(deploy_mode, args, working_dir="."):
     spark_args = spark_args[:i] + spark_args[i+2:]
 
     assert isinstance(conda_env, str)
-    if conda_env.startswith("hdfs://"):
+    # "hadoop fs -ls" can return URLs with only a single "/" after the "hdfs:" scheme
+    if conda_env.startswith("hdfs:/"):
         log.info("Using conda environment from hdfs location")
         # conda environment is on hdfs
         filename = os.path.basename(conda_env)
@@ -271,6 +273,9 @@ def launcher(deploy_mode, args, working_dir="."):
             with zipfile.ZipFile(os.path.join(working_dir, filename)) as z:
                 z.extractall(working_dir)
             env_dir = os.path.join(working_dir, env_name)
+            # Because of a python deficiency (Issue15795), the execute bits aren't
+            # preserved when the zip file is unzipped. Need to add them back here.
+            _fix_permissions(env_dir)
         else:
             env_dir = ""
         env_archive = conda_env
@@ -285,6 +290,9 @@ def launcher(deploy_mode, args, working_dir="."):
         env_name = os.path.basename(basename)
         env_dir = os.path.join(working_dir, env_name)
         env_archive = os.path.abspath(conda_env)
+        # Because of a python deficiency (Issue15795), the execute bits aren't
+        # preserved when the zip file is unzipped. Need to add them back here.
+        _fix_permissions(env_dir)
 
     # The case where we have to CREATE the environment ourselves
     elif conda_env.endswith(".yaml"):
@@ -313,9 +321,18 @@ def launcher(deploy_mode, args, working_dir="."):
         run_pyspark_yarn_cluster(**args)
 
 
+def _fix_permissions(env_dir):
+    bin_dir = os.path.join(env_dir, "bin")
+    if os.path.isdir(bin_dir):
+        if platform.system() == 'Linux':
+            subprocess.check_call(["chmod", "-R", "a+x", bin_dir])
+        else:
+            raise NotImplementedError("Don't know how to change permissions on " + platform.system())
+
+
 def pyspark_conda_yarn_cluster():
     """
-    Endpoint for starting a pypark conda job using cluster-mode.
+    Endpoint for starting a pyspark conda job using cluster-mode.
 
     """
     args = sys.argv[1:]
@@ -324,7 +341,7 @@ def pyspark_conda_yarn_cluster():
 
 def pyspark_conda_yarn_client():
     """
-    Endpoint for starting a pypark conda job using client-mode.
+    Endpoint for starting a pyspark conda job using client-mode.
 
     """
     args = sys.argv[1:]
