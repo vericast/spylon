@@ -438,17 +438,40 @@ class SparkConfiguration(object):
     def __getitem__(self, key):
         return self._spark_conf.__getitem__(key)
 
+    def _set_launcher_property(self, driver_arg_key, spark_property_key):
+        """Handler for a special property that exists in both the launcher arguments and the spark conf dictionary.
+
+        This will use the launcher argument if set falling back to the spark conf argument.  If neither are set this is
+        a noop (which means that the standard spark defaults will be used).
+
+        Since `spark.driver.memory` (eg) can be set erroneously by a user on the standard spark conf, we want to be able
+        to use that value if present. If we do not have this fall-back behavior then these settings are IGNORED when
+        starting up the spark driver JVM under client mode (standalone, local, yarn-client or mesos-client).
+
+        Parameters
+        ----------
+        driver_arg_key : string
+            Eg: "driver-memory"
+        spark_property_key : string
+            Eg: "spark.driver.memory"
+
+        """
+        value = self._spark_launcher_args.get(driver_arg_key, self.conf._conf_dict.get(spark_property_key))
+        if value:
+            self._spark_launcher_args[driver_arg_key] = value
+            self.conf[spark_property_key] = value
+
     def _set_environment_variables(self):
         """Initializes the correct environment variables for spark"""
         cmd = []
 
-        # special case for driver memory.
-        # Since this can be set erroneously on the standard spark conf we want to be able to just pick that up if
-        # present, since other the setting is IGNORED when starting up the spark daemon.
-        driver_memory = self._spark_launcher_args.get("driver-memory", self.conf._conf_dict.get("spark.driver.memory"))
-        if driver_memory:
-            self._spark_launcher_args["driver-memory"] = driver_memory
-            self.conf["spark.driver.memory"] = driver_memory
+        # special case for driver JVM properties.
+        self._set_launcher_property("driver-memory", "spark.driver.memory")
+        self._set_launcher_property("driver-library-path", "spark.driver.extraLibraryPath")
+        self._set_launcher_property("driver-class-path", "spark.driver.extraClassPath")
+        self._set_launcher_property("driver-java-options", "spark.driver.extraJavaOptions")
+        self._set_launcher_property("executor-memory", "spark.executor.memory")
+        self._set_launcher_property("executor-cores", "spark.executor.cores")
 
         for key, val in self._spark_launcher_args.items():
             if val is None:
