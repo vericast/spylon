@@ -306,6 +306,9 @@ class _SparkConfHelper(object):
     def __setitem__(self, key, value):
         self._conf_dict[key] = value
 
+    def __getitem__(self, key):
+        return self._conf_dict[key]
+
     def set(self, key, value):
         """Set a particular spark property by the string key name.
 
@@ -438,6 +441,15 @@ class SparkConfiguration(object):
     def _set_environment_variables(self):
         """Initializes the correct environment variables for spark"""
         cmd = []
+
+        # special case for driver memory.
+        # Since this can be set erroneously on the standard spark conf we want to be able to just pick that up if
+        # present, since other the setting is IGNORED when starting up the spark daemon.
+        driver_memory = self._spark_launcher_args.get("driver-memory", self.conf._conf_dict.get("spark.driver.memory"))
+        if driver_memory:
+            self._spark_launcher_args["driver-memory"] = driver_memory
+            self.conf["spark.driver.memory"] = driver_memory
+
         for key, val in self._spark_launcher_args.items():
             if val is None:
                 continue
