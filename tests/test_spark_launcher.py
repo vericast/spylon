@@ -28,3 +28,10 @@ def test_spark_launcher_multiple_argument():
     c.archives = archive
     c._set_environment_variables()
     assert ('--archives ' + ','.join(archive)) in os.environ['PYSPARK_SUBMIT_ARGS']
+
+
+def test_spark_driver_memory():
+    c = sparklauncher.SparkConfiguration()
+    c.conf.spark.driver.memory = "5g"
+    c._set_environment_variables()
+    assert '--driver-memory 5g' in os.environ['PYSPARK_SUBMIT_ARGS']
