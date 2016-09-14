@@ -34,8 +34,6 @@ import logging
 import pprint
 import platform
 
-from .launcher import SparkConfiguration
-
 __author__ = 'mniekerk'
 
 log = logging.getLogger("spylon.spark.yarn_launcher")
@@ -93,6 +91,9 @@ def prepare_pyspark_yarn_interactive(env_name, env_archive, spark_conf):
     """
     This ASSUMES that you have a compatible python environment running on the other side.
 
+    WARNING: Injects "PYSPARK_DRIVER_PYTHON" and "PYSPARK_PYTHON" as
+    environmental variables into your current environment
+
     Parameters
     ----------
     env_name : str
@@ -126,19 +127,22 @@ def prepare_pyspark_yarn_interactive(env_name, env_archive, spark_conf):
     Returns
     -------
     SparkConfiguration
-        Configuration object with YARN requirements added.
+        Copy of `spark_conf` input with added Yarn requirements.
     """
+
+    from .launcher import SparkConfiguration
 
     assert isinstance(spark_conf, SparkConfiguration)
 
     yarn_python = os.path.join(".", "CONDA", env_name, "bin", "python")
     archives = env_archive + "#CONDA"
 
-    spark_conf.master = "yarn"
-    spark_conf.deploy_mode = "client"
-    spark_conf.archives = [archives]
-    spark_conf.conf.set("spark.executorEnv.PYSPARK_PYTHON", yarn_python)
-    spark_conf._python_path = yarn_python
+    new_spark_conf = copy.deepcopy(spark_conf)
+    new_spark_conf.master = "yarn"
+    new_spark_conf.deploy_mode = "client"
+    new_spark_conf.archives = [archives]
+    new_spark_conf.conf.set("spark.executorEnv.PYSPARK_PYTHON", yarn_python)
+    new_spark_conf._python_path = yarn_python
 
     env_update = {
         "PYSPARK_DRIVER_PYTHON": sys.executable,
@@ -147,7 +151,7 @@ def prepare_pyspark_yarn_interactive(env_name, env_archive, spark_conf):
 
     os.environ.update(env_update)
 
-    return spark_conf
+    return new_spark_conf
 
 
 def run_pyspark_yarn_client(env_dir, env_name, env_archive, args):
