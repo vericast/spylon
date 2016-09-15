@@ -18,7 +18,7 @@ before_install:
   - wget -q http://d3kbcqa49mib13.cloudfront.net/spark-${APACHE_SPARK_VERSION}-bin-hadoop2.6.tgz
   - tar xzf spark-${APACHE_SPARK_VERSION}-bin-hadoop2.6.tgz
   - export SPARK_HOME=`pwd`/spark-${APACHE_SPARK_VERSION}-bin-hadoop2.6
-  - pip install doctr findspark sphinx
+  - pip install doctr findspark sphinx numpydoc sphinx_rtd_theme
 
 
 script:
