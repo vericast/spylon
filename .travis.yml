@@ -16,8 +16,8 @@ env:
 
 before_install:
   - wget -q http://d3kbcqa49mib13.cloudfront.net/spark-${APACHE_SPARK_VERSION}-bin-hadoop2.6.tgz
-  - tar xzf spark-${APACHE_SPARK_VERSION}-bin-hadoop2.6.tgz -C
-  - export SPARK_HOME=spark-${APACHE_SPARK_VERSION}-bin-hadoop2.6
+  - tar xzf spark-${APACHE_SPARK_VERSION}-bin-hadoop2.6.tgz
+  - export `pwd`/SPARK_HOME=spark-${APACHE_SPARK_VERSION}-bin-hadoop2.6
   - pip install doctr findspark sphinx
 
 
