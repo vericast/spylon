@@ -54,6 +54,7 @@ clean:
 	rm -rf $(BUILDDIR)/*
 
 .PHONY: html
+html: SPHINXOPTS += -W
 html:
 	./hack-readme.sh
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html

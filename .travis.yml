@@ -10,13 +10,22 @@ services:
 
 env:
   global:
+    - APACHE_SPARK_VERSION: 1.6.1
     - secure: "VtgqCL9r27bg9pNeFEFGDtbneDicMLtbRctKeKwUV4dp3FTSvIOogsU7hRIS6UO5oPUtysEvXPqp1aEHhOZZpnK95b6D1fyE49bMsCGEuzGPeMR6tDARSZRJcwGZb1/Ne74kxP8GjlO6GvDhpkvgR3EHUUIB3B1Y6SQLcRvOJetYoP3d5Acdb7W2gux0UKdBygXn5MwMMq6WVJNqpeQ4ISZSctBxn+XL/ccSpw5pykal3O1cp1PrlFkLana79aZuv4D/UjOZuwVf5MLOXHzxDQqULX7iO14iyia0CgMakiSb7oP0hhojpUA36J4jhOb9aOaxcV5C8vewdL8k/20a4EhVDxLNXcNePm/zYlyv9jUW3TnrCmXd0SterJ8a6OeWFXKnPJIOQrYMpXM5d7ZPsN0hbMVS5E9fRJPwk/Nkpv2R0XHiJOHfG2wV+vH23Mhs8NyJHqlSwq4Hpe7rlrquNRj84xZMCEugTGYyKlN1h0Gy8uwUD5C1XAqMeWYxsW6RiE3n+wMYBKBdHaRStSniczK6UZdS9OB2OuzEVZLgvfAi2wiRndTnIIvmGWHh/yNh31oeixa/syoJ/wjR5XYX5KboPb1epRtPvdgpb82uPVNuTzGEQn3kwm2nhLNOTD61Zgi533WJAOBPDuY+lN56jNytc7vbCFN0hoPlV/qX7pU="
 
+
+before_install:
+  - wget -q http://d3kbcqa49mib13.cloudfront.net/spark-${APACHE_SPARK_VERSION}-bin-hadoop2.6.tgz
+  - tar xzf spark-${APACHE_SPARK_VERSION}-bin-hadoop2.6.tgz -C
+  - export SPARK_HOME=spark-${APACHE_SPARK_VERSION}-bin-hadoop2.6
+  - pip install doctr findspark sphinx
 
 
 script:
   - docker build -t spylon-integration .
   - docker run -it spylon-integration
   # Build and deploy docs
-  - pip install doctr
+  - cd docs
+  - make html
+  - cd ..
   - doctr deploy
