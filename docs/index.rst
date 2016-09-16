@@ -48,6 +48,7 @@ example of some use cases for Spylon.
 .. |Conda_Forge| image:: https://anaconda.org/conda-forge/spylon/badges/version.svg
    :target: https://anaconda.org/conda-forge/spylon
 
+
 Complete Reference (API)
 ========================
 
