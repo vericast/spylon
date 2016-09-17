@@ -2,9 +2,14 @@ FROM jupyter/pyspark-notebook:54838ed4acb1
 
 USER root
 
+# test dependencies
 RUN conda install --yes pytest coverage
 
-RUN conda install --yes -c conda-forge findspark
+# runtime dependencies
+RUN conda install --yes -c conda-forge findspark pandas pyyaml
+
+# sphinx doc build dependencies
+RUN conda install --yes -c conda-forge sphinx numpydoc sphinx_rtd_theme
 
 COPY . /repo
 

@@ -1,7 +1,7 @@
 Spylon
 ======
 
-|Version Status| |Downloads| Conda Forge |Conda Forge|
+|Version_Status| |Downloads| Conda Forge |Conda_Forge|
 
 A set of compatibility routines for making it easier to interact with Scala from
 Python.
@@ -41,16 +41,19 @@ user or Py4J, some special use cases have been implemented for that and its an
 example of some use cases for Spylon.
 
 
-.. |Version Status| image:: https://img.shields.io/pypi/v/spylon.svg
+.. |Version_Status| image:: https://img.shields.io/pypi/v/spylon.svg
    :target: https://pypi.python.org/pypi/spylon/
 .. |Downloads| image:: https://img.shields.io/pypi/dm/spylon.svg
    :target: https://pypi.python.org/pypi/spylon/
-.. |Conda Forge| image:: https://anaconda.org/conda-forge/spylon/badges/version.svg
+.. |Conda_Forge| image:: https://anaconda.org/conda-forge/spylon/badges/version.svg
    :target: https://anaconda.org/conda-forge/spylon
+
+
 Complete Reference (API)
 ========================
 
-Contents:
+Contents
+--------
 
 .. toctree::
    :maxdepth: 2

@@ -20,8 +20,15 @@ import os
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #sys.path.insert(0, os.path.abspath('.'))
+#sys.path.insert(0, os.path.abspath('..')) # For spylon
+
+import spylon
+
 
 # -- General configuration ------------------------------------------------
+
+# Ignore non-local image warning/errors
+suppress_warnings = ['image.nonlocal_uri']
 
 # If your documentation needs a minimal Sphinx version, state it here.
 #needs_sphinx = '1.0'
@@ -37,6 +44,8 @@ extensions = [
     'numpydoc',
     'sphinx.ext.napoleon',
 ]
+
+numpydoc_show_class_members = False
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -113,6 +122,9 @@ pygments_style = 'sphinx'
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = False
 
+
+# Needed for badges
+supress_warnings = ["image.nonlocal_uri"]
 
 # -- Options for HTML output ----------------------------------------------
 

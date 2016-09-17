@@ -20,15 +20,6 @@ spylon.common module
     :undoc-members:
     :show-inheritance:
 
-spylon.version module
----------------------
-
-.. automodule:: spylon.version
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-
 Module contents
 ---------------
 
