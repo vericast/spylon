@@ -20,8 +20,10 @@ script:
   - docker build --rm -t spylon-integration .
   - docker run -it --rm spylon-integration
   # Build and deploy docs
-  - docker run -v `pwd`:/repo -it --rm spylon-integration make -C docs html
+  - docker run -it --name spylon-docs spylon-integration make -C docs html
   # Building the docs messes with our source tree.
-  - git reset --hard
+  - docker cp spylon-docs:/repo/docs/_build docs
+  # remove the container that we built
+  - docker rm spylon-docs
   # On pushes push the docs to gh-pages
   - doctr deploy
