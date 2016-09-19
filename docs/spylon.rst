@@ -1,6 +1,9 @@
 spylon package
 ==============
 
+.. toctree::
+    changelog
+
 Subpackages
 -----------
 
