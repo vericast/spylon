@@ -1,7 +1,7 @@
 Spylon
 ======
 
-|Version_Status| |Travis| Conda Forge |Conda_Forge|
+|Version_Status| |Travis| Conda Forge |Conda_Forge| |Docs|
 
 A set of compatibility routines for making it easier to interact with Scala from
 Python.
@@ -49,6 +49,8 @@ example of some use cases for Spylon.
    :target: https://anaconda.org/conda-forge/spylon
 .. |Travis| image:: https://travis-ci.org/MaxPoint/spylon.svg
    :target: https://travis-ci.org/MaxPoint/spylon
+.. |Docs| image:: https://img.shields.io/badge/docs-github-brightgreen.svg
+   :target: https://maxpoint.github.io/spylon/
 
 Complete Reference (API)
 ========================

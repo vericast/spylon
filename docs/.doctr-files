@@ -5,6 +5,7 @@ docs/_modules/spylon/simple.html
 docs/_modules/spylon/spark/launcher.html
 docs/_modules/spylon/spark/utils.html
 docs/_modules/spylon/spark/yarn_launcher.html
+docs/_sources/changelog.txt
 docs/_sources/index.txt
 docs/_sources/modules.txt
 docs/_sources/spylon.simple.txt
@@ -44,6 +45,7 @@ docs/_static/underscore.js
 docs/_static/up-pressed.png
 docs/_static/up.png
 docs/_static/websupport.js
+docs/changelog.html
 docs/genindex.html
 docs/index.html
 docs/modules.html
