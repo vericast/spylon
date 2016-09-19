@@ -1,0 +1,545 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>spylon.spark.yarn_launcher &mdash; spylon 0.2.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="spylon 0.2.0 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> spylon
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.2.4+24.g1750d32
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">spylon</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../spylon.html">spylon package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../spylon.simple.html">spylon.simple package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../spylon.spark.html">spylon.spark package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../index.html">spylon</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      
+    <li>spylon.spark.yarn_launcher</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for spylon.spark.yarn_launcher</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright (c) 2016 MaxPoint Interactive, Inc.</span>
+<span class="c1">#</span>
+<span class="c1"># All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># Redistribution and use in source and binary forms, with or without modification, are permitted provided that the</span>
+<span class="c1"># following conditions are met:</span>
+<span class="c1">#</span>
+<span class="c1"># 1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following</span>
+<span class="c1">#    disclaimer.</span>
+<span class="c1">#</span>
+<span class="c1"># 2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following</span>
+<span class="c1">#    disclaimer in the documentation and/or other materials provided with the distribution.</span>
+<span class="c1">#</span>
+<span class="c1"># 3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote</span>
+<span class="c1">#    products derived from this software without specific prior written permission.</span>
+<span class="c1">#</span>
+<span class="c1"># THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND ANY EXPRESS OR IMPLIED WARRANTIES,</span>
+<span class="c1"># INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE</span>
+<span class="c1"># DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,</span>
+<span class="c1"># SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR</span>
+<span class="c1"># SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,</span>
+<span class="c1"># WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE</span>
+<span class="c1"># OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</span>
+
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">absolute_import</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">yaml</span>
+<span class="kn">import</span> <span class="nn">shlex</span>
+<span class="kn">import</span> <span class="nn">zipfile</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">pprint</span>
+<span class="kn">import</span> <span class="nn">platform</span>
+
+<span class="n">__author__</span> <span class="o">=</span> <span class="s1">&#39;mniekerk&#39;</span>
+
+<span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;spylon.spark.yarn_launcher&quot;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="create_conda_env"><a class="viewcode-back" href="../../../spylon.spark.html#spylon.spark.yarn_launcher.create_conda_env">[docs]</a><span class="k">def</span> <span class="nf">create_conda_env</span><span class="p">(</span><span class="n">sandbox_dir</span><span class="p">,</span> <span class="n">env_name</span><span class="p">,</span> <span class="n">dependencies</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="p">()):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create a conda environment inside the current sandbox for the given list of dependencies and options.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    sandbox_dir : str</span>
+<span class="sd">    env_name : str</span>
+<span class="sd">    dependencies : list</span>
+<span class="sd">        List of conda specs</span>
+<span class="sd">    options</span>
+<span class="sd">        List of additional options to pass to conda.  Things like [&quot;-c&quot;, &quot;conda-forge&quot;]</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    (env_dir, env_name)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">env_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sandbox_dir</span><span class="p">,</span> <span class="n">env_name</span><span class="p">)</span>
+    <span class="n">cmdline</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;conda&quot;</span><span class="p">,</span> <span class="s2">&quot;create&quot;</span><span class="p">,</span> <span class="s2">&quot;--yes&quot;</span><span class="p">,</span> <span class="s2">&quot;--copy&quot;</span><span class="p">,</span> <span class="s2">&quot;--quiet&quot;</span><span class="p">,</span> <span class="s2">&quot;-p&quot;</span><span class="p">,</span> <span class="n">env_dir</span><span class="p">]</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">options</span><span class="p">)</span> <span class="o">+</span> <span class="n">dependencies</span>
+
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Creating conda environment: &quot;</span><span class="p">)</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;  command line: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">cmdline</span><span class="p">)</span>
+    <span class="n">subprocess</span><span class="o">.</span><span class="n">check_call</span><span class="p">(</span><span class="n">cmdline</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">)</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Environment created&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">env_dir</span><span class="p">,</span> <span class="n">env_name</span></div>
+
+
+<div class="viewcode-block" id="archive_dir"><a class="viewcode-back" href="../../../spylon.spark.html#spylon.spark.yarn_launcher.archive_dir">[docs]</a><span class="k">def</span> <span class="nf">archive_dir</span><span class="p">(</span><span class="n">env_dir</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compresses the directory and writes to its parent</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    env_dir : str</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    str</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">output_filename</span> <span class="o">=</span> <span class="n">env_dir</span> <span class="o">+</span> <span class="s2">&quot;.zip&quot;</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Archiving conda environment: </span><span class="si">%s</span><span class="s2"> -&gt; </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">env_dir</span><span class="p">,</span> <span class="n">output_filename</span><span class="p">)</span>
+    <span class="n">subprocess</span><span class="o">.</span><span class="n">check_call</span><span class="p">([</span><span class="s2">&quot;zip&quot;</span><span class="p">,</span> <span class="s2">&quot;-r&quot;</span><span class="p">,</span> <span class="s2">&quot;-0&quot;</span><span class="p">,</span> <span class="s2">&quot;-q&quot;</span><span class="p">,</span> <span class="n">output_filename</span><span class="p">,</span> <span class="n">env_dir</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">output_filename</span></div>
+
+
+<span class="c1">#TODO : move this into the SparkConfiguration object</span>
+<div class="viewcode-block" id="prepare_pyspark_yarn_interactive"><a class="viewcode-back" href="../../../spylon.spark.html#spylon.spark.yarn_launcher.prepare_pyspark_yarn_interactive">[docs]</a><span class="k">def</span> <span class="nf">prepare_pyspark_yarn_interactive</span><span class="p">(</span><span class="n">env_name</span><span class="p">,</span> <span class="n">env_archive</span><span class="p">,</span> <span class="n">spark_conf</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This ASSUMES that you have a compatible python environment running on the other side.</span>
+
+<span class="sd">    WARNING: Injects &quot;PYSPARK_DRIVER_PYTHON&quot; and &quot;PYSPARK_PYTHON&quot; as</span>
+<span class="sd">    environmental variables into your current environment</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    env_name : str</span>
+<span class="sd">    env_archive : str</span>
+<span class="sd">    spark_conf : SparkConfiguration</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; from spylon.spark import SparkConfiguration</span>
+<span class="sd">    &gt;&gt;&gt; conf = SparkConfiguration()</span>
+<span class="sd">    &gt;&gt;&gt; import spylon.spark.yarn_launcher as yl</span>
+<span class="sd">    &gt;&gt;&gt; conf = yl.prepare_pyspark_yarn_interactive(</span>
+<span class="sd">    ...    env_name=&quot;yarn-pyspark-env&quot;, env_archive=&quot;hdfs:///path/to/conda_envs/yarn-pyspark-env.zip&quot;,</span>
+<span class="sd">    ...    spark_conf=conf</span>
+<span class="sd">    ... )</span>
+<span class="sd">    ... # Create our context</span>
+<span class="sd">    ... sc, sqlC = conf.sql_context(&quot;conda-test&quot;)</span>
+<span class="sd">    ... # Example of it working</span>
+<span class="sd">    ... rdd = sc.parallelize(range(10), 10)</span>
+<span class="sd">    ...</span>
+<span class="sd">    ... def pandas_test(x):</span>
+<span class="sd">    ...    import numpy</span>
+<span class="sd">    ...    import pandas</span>
+<span class="sd">    ...    import sys</span>
+<span class="sd">    ...    import socket</span>
+<span class="sd">    ...    return [{&quot;numpy&quot;: numpy.__version__, &quot;pandas&quot;: pandas.__version__,</span>
+<span class="sd">    ...             &quot;host&quot;: socket.getfqdn(), &quot;python&quot;: sys.executable}]</span>
+<span class="sd">    ...</span>
+<span class="sd">    ... rdd.mapPartitions(pandas_test).collect()</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    SparkConfiguration</span>
+<span class="sd">        Copy of `spark_conf` input with added Yarn requirements.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="kn">from</span> <span class="nn">.launcher</span> <span class="k">import</span> <span class="n">SparkConfiguration</span>
+
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">spark_conf</span><span class="p">,</span> <span class="n">SparkConfiguration</span><span class="p">)</span>
+
+    <span class="n">yarn_python</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="s2">&quot;CONDA&quot;</span><span class="p">,</span> <span class="n">env_name</span><span class="p">,</span> <span class="s2">&quot;bin&quot;</span><span class="p">,</span> <span class="s2">&quot;python&quot;</span><span class="p">)</span>
+    <span class="n">archives</span> <span class="o">=</span> <span class="n">env_archive</span> <span class="o">+</span> <span class="s2">&quot;#CONDA&quot;</span>
+
+    <span class="n">new_spark_conf</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">spark_conf</span><span class="p">)</span>
+    <span class="n">new_spark_conf</span><span class="o">.</span><span class="n">master</span> <span class="o">=</span> <span class="s2">&quot;yarn&quot;</span>
+    <span class="n">new_spark_conf</span><span class="o">.</span><span class="n">deploy_mode</span> <span class="o">=</span> <span class="s2">&quot;client&quot;</span>
+    <span class="n">new_spark_conf</span><span class="o">.</span><span class="n">archives</span> <span class="o">=</span> <span class="p">[</span><span class="n">archives</span><span class="p">]</span>
+    <span class="n">new_spark_conf</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s2">&quot;spark.executorEnv.PYSPARK_PYTHON&quot;</span><span class="p">,</span> <span class="n">yarn_python</span><span class="p">)</span>
+    <span class="n">new_spark_conf</span><span class="o">.</span><span class="n">_python_path</span> <span class="o">=</span> <span class="n">yarn_python</span>
+
+    <span class="n">env_update</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;PYSPARK_DRIVER_PYTHON&quot;</span><span class="p">:</span> <span class="n">sys</span><span class="o">.</span><span class="n">executable</span><span class="p">,</span>
+        <span class="s2">&quot;PYSPARK_PYTHON&quot;</span><span class="p">:</span> <span class="n">yarn_python</span>
+    <span class="p">}</span>
+
+    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">env_update</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">new_spark_conf</span></div>
+
+
+<div class="viewcode-block" id="run_pyspark_yarn_client"><a class="viewcode-back" href="../../../spylon.spark.html#spylon.spark.yarn_launcher.run_pyspark_yarn_client">[docs]</a><span class="k">def</span> <span class="nf">run_pyspark_yarn_client</span><span class="p">(</span><span class="n">env_dir</span><span class="p">,</span> <span class="n">env_name</span><span class="p">,</span> <span class="n">env_archive</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Initializes the requires spark command line options on order to start a python job with the given python</span>
+<span class="sd">    environment.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    env_dir : str</span>
+<span class="sd">    env_name : str</span>
+<span class="sd">    env_archive : str</span>
+<span class="sd">    args : list</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    This call will spawn a child process and block until that is complete.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">env</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">)</span>
+    <span class="n">python</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">env_dir</span><span class="p">,</span> <span class="s2">&quot;bin&quot;</span><span class="p">,</span> <span class="s2">&quot;python&quot;</span><span class="p">)</span>
+    <span class="n">yarn_python</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="s2">&quot;CONDA&quot;</span><span class="p">,</span> <span class="n">env_name</span><span class="p">,</span> <span class="s2">&quot;bin&quot;</span><span class="p">,</span> <span class="s2">&quot;python&quot;</span><span class="p">)</span>
+    <span class="n">archives</span> <span class="o">=</span> <span class="n">env_archive</span> <span class="o">+</span> <span class="s2">&quot;#CONDA&quot;</span>
+
+    <span class="n">prepend_args</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s2">&quot;--master&quot;</span><span class="p">,</span> <span class="s2">&quot;yarn&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--deploy-mode&quot;</span><span class="p">,</span> <span class="s2">&quot;client&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--archives&quot;</span><span class="p">,</span> <span class="n">archives</span><span class="p">,</span>
+    <span class="p">]</span>
+
+    <span class="n">env_update</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;PYSPARK_DRIVER_PYTHON&quot;</span><span class="p">:</span> <span class="n">python</span><span class="p">,</span>
+        <span class="s2">&quot;PYSPARK_PYTHON&quot;</span><span class="p">:</span> <span class="n">yarn_python</span>
+    <span class="p">}</span>
+
+    <span class="n">env</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">env_update</span><span class="p">)</span>
+    <span class="n">spark_submit</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">env</span><span class="p">[</span><span class="s2">&quot;SPARK_HOME&quot;</span><span class="p">],</span> <span class="s2">&quot;bin&quot;</span><span class="p">,</span> <span class="s2">&quot;spark-submit&quot;</span><span class="p">)</span>
+
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Running spark in YARN-client mode with added arguments&quot;</span><span class="p">)</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;  args: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="n">prepend_args</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">))</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;  env: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="n">env_update</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">))</span>
+
+    <span class="c1"># REPLACE our python process with another one</span>
+    <span class="n">subprocess</span><span class="o">.</span><span class="n">check_call</span><span class="p">([</span><span class="n">spark_submit</span><span class="p">]</span> <span class="o">+</span> <span class="n">prepend_args</span> <span class="o">+</span> <span class="n">args</span><span class="p">,</span> <span class="n">env</span><span class="o">=</span><span class="n">env</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="run_pyspark_yarn_cluster"><a class="viewcode-back" href="../../../spylon.spark.html#spylon.spark.yarn_launcher.run_pyspark_yarn_cluster">[docs]</a><span class="k">def</span> <span class="nf">run_pyspark_yarn_cluster</span><span class="p">(</span><span class="n">env_dir</span><span class="p">,</span> <span class="n">env_name</span><span class="p">,</span> <span class="n">env_archive</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Initializes the requires spark command line options on order to start a python job with the given python environment.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    env_dir : str</span>
+<span class="sd">    env_name : str</span>
+<span class="sd">    env_archive : str</span>
+<span class="sd">    args : list</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    This call will spawn a child process and block until that is complete.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">env</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">)</span>
+    <span class="n">yarn_python</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="s2">&quot;CONDA&quot;</span><span class="p">,</span> <span class="n">env_name</span><span class="p">,</span> <span class="s2">&quot;bin&quot;</span><span class="p">,</span> <span class="s2">&quot;python&quot;</span><span class="p">)</span>
+    <span class="n">archives</span> <span class="o">=</span> <span class="n">env_archive</span> <span class="o">+</span> <span class="s2">&quot;#CONDA&quot;</span>
+
+    <span class="n">prepend_args</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s2">&quot;--master&quot;</span><span class="p">,</span> <span class="s2">&quot;yarn&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--deploy-mode&quot;</span><span class="p">,</span> <span class="s2">&quot;cluster&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--conf&quot;</span><span class="p">,</span> <span class="s2">&quot;spark.yarn.appMasterEnv.PYSPARK_PYTHON=</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">yarn_python</span><span class="p">),</span>
+        <span class="s2">&quot;--archives&quot;</span><span class="p">,</span> <span class="n">archives</span><span class="p">,</span>
+    <span class="p">]</span>
+
+    <span class="n">env_update</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;PYSPARK_PYTHON&quot;</span><span class="p">:</span> <span class="n">yarn_python</span>
+    <span class="p">}</span>
+
+    <span class="n">env</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">env_update</span><span class="p">)</span>
+    <span class="n">spark_submit</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">env</span><span class="p">[</span><span class="s2">&quot;SPARK_HOME&quot;</span><span class="p">],</span> <span class="s2">&quot;bin&quot;</span><span class="p">,</span> <span class="s2">&quot;spark-submit&quot;</span><span class="p">)</span>
+
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Running spark in YARN-client mode with added arguments&quot;</span><span class="p">)</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;  args: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="n">prepend_args</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">))</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;  env: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="n">env_update</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">))</span>
+    <span class="c1"># REPLACE our python process with another one</span>
+    <span class="n">subprocess</span><span class="o">.</span><span class="n">check_call</span><span class="p">([</span><span class="n">spark_submit</span><span class="p">]</span> <span class="o">+</span> <span class="n">prepend_args</span> <span class="o">+</span> <span class="n">args</span><span class="p">,</span> <span class="n">env</span><span class="o">=</span><span class="n">env</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="launcher"><a class="viewcode-back" href="../../../spylon.spark.html#spylon.spark.yarn_launcher.launcher">[docs]</a><span class="k">def</span> <span class="nf">launcher</span><span class="p">(</span><span class="n">deploy_mode</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">working_dir</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Initializes arguments and starts up pyspark with the correct deploy mode and environment.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    deploy_mode : {&quot;client&quot;, &quot;cluster&quot;}</span>
+<span class="sd">    args : str</span>
+<span class="sd">        arguments to pass onwards to spark submit</span>
+<span class="sd">    working_dir : str</span>
+<span class="sd">        path to working directory to use for creating conda environments</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    This call will spawn a child process and block until that is complete.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Splits the list of arguments to Spark arguments and non-spark arguments.</span>
+    <span class="n">spark_args</span> <span class="o">=</span> <span class="n">args</span>
+
+    <span class="c1"># Scan through the arguments to find --conda</span>
+    <span class="c1"># TODO: make this optional,  if not specified ignore all the python stuff</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="n">spark_args</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s2">&quot;--conda-env&quot;</span><span class="p">)</span>
+    <span class="n">conda_env</span> <span class="o">=</span> <span class="n">spark_args</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">spark_args</span> <span class="o">=</span> <span class="n">spark_args</span><span class="p">[:</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">spark_args</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">2</span><span class="p">:]</span>
+
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">conda_env</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+    <span class="c1"># &quot;hadoop fs -ls&quot; can return URLs with only a single &quot;/&quot; after the &quot;hdfs:&quot; scheme</span>
+    <span class="k">if</span> <span class="n">conda_env</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;hdfs:/&quot;</span><span class="p">):</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Using conda environment from hdfs location&quot;</span><span class="p">)</span>
+        <span class="c1"># conda environment is on hdfs</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">conda_env</span><span class="p">)</span>
+        <span class="n">env_name</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+
+        <span class="c1"># When running in client mode download it from HDFS first.</span>
+        <span class="k">if</span> <span class="n">deploy_mode</span> <span class="o">==</span> <span class="s2">&quot;client&quot;</span><span class="p">:</span>
+            <span class="c1"># TODO: Allow user to specify a local environment to use if around</span>
+
+            <span class="n">subprocess</span><span class="o">.</span><span class="n">check_call</span><span class="p">([</span><span class="s2">&quot;hadoop&quot;</span><span class="p">,</span> <span class="s2">&quot;fs&quot;</span><span class="p">,</span> <span class="s2">&quot;-get&quot;</span><span class="p">,</span> <span class="n">conda_env</span><span class="p">,</span> <span class="n">working_dir</span><span class="p">],</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">)</span>
+            <span class="k">with</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZipFile</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">working_dir</span><span class="p">,</span> <span class="n">filename</span><span class="p">))</span> <span class="k">as</span> <span class="n">z</span><span class="p">:</span>
+                <span class="n">z</span><span class="o">.</span><span class="n">extractall</span><span class="p">(</span><span class="n">working_dir</span><span class="p">)</span>
+            <span class="n">env_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">working_dir</span><span class="p">,</span> <span class="n">env_name</span><span class="p">)</span>
+            <span class="c1"># Because of a python deficiency (Issue15795), the execute bits aren&#39;t</span>
+            <span class="c1"># preserved when the zip file is unzipped. Need to add them back here.</span>
+            <span class="n">_fix_permissions</span><span class="p">(</span><span class="n">env_dir</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">env_dir</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">env_archive</span> <span class="o">=</span> <span class="n">conda_env</span>
+
+    <span class="c1"># We have a precreated conda environment around.</span>
+    <span class="k">elif</span> <span class="n">conda_env</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.zip&quot;</span><span class="p">):</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Using conda environment from zip file&quot;</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZipFile</span><span class="p">(</span><span class="n">conda_env</span><span class="p">)</span> <span class="k">as</span> <span class="n">z</span><span class="p">:</span>
+            <span class="n">basename</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">conda_env</span><span class="p">)</span>
+            <span class="n">z</span><span class="o">.</span><span class="n">extractall</span><span class="p">(</span><span class="n">working_dir</span><span class="p">)</span>
+
+        <span class="n">env_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">basename</span><span class="p">)</span>
+        <span class="n">env_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">working_dir</span><span class="p">,</span> <span class="n">env_name</span><span class="p">)</span>
+        <span class="n">env_archive</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">conda_env</span><span class="p">)</span>
+        <span class="c1"># Because of a python deficiency (Issue15795), the execute bits aren&#39;t</span>
+        <span class="c1"># preserved when the zip file is unzipped. Need to add them back here.</span>
+        <span class="n">_fix_permissions</span><span class="p">(</span><span class="n">env_dir</span><span class="p">)</span>
+
+    <span class="c1"># The case where we have to CREATE the environment ourselves</span>
+    <span class="k">elif</span> <span class="n">conda_env</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.yaml&quot;</span><span class="p">):</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Building conda environment from yaml specification&quot;</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">conda_env</span><span class="p">)</span> <span class="k">as</span> <span class="n">fo</span><span class="p">:</span>
+            <span class="n">env</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">fo</span><span class="p">)</span>
+
+        <span class="n">conda_create_args</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;conda-args&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="n">conda_create_args</span> <span class="o">=</span> <span class="n">shlex</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">conda_create_args</span><span class="p">)</span>
+        <span class="n">deps</span> <span class="o">=</span> <span class="n">env</span><span class="p">[</span><span class="s2">&quot;dependencies&quot;</span><span class="p">]</span>
+        <span class="n">env_name</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;envname&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Create the conda environment</span>
+        <span class="n">env_dir</span><span class="p">,</span> <span class="n">env_name</span> <span class="o">=</span> <span class="n">create_conda_env</span><span class="p">(</span><span class="n">working_dir</span><span class="p">,</span> <span class="n">env_name</span><span class="p">,</span> <span class="n">deps</span><span class="p">,</span> <span class="n">conda_create_args</span><span class="p">)</span>
+
+        <span class="c1"># Archive the conda environment</span>
+        <span class="n">env_archive</span> <span class="o">=</span> <span class="n">archive_dir</span><span class="p">(</span><span class="n">env_dir</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+
+    <span class="n">args</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">env_dir</span><span class="o">=</span><span class="n">env_dir</span><span class="p">,</span> <span class="n">env_name</span><span class="o">=</span><span class="n">env_name</span><span class="p">,</span> <span class="n">env_archive</span><span class="o">=</span><span class="n">env_archive</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="n">spark_args</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">deploy_mode</span> <span class="o">==</span> <span class="s2">&quot;client&quot;</span><span class="p">:</span>
+        <span class="n">run_pyspark_yarn_client</span><span class="p">(</span><span class="o">**</span><span class="n">args</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">deploy_mode</span> <span class="o">==</span> <span class="s2">&quot;cluster&quot;</span><span class="p">:</span>
+        <span class="n">run_pyspark_yarn_cluster</span><span class="p">(</span><span class="o">**</span><span class="n">args</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">_fix_permissions</span><span class="p">(</span><span class="n">env_dir</span><span class="p">):</span>
+    <span class="n">bin_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">env_dir</span><span class="p">,</span> <span class="s2">&quot;bin&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">bin_dir</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;Linux&#39;</span><span class="p">:</span>
+            <span class="n">subprocess</span><span class="o">.</span><span class="n">check_call</span><span class="p">([</span><span class="s2">&quot;chmod&quot;</span><span class="p">,</span> <span class="s2">&quot;-R&quot;</span><span class="p">,</span> <span class="s2">&quot;a+x&quot;</span><span class="p">,</span> <span class="n">bin_dir</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Don&#39;t know how to change permissions on &quot;</span> <span class="o">+</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">())</span>
+
+
+<div class="viewcode-block" id="pyspark_conda_yarn_cluster"><a class="viewcode-back" href="../../../spylon.spark.html#spylon.spark.yarn_launcher.pyspark_conda_yarn_cluster">[docs]</a><span class="k">def</span> <span class="nf">pyspark_conda_yarn_cluster</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Endpoint for starting a pyspark conda job using cluster-mode.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+    <span class="n">launcher</span><span class="p">(</span><span class="s2">&quot;cluster&quot;</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="pyspark_conda_yarn_client"><a class="viewcode-back" href="../../../spylon.spark.html#spylon.spark.yarn_launcher.pyspark_conda_yarn_client">[docs]</a><span class="k">def</span> <span class="nf">pyspark_conda_yarn_client</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Endpoint for starting a pyspark conda job using client-mode.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+    <span class="n">launcher</span><span class="p">(</span><span class="s2">&quot;client&quot;</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, MaxPoint Interactive.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'0.2.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

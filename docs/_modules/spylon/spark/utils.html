@@ -1,0 +1,319 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>spylon.spark.utils &mdash; spylon 0.2.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="spylon 0.2.0 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> spylon
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.2.4+24.g1750d32
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">spylon</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../spylon.html">spylon package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../spylon.simple.html">spylon.simple package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../spylon.spark.html">spylon.spark package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../index.html">spylon</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      
+    <li>spylon.spark.utils</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for spylon.spark.utils</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright (c) 2016 MaxPoint Interactive, Inc.</span>
+<span class="c1">#</span>
+<span class="c1"># All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># Redistribution and use in source and binary forms, with or without modification, are permitted provided that the</span>
+<span class="c1"># following conditions are met:</span>
+<span class="c1">#</span>
+<span class="c1"># 1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following</span>
+<span class="c1">#    disclaimer.</span>
+<span class="c1">#</span>
+<span class="c1"># 2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following</span>
+<span class="c1">#    disclaimer in the documentation and/or other materials provided with the distribution.</span>
+<span class="c1">#</span>
+<span class="c1"># 3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote</span>
+<span class="c1">#    products derived from this software without specific prior written permission.</span>
+<span class="c1">#</span>
+<span class="c1"># THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND ANY EXPRESS OR IMPLIED WARRANTIES,</span>
+<span class="c1"># INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE</span>
+<span class="c1"># DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,</span>
+<span class="c1"># SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR</span>
+<span class="c1"># SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,</span>
+<span class="c1"># WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE</span>
+<span class="c1"># OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</span>
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Utility classes for creating and interacting with the java side of pyspark.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">print_function</span>
+<span class="kn">from</span> <span class="nn">spylon.common</span> <span class="k">import</span> <span class="n">JVMHelpers</span>
+
+<span class="c1"># noinspection PyUnresolvedReferences</span>
+<span class="kn">from</span> <span class="nn">pyspark</span> <span class="k">import</span> <span class="n">SparkContext</span>
+<span class="c1"># noinspection PyUnresolvedReferences</span>
+<span class="kn">from</span> <span class="nn">pyspark.sql</span> <span class="k">import</span> <span class="n">Column</span><span class="p">,</span> <span class="n">SQLContext</span>
+<span class="c1"># noinspection PyUnresolvedReferences</span>
+<span class="kn">from</span> <span class="nn">pyspark.sql.functions</span> <span class="k">import</span> <span class="n">col</span> <span class="k">as</span> <span class="n">_make_col</span>
+<span class="c1"># noinspection PyUnresolvedReferences</span>
+<span class="kn">from</span> <span class="nn">pyspark.sql.column</span> <span class="k">import</span> <span class="n">_to_seq</span><span class="p">,</span> <span class="n">_to_list</span><span class="p">,</span> <span class="n">_to_java_column</span>
+
+<div class="viewcode-block" id="SparkJVMHelpers"><a class="viewcode-back" href="../../../spylon.spark.html#spylon.spark.utils.SparkJVMHelpers">[docs]</a><span class="k">class</span> <span class="nc">SparkJVMHelpers</span><span class="p">(</span><span class="n">JVMHelpers</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Utilities for easier interoperability with pyspark and scala.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    sc : SparkContext</span>
+<span class="sd">        A pyspark context that you&#39;d like to use as the main jvm reflection point.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sc</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">SparkJVMHelpers</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sc</span> <span class="o">=</span> <span class="n">sc</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">jvm</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns the py4j jvm mirror that spark is using.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sc</span><span class="o">.</span><span class="n">_jvm</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">gateway</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns the py4j gateway that spark is using.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sc</span><span class="o">.</span><span class="n">_gateway</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">classloader</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns the private class loader that spark uses.</span>
+
+<span class="sd">        This is needed since jars added with --jars are not easily resolvable by py4j&#39;s classloader</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">jvm</span><span class="o">.</span><span class="n">org</span><span class="o">.</span><span class="n">apache</span><span class="o">.</span><span class="n">spark</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">Utils</span><span class="o">.</span><span class="n">getContextOrSparkClassLoader</span><span class="p">()</span>
+
+<div class="viewcode-block" id="SparkJVMHelpers.get_java_container"><a class="viewcode-back" href="../../../spylon.spark.html#spylon.spark.utils.SparkJVMHelpers.get_java_container">[docs]</a>    <span class="k">def</span> <span class="nf">get_java_container</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">package_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">object_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">java_class_instance</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Convenience method to get the container that houses methods we wish to call a method on.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">package_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">jcontainer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">import_scala_package_object</span><span class="p">(</span><span class="n">package_name</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">object_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">jcontainer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">import_scala_object</span><span class="p">(</span><span class="n">object_name</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">java_class_instance</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">jcontainer</span> <span class="o">=</span> <span class="n">java_class_instance</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Expected one of package_name, object_name or java_class_instance&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">jcontainer</span></div>
+
+<div class="viewcode-block" id="SparkJVMHelpers.wrap_function_cols"><a class="viewcode-back" href="../../../spylon.spark.html#spylon.spark.utils.SparkJVMHelpers.wrap_function_cols">[docs]</a>    <span class="k">def</span> <span class="nf">wrap_function_cols</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">package_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">object_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">java_class_instance</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">doc</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Utility method for wrapping a scala/java function that returns a spark sql Column.</span>
+
+<span class="sd">        This assumes that the function that you are wrapping takes a list of spark sql Column objects as its arguments.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="nf">_</span><span class="p">(</span><span class="o">*</span><span class="n">cols</span><span class="p">):</span>
+            <span class="n">jcontainer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_java_container</span><span class="p">(</span><span class="n">package_name</span><span class="o">=</span><span class="n">package_name</span><span class="p">,</span> <span class="n">object_name</span><span class="o">=</span><span class="n">object_name</span><span class="p">,</span> <span class="n">java_class_instance</span><span class="o">=</span><span class="n">java_class_instance</span><span class="p">)</span>
+            <span class="c1"># Ensure that your argument is a column</span>
+            <span class="n">col_args</span> <span class="o">=</span> <span class="p">[</span><span class="n">col</span><span class="o">.</span><span class="n">_jc</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">col</span><span class="p">,</span> <span class="n">Column</span><span class="p">)</span> <span class="k">else</span> <span class="n">_make_col</span><span class="p">(</span><span class="n">col</span><span class="p">)</span><span class="o">.</span><span class="n">_jc</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">cols</span><span class="p">]</span>
+            <span class="n">function</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">jcontainer</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+            <span class="n">args</span> <span class="o">=</span> <span class="n">col_args</span>
+            <span class="n">jc</span> <span class="o">=</span> <span class="n">function</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">Column</span><span class="p">(</span><span class="n">jc</span><span class="p">)</span>
+        <span class="n">_</span><span class="o">.</span><span class="n">__name__</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="n">_</span><span class="o">.</span><span class="n">__doc__</span> <span class="o">=</span> <span class="n">doc</span>
+        <span class="k">return</span> <span class="n">_</span></div>
+
+<div class="viewcode-block" id="SparkJVMHelpers.wrap_spark_sql_udf"><a class="viewcode-back" href="../../../spylon.spark.html#spylon.spark.utils.SparkJVMHelpers.wrap_spark_sql_udf">[docs]</a>    <span class="k">def</span> <span class="nf">wrap_spark_sql_udf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">package_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">object_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">java_class_instance</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">doc</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Wraps a scala/java spark user defined function &quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="nf">_</span><span class="p">(</span><span class="o">*</span><span class="n">cols</span><span class="p">):</span>
+            <span class="n">jcontainer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_java_container</span><span class="p">(</span><span class="n">package_name</span><span class="o">=</span><span class="n">package_name</span><span class="p">,</span> <span class="n">object_name</span><span class="o">=</span><span class="n">object_name</span><span class="p">,</span> <span class="n">java_class_instance</span><span class="o">=</span><span class="n">java_class_instance</span><span class="p">)</span>
+            <span class="c1"># Ensure that your argument is a column</span>
+            <span class="n">function</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">jcontainer</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+            <span class="n">judf</span> <span class="o">=</span> <span class="n">function</span><span class="p">()</span>
+            <span class="n">jc</span> <span class="o">=</span> <span class="n">judf</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">to_scala_seq</span><span class="p">([</span><span class="n">_to_java_column</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">cols</span><span class="p">]))</span>
+            <span class="k">return</span> <span class="n">Column</span><span class="p">(</span><span class="n">jc</span><span class="p">)</span>
+        <span class="n">_</span><span class="o">.</span><span class="n">__name__</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="n">_</span><span class="o">.</span><span class="n">__doc__</span> <span class="o">=</span> <span class="n">doc</span>
+        <span class="k">return</span> <span class="n">_</span></div>
+
+<div class="viewcode-block" id="SparkJVMHelpers.wrap_java_dataframe"><a class="viewcode-back" href="../../../spylon.spark.html#spylon.spark.utils.SparkJVMHelpers.wrap_java_dataframe">[docs]</a>    <span class="k">def</span> <span class="nf">wrap_java_dataframe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">jdf</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Converts a java scala spark dataframe to its python equivalent.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">pyspark</span><span class="o">.</span><span class="n">sql</span><span class="o">.</span><span class="n">Dataframe</span><span class="p">(</span><span class="n">jdf</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sc</span><span class="p">)</span></div></div>
+
+    <span class="c1"># TODO: Future work could be made that will make use of the catalyst code generator to directly create classes from strings of Java code</span>
+    <span class="c1"># def compile_body(self):</span>
+    <span class="c1">#     self.import_scala_object(&quot;org.apache.spark.sql.catalyst.expressions.codegen.CodeGenerator&quot;)</span>
+    <span class="c1">#     self.c CodeAndComment</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, MaxPoint Interactive.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'0.2.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

@@ -1,0 +1,650 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>spylon.spark package &mdash; spylon 0.2.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="spylon 0.2.0 documentation" href="index.html"/>
+        <link rel="up" title="spylon package" href="spylon.html"/>
+        <link rel="prev" title="spylon.simple package" href="spylon.simple.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> spylon
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.2.4+24.g1750d32
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">spylon</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="spylon.html">spylon package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="spylon.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="spylon.simple.html">spylon.simple package</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">spylon.spark package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="spylon.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="spylon.html#module-spylon.common">spylon.common module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="spylon.html#module-spylon">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="spylon.html">spylon package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="spylon.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="spylon.simple.html">spylon.simple package</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">spylon.spark package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-spylon.spark.launcher">spylon.spark.launcher module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-spylon.spark.utils">spylon.spark.utils module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-spylon.spark.yarn_launcher">spylon.spark.yarn_launcher module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-spylon.spark">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="spylon.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spylon.html#module-spylon.common">spylon.common module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spylon.html#module-spylon">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="spylon.simple.html">spylon.simple package</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">spylon.spark package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-spylon.spark.launcher">spylon.spark.launcher module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-spylon.spark.utils">spylon.spark.utils module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-spylon.spark.yarn_launcher">spylon.spark.yarn_launcher module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-spylon.spark">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">spylon</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="modules.html">spylon</a> &raquo;</li>
+      
+          <li><a href="spylon.html">spylon package</a> &raquo;</li>
+      
+    <li>spylon.spark package</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/spylon.spark.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="spylon-spark-package">
+<h1>spylon.spark package<a class="headerlink" href="#spylon-spark-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-spylon.spark.launcher">
+<span id="spylon-spark-launcher-module"></span><h2>spylon.spark.launcher module<a class="headerlink" href="#module-spylon.spark.launcher" title="Permalink to this headline">¶</a></h2>
+<p>&#8221;
+A better launcher from the python side for creating a pyspark context</p>
+<p>This allows you to much more easily customize the parameters that get passed to
+spark-submit that ultimately gets launched when instantiating a SparkContext.</p>
+<p>This does NOT require you to mangle sys.path yourself in order to be able to import
+pyspark.</p>
+<p>This is done via minRK&#8217;s findspark library if you cannot import pyspark directly</p>
+<dl class="class">
+<dt id="spylon.spark.launcher.SparkConfiguration">
+<em class="property">class </em><code class="descclassname">spylon.spark.launcher.</code><code class="descname">SparkConfiguration</code><span class="sig-paren">(</span><em>python_path=None</em>, <em>spark_conf=None</em>, <em>spark_launcher_args=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spylon/spark/launcher.html#SparkConfiguration"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spylon.spark.launcher.SparkConfiguration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="spylon.spark.launcher.SparkConfiguration.conf">
+<code class="descname">conf</code><a class="headerlink" href="#spylon.spark.launcher.SparkConfiguration.conf" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="spylon.spark.launcher.SparkConfiguration.launcher_args">
+<code class="descname">launcher_args</code><a class="headerlink" href="#spylon.spark.launcher.SparkConfiguration.launcher_args" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="spylon.spark.launcher.SparkConfiguration.spark_context">
+<code class="descname">spark_context</code><span class="sig-paren">(</span><em>application_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spylon/spark/launcher.html#SparkConfiguration.spark_context"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spylon.spark.launcher.SparkConfiguration.spark_context" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a spark context given the parameters configured in this class.</p>
+<p>The caller is responsible for calling <code class="docutils literal"><span class="pre">.close</span></code> on the resulting spark context</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>application_name</strong> (<em>string</em>) &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>sc</strong></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">SparkContext</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spylon.spark.launcher.SparkConfiguration.spark_home">
+<code class="descname">spark_home</code><a class="headerlink" href="#spylon.spark.launcher.SparkConfiguration.spark_home" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="spylon.spark.launcher.SparkConfiguration.sql_context">
+<code class="descname">sql_context</code><span class="sig-paren">(</span><em>application_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spylon/spark/launcher.html#SparkConfiguration.sql_context"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spylon.spark.launcher.SparkConfiguration.sql_context" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a spark context given the parameters configured in this class.</p>
+<p>The caller is responsible for calling <code class="docutils literal"><span class="pre">.close</span></code> on the resulting spark context</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>application_name</strong> (<em>string</em>) &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>sc</strong></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">SparkContext</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="spylon.spark.launcher.init_spark">
+<code class="descclassname">spylon.spark.launcher.</code><code class="descname">init_spark</code><span class="sig-paren">(</span><em>spark_home=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spylon/spark/launcher.html#init_spark"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spylon.spark.launcher.init_spark" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="spylon.spark.launcher.keyfilter">
+<code class="descclassname">spylon.spark.launcher.</code><code class="descname">keyfilter</code><span class="sig-paren">(</span><em>predicate</em>, <em>d</em>, <em>factory=&lt;class 'dict'&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spylon/spark/launcher.html#keyfilter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spylon.spark.launcher.keyfilter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filter items in dictionary by key</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">iseven</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">d</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">:</span> <span class="mi">5</span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">keyfilter</span><span class="p">(</span><span class="n">iseven</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+<span class="go">{2: 3, 4: 5}</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last">valfilter
+itemfilter
+keymap</p>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="spylon.spark.launcher.with_spark_context">
+<code class="descclassname">spylon.spark.launcher.</code><code class="descname">with_spark_context</code><span class="sig-paren">(</span><em>application_name</em>, <em>conf=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spylon/spark/launcher.html#with_spark_context"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spylon.spark.launcher.with_spark_context" title="Permalink to this definition">¶</a></dt>
+<dd><p>Context manager for a spark context</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>application_name</strong> (<em>string</em>) &#8211; </li>
+<li><strong>conf</strong> (<em>string, optional</em>) &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>sc</strong></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">SparkContext</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<p>Used within a context manager
+&gt;&gt;&gt; with with_spark_context(&#8220;MyApplication&#8221;) as sc:
+...     # Your Code here
+...     pass</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="spylon.spark.launcher.with_sql_context">
+<code class="descclassname">spylon.spark.launcher.</code><code class="descname">with_sql_context</code><span class="sig-paren">(</span><em>application_name</em>, <em>conf=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spylon/spark/launcher.html#with_sql_context"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spylon.spark.launcher.with_sql_context" title="Permalink to this definition">¶</a></dt>
+<dd><p>Context manager for a spark context</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><ul class="simple">
+<li><strong>sc</strong> (<em>SparkContext</em>)</li>
+<li><strong>sql_context</strong> (<em>SQLContext</em>)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<p>Used within a context manager
+&gt;&gt;&gt; with with_sql_context(&#8220;MyApplication&#8221;) as (sc, sql_context):
+...     import pyspark
+...     # Do stuff
+...     pass</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-spylon.spark.utils">
+<span id="spylon-spark-utils-module"></span><h2>spylon.spark.utils module<a class="headerlink" href="#module-spylon.spark.utils" title="Permalink to this headline">¶</a></h2>
+<p>Utility classes for creating and interacting with the java side of pyspark.</p>
+<dl class="class">
+<dt id="spylon.spark.utils.SparkJVMHelpers">
+<em class="property">class </em><code class="descclassname">spylon.spark.utils.</code><code class="descname">SparkJVMHelpers</code><span class="sig-paren">(</span><em>sc</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spylon/spark/utils.html#SparkJVMHelpers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spylon.spark.utils.SparkJVMHelpers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="spylon.html#spylon.common.JVMHelpers" title="spylon.common.JVMHelpers"><code class="xref py py-class docutils literal"><span class="pre">spylon.common.JVMHelpers</span></code></a></p>
+<p>Utilities for easier interoperability with pyspark and scala.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sc</strong> (<em>SparkContext</em>) &#8211; A pyspark context that you&#8217;d like to use as the main jvm reflection point.</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="spylon.spark.utils.SparkJVMHelpers.classloader">
+<code class="descname">classloader</code><a class="headerlink" href="#spylon.spark.utils.SparkJVMHelpers.classloader" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the private class loader that spark uses.</p>
+<p>This is needed since jars added with &#8211;jars are not easily resolvable by py4j&#8217;s classloader</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spylon.spark.utils.SparkJVMHelpers.gateway">
+<code class="descname">gateway</code><a class="headerlink" href="#spylon.spark.utils.SparkJVMHelpers.gateway" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the py4j gateway that spark is using.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="spylon.spark.utils.SparkJVMHelpers.get_java_container">
+<code class="descname">get_java_container</code><span class="sig-paren">(</span><em>package_name=None</em>, <em>object_name=None</em>, <em>java_class_instance=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spylon/spark/utils.html#SparkJVMHelpers.get_java_container"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spylon.spark.utils.SparkJVMHelpers.get_java_container" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convenience method to get the container that houses methods we wish to call a method on.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spylon.spark.utils.SparkJVMHelpers.jvm">
+<code class="descname">jvm</code><a class="headerlink" href="#spylon.spark.utils.SparkJVMHelpers.jvm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the py4j jvm mirror that spark is using.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="spylon.spark.utils.SparkJVMHelpers.wrap_function_cols">
+<code class="descname">wrap_function_cols</code><span class="sig-paren">(</span><em>name</em>, <em>package_name=None</em>, <em>object_name=None</em>, <em>java_class_instance=None</em>, <em>doc=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spylon/spark/utils.html#SparkJVMHelpers.wrap_function_cols"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spylon.spark.utils.SparkJVMHelpers.wrap_function_cols" title="Permalink to this definition">¶</a></dt>
+<dd><p>Utility method for wrapping a scala/java function that returns a spark sql Column.</p>
+<p>This assumes that the function that you are wrapping takes a list of spark sql Column objects as its arguments.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="spylon.spark.utils.SparkJVMHelpers.wrap_java_dataframe">
+<code class="descname">wrap_java_dataframe</code><span class="sig-paren">(</span><em>jdf</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spylon/spark/utils.html#SparkJVMHelpers.wrap_java_dataframe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spylon.spark.utils.SparkJVMHelpers.wrap_java_dataframe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts a java scala spark dataframe to its python equivalent.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="spylon.spark.utils.SparkJVMHelpers.wrap_spark_sql_udf">
+<code class="descname">wrap_spark_sql_udf</code><span class="sig-paren">(</span><em>name</em>, <em>package_name=None</em>, <em>object_name=None</em>, <em>java_class_instance=None</em>, <em>doc=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spylon/spark/utils.html#SparkJVMHelpers.wrap_spark_sql_udf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spylon.spark.utils.SparkJVMHelpers.wrap_spark_sql_udf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wraps a scala/java spark user defined function</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-spylon.spark.yarn_launcher">
+<span id="spylon-spark-yarn-launcher-module"></span><h2>spylon.spark.yarn_launcher module<a class="headerlink" href="#module-spylon.spark.yarn_launcher" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="spylon.spark.yarn_launcher.archive_dir">
+<code class="descclassname">spylon.spark.yarn_launcher.</code><code class="descname">archive_dir</code><span class="sig-paren">(</span><em>env_dir</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spylon/spark/yarn_launcher.html#archive_dir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spylon.spark.yarn_launcher.archive_dir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compresses the directory and writes to its parent</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>env_dir</strong> (<em>str</em>) &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="spylon.spark.yarn_launcher.create_conda_env">
+<code class="descclassname">spylon.spark.yarn_launcher.</code><code class="descname">create_conda_env</code><span class="sig-paren">(</span><em>sandbox_dir</em>, <em>env_name</em>, <em>dependencies</em>, <em>options=()</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spylon/spark/yarn_launcher.html#create_conda_env"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spylon.spark.yarn_launcher.create_conda_env" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a conda environment inside the current sandbox for the given list of dependencies and options.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>sandbox_dir</strong> (<em>str</em>) &#8211; </li>
+<li><strong>env_name</strong> (<em>str</em>) &#8211; </li>
+<li><strong>dependencies</strong> (<em>list</em>) &#8211; List of conda specs</li>
+<li><strong>options</strong> &#8211; List of additional options to pass to conda.  Things like [&#8220;-c&#8221;, &#8220;conda-forge&#8221;]</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(env_dir, env_name)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="spylon.spark.yarn_launcher.launcher">
+<code class="descclassname">spylon.spark.yarn_launcher.</code><code class="descname">launcher</code><span class="sig-paren">(</span><em>deploy_mode</em>, <em>args</em>, <em>working_dir='.'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spylon/spark/yarn_launcher.html#launcher"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spylon.spark.yarn_launcher.launcher" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initializes arguments and starts up pyspark with the correct deploy mode and environment.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>deploy_mode</strong> (<em>{&quot;client&quot;, &quot;cluster&quot;}</em>) &#8211; </li>
+<li><strong>args</strong> (<em>str</em>) &#8211; arguments to pass onwards to spark submit</li>
+<li><strong>working_dir</strong> (<em>str</em>) &#8211; path to working directory to use for creating conda environments</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">This call will spawn a child process and block until that is complete.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="spylon.spark.yarn_launcher.prepare_pyspark_yarn_interactive">
+<code class="descclassname">spylon.spark.yarn_launcher.</code><code class="descname">prepare_pyspark_yarn_interactive</code><span class="sig-paren">(</span><em>env_name</em>, <em>env_archive</em>, <em>spark_conf</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spylon/spark/yarn_launcher.html#prepare_pyspark_yarn_interactive"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spylon.spark.yarn_launcher.prepare_pyspark_yarn_interactive" title="Permalink to this definition">¶</a></dt>
+<dd><p>This ASSUMES that you have a compatible python environment running on the other side.</p>
+<p>WARNING: Injects &#8220;PYSPARK_DRIVER_PYTHON&#8221; and &#8220;PYSPARK_PYTHON&#8221; as
+environmental variables into your current environment</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>env_name</strong> (<em>str</em>) &#8211; </li>
+<li><strong>env_archive</strong> (<em>str</em>) &#8211; </li>
+<li><strong>spark_conf</strong> (<a class="reference internal" href="#spylon.spark.launcher.SparkConfiguration" title="spylon.spark.launcher.SparkConfiguration"><em>SparkConfiguration</em></a>) &#8211; </li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">spylon.spark</span> <span class="k">import</span> <span class="n">SparkConfiguration</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">conf</span> <span class="o">=</span> <span class="n">SparkConfiguration</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">spylon.spark.yarn_launcher</span> <span class="k">as</span> <span class="nn">yl</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">conf</span> <span class="o">=</span> <span class="n">yl</span><span class="o">.</span><span class="n">prepare_pyspark_yarn_interactive</span><span class="p">(</span>
+<span class="gp">... </span>   <span class="n">env_name</span><span class="o">=</span><span class="s2">&quot;yarn-pyspark-env&quot;</span><span class="p">,</span> <span class="n">env_archive</span><span class="o">=</span><span class="s2">&quot;hdfs:///path/to/conda_envs/yarn-pyspark-env.zip&quot;</span><span class="p">,</span>
+<span class="gp">... </span>   <span class="n">spark_conf</span><span class="o">=</span><span class="n">conf</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">... </span><span class="c1"># Create our context</span>
+<span class="gp">... </span><span class="n">sc</span><span class="p">,</span> <span class="n">sqlC</span> <span class="o">=</span> <span class="n">conf</span><span class="o">.</span><span class="n">sql_context</span><span class="p">(</span><span class="s2">&quot;conda-test&quot;</span><span class="p">)</span>
+<span class="gp">... </span><span class="c1"># Example of it working</span>
+<span class="gp">... </span><span class="n">rdd</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">parallelize</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span> <span class="mi">10</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">... </span><span class="k">def</span> <span class="nf">pandas_test</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="gp">... </span>   <span class="kn">import</span> <span class="nn">numpy</span>
+<span class="gp">... </span>   <span class="kn">import</span> <span class="nn">pandas</span>
+<span class="gp">... </span>   <span class="kn">import</span> <span class="nn">sys</span>
+<span class="gp">... </span>   <span class="kn">import</span> <span class="nn">socket</span>
+<span class="gp">... </span>   <span class="k">return</span> <span class="p">[{</span><span class="s2">&quot;numpy&quot;</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">__version__</span><span class="p">,</span> <span class="s2">&quot;pandas&quot;</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">__version__</span><span class="p">,</span>
+<span class="gp">... </span>            <span class="s2">&quot;host&quot;</span><span class="p">:</span> <span class="n">socket</span><span class="o">.</span><span class="n">getfqdn</span><span class="p">(),</span> <span class="s2">&quot;python&quot;</span><span class="p">:</span> <span class="n">sys</span><span class="o">.</span><span class="n">executable</span><span class="p">}]</span>
+<span class="gp">...</span>
+<span class="gp">... </span><span class="n">rdd</span><span class="o">.</span><span class="n">mapPartitions</span><span class="p">(</span><span class="n">pandas_test</span><span class="p">)</span><span class="o">.</span><span class="n">collect</span><span class="p">()</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Copy of <cite>spark_conf</cite> input with added Yarn requirements.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#spylon.spark.launcher.SparkConfiguration" title="spylon.spark.launcher.SparkConfiguration">SparkConfiguration</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="spylon.spark.yarn_launcher.pyspark_conda_yarn_client">
+<code class="descclassname">spylon.spark.yarn_launcher.</code><code class="descname">pyspark_conda_yarn_client</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/spylon/spark/yarn_launcher.html#pyspark_conda_yarn_client"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spylon.spark.yarn_launcher.pyspark_conda_yarn_client" title="Permalink to this definition">¶</a></dt>
+<dd><p>Endpoint for starting a pyspark conda job using client-mode.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="spylon.spark.yarn_launcher.pyspark_conda_yarn_cluster">
+<code class="descclassname">spylon.spark.yarn_launcher.</code><code class="descname">pyspark_conda_yarn_cluster</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/spylon/spark/yarn_launcher.html#pyspark_conda_yarn_cluster"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spylon.spark.yarn_launcher.pyspark_conda_yarn_cluster" title="Permalink to this definition">¶</a></dt>
+<dd><p>Endpoint for starting a pyspark conda job using cluster-mode.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="spylon.spark.yarn_launcher.run_pyspark_yarn_client">
+<code class="descclassname">spylon.spark.yarn_launcher.</code><code class="descname">run_pyspark_yarn_client</code><span class="sig-paren">(</span><em>env_dir</em>, <em>env_name</em>, <em>env_archive</em>, <em>args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spylon/spark/yarn_launcher.html#run_pyspark_yarn_client"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spylon.spark.yarn_launcher.run_pyspark_yarn_client" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initializes the requires spark command line options on order to start a python job with the given python
+environment.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>env_dir</strong> (<em>str</em>) &#8211; </li>
+<li><strong>env_name</strong> (<em>str</em>) &#8211; </li>
+<li><strong>env_archive</strong> (<em>str</em>) &#8211; </li>
+<li><strong>args</strong> (<em>list</em>) &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">This call will spawn a child process and block until that is complete.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="spylon.spark.yarn_launcher.run_pyspark_yarn_cluster">
+<code class="descclassname">spylon.spark.yarn_launcher.</code><code class="descname">run_pyspark_yarn_cluster</code><span class="sig-paren">(</span><em>env_dir</em>, <em>env_name</em>, <em>env_archive</em>, <em>args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spylon/spark/yarn_launcher.html#run_pyspark_yarn_cluster"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spylon.spark.yarn_launcher.run_pyspark_yarn_cluster" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initializes the requires spark command line options on order to start a python job with the given python environment.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>env_dir</strong> (<em>str</em>) &#8211; </li>
+<li><strong>env_name</strong> (<em>str</em>) &#8211; </li>
+<li><strong>env_archive</strong> (<em>str</em>) &#8211; </li>
+<li><strong>args</strong> (<em>list</em>) &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">This call will spawn a child process and block until that is complete.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-spylon.spark">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-spylon.spark" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="spylon.simple.html" class="btn btn-neutral" title="spylon.simple package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, MaxPoint Interactive.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.2.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

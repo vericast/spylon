@@ -1,0 +1,828 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>spylon.spark.launcher &mdash; spylon 0.2.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="spylon 0.2.0 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> spylon
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.2.4+24.g1750d32
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">spylon</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../spylon.html">spylon package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../spylon.simple.html">spylon.simple package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../spylon.spark.html">spylon.spark package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../index.html">spylon</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      
+    <li>spylon.spark.launcher</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for spylon.spark.launcher</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright (c) 2016 MaxPoint Interactive, Inc.</span>
+<span class="c1">#</span>
+<span class="c1"># All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># Redistribution and use in source and binary forms, with or without modification, are permitted provided that the</span>
+<span class="c1"># following conditions are met:</span>
+<span class="c1">#</span>
+<span class="c1"># 1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following</span>
+<span class="c1">#    disclaimer.</span>
+<span class="c1">#</span>
+<span class="c1"># 2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following</span>
+<span class="c1">#    disclaimer in the documentation and/or other materials provided with the distribution.</span>
+<span class="c1">#</span>
+<span class="c1"># 3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote</span>
+<span class="c1">#    products derived from this software without specific prior written permission.</span>
+<span class="c1">#</span>
+<span class="c1"># THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND ANY EXPRESS OR IMPLIED WARRANTIES,</span>
+<span class="c1"># INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE</span>
+<span class="c1"># DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,</span>
+<span class="c1"># SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR</span>
+<span class="c1"># SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,</span>
+<span class="c1"># WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE</span>
+<span class="c1"># OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</span>
+
+<span class="sd">&quot;&quot;&quot;&quot;</span>
+<span class="sd">A better launcher from the python side for creating a pyspark context</span>
+
+<span class="sd">This allows you to much more easily customize the parameters that get passed to</span>
+<span class="sd">spark-submit that ultimately gets launched when instantiating a SparkContext.</span>
+
+<span class="sd">This does NOT require you to mangle sys.path yourself in order to be able to import</span>
+<span class="sd">pyspark.</span>
+
+<span class="sd">This is done via minRK&#39;s findspark library if you cannot import pyspark directly</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">print_function</span>
+
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">defaultdict</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">contextlib</span> <span class="k">import</span> <span class="n">contextmanager</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">from</span> <span class="nn">six</span> <span class="k">import</span> <span class="n">iteritems</span>
+<span class="kn">from</span> <span class="nn">spylon.common</span> <span class="k">import</span> <span class="n">as_iterable</span>
+
+<span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;spylon.spark.launcher&quot;</span><span class="p">)</span>
+
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">pyspark</span>
+    <span class="n">use_findspark</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;pyspark not importable.  using findspark instead&quot;</span><span class="p">)</span>
+    <span class="n">use_findspark</span> <span class="o">=</span> <span class="kc">True</span>
+
+<span class="k">if</span> <span class="n">use_findspark</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">findspark</span>
+
+    <span class="k">def</span> <span class="nf">init_spark</span><span class="p">(</span><span class="n">spark_home</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">spark_home</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">spark_home</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;SPARK_HOME&quot;</span><span class="p">]</span>
+        <span class="n">findspark</span><span class="o">.</span><span class="n">init_spark</span><span class="p">(</span><span class="n">spark_home</span><span class="o">=</span><span class="n">spark_home</span><span class="p">)</span>
+        <span class="kn">import</span> <span class="nn">pyspark</span>
+<span class="k">else</span><span class="p">:</span>
+<div class="viewcode-block" id="init_spark"><a class="viewcode-back" href="../../../spylon.spark.html#spylon.spark.launcher.init_spark">[docs]</a>    <span class="k">def</span> <span class="nf">init_spark</span><span class="p">(</span><span class="n">spark_home</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="c1"># Assumes all things are good.</span>
+        <span class="k">if</span> <span class="n">spark_home</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">spark_home</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;SPARK_HOME&quot;</span><span class="p">]</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;SPARK_HOME&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">spark_home</span></div>
+
+<span class="n">DEFAULT_SPARK_PACKAGES</span> <span class="o">=</span> <span class="p">()</span>
+<span class="n">DEFAULT_PYTHON</span> <span class="o">=</span> <span class="s1">&#39;python&#39;</span>
+<span class="n">_SPARK_INITIALIZED</span> <span class="o">=</span> <span class="kc">False</span>
+
+
+<div class="viewcode-block" id="keyfilter"><a class="viewcode-back" href="../../../spylon.spark.html#spylon.spark.launcher.keyfilter">[docs]</a><span class="k">def</span> <span class="nf">keyfilter</span><span class="p">(</span><span class="n">predicate</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Filter items in dictionary by key</span>
+
+<span class="sd">    &gt;&gt;&gt; iseven = lambda x: x % 2 == 0</span>
+<span class="sd">    &gt;&gt;&gt; d = {1: 2, 2: 3, 3: 4, 4: 5}</span>
+<span class="sd">    &gt;&gt;&gt; keyfilter(iseven, d)</span>
+<span class="sd">    {2: 3, 4: 5}</span>
+
+<span class="sd">    See Also:</span>
+<span class="sd">        valfilter</span>
+<span class="sd">        itemfilter</span>
+<span class="sd">        keymap</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">rv</span> <span class="o">=</span> <span class="n">factory</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">iteritems</span><span class="p">(</span><span class="n">d</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">predicate</span><span class="p">(</span><span class="n">k</span><span class="p">):</span>
+            <span class="n">rv</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+    <span class="k">return</span> <span class="n">rv</span></div>
+
+
+<span class="k">class</span> <span class="nc">_AttributedDict</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Utility attributed dictionary with Mappable semantics.</span>
+
+<span class="sd">    This has the option to delegate setting to another Mappable if needed.</span>
+<span class="sd">    This effectively allows us to do something like</span>
+
+<span class="sd">    x.foo.bar.baz = 7</span>
+
+<span class="sd">    and have that effectively turn into</span>
+
+<span class="sd">    y[&quot;foo.bar.baz&quot;] = 7</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">surrogate</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">attr</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_enable_surrogate</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_attr</span> <span class="o">=</span> <span class="n">attr</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_surrogate</span> <span class="o">=</span> <span class="n">surrogate</span>
+        <span class="k">if</span> <span class="n">init</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">init</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">init</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="bp">self</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_enable_surrogate</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="k">def</span> <span class="nf">__getstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__dict__</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__setstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">items</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">items</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__dict__</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">(</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__dict__</span><span class="o">.</span><span class="n">__repr__</span><span class="p">())</span>
+
+    <span class="k">def</span> <span class="nf">_repr_pretty_</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">cycle</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">IPython.lib.pretty</span> <span class="k">import</span> <span class="n">_dict_pprinter_factory</span>
+        <span class="n">fn</span> <span class="o">=</span> <span class="n">_dict_pprinter_factory</span><span class="p">(</span><span class="s1">&#39;{&#39;</span><span class="p">,</span> <span class="s1">&#39;}&#39;</span><span class="p">)</span>
+        <span class="n">excluded_fields</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;_enable_surrogate&#39;</span><span class="p">,</span> <span class="s1">&#39;_attr&#39;</span><span class="p">,</span> <span class="s1">&#39;_parent&#39;</span><span class="p">,</span> <span class="s1">&#39;_surrogate&#39;</span><span class="p">}</span>
+        <span class="n">fn</span><span class="p">(</span><span class="n">keyfilter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">k</span><span class="p">:</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">excluded_fields</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__dict__</span><span class="p">),</span> <span class="n">p</span><span class="p">,</span> <span class="n">cycle</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__dict__</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_enable_surrogate</span><span class="p">):</span>
+            <span class="nb">super</span><span class="p">(</span><span class="n">_AttributedDict</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__setattr__</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">full_key</span> <span class="o">=</span> <span class="p">[</span><span class="n">key</span><span class="p">]</span>
+            <span class="n">parent</span> <span class="o">=</span> <span class="bp">self</span>
+            <span class="k">while</span> <span class="n">parent</span><span class="p">:</span>
+                <span class="n">attr</span> <span class="o">=</span> <span class="n">parent</span><span class="o">.</span><span class="n">_attr</span>
+                <span class="k">if</span> <span class="n">attr</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">break</span>
+                <span class="n">full_key</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">attr</span><span class="p">)</span>
+                <span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span><span class="o">.</span><span class="n">_parent</span>
+
+            <span class="n">dotted_key</span> <span class="o">=</span> <span class="s1">&#39;.&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="n">full_key</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_surrogate</span><span class="p">[</span><span class="n">dotted_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="k">def</span> <span class="nf">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_surrogate</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+
+        <span class="n">old</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_enable_surrogate</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_enable_surrogate</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_enable_surrogate</span> <span class="o">=</span> <span class="n">old</span>
+
+    <span class="k">def</span> <span class="nf">__dir__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Hide the various surrogate methods we have on this so that we can get cleaner tab completion in IPython.</span>
+        <span class="n">excluded</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;_attr&#39;</span><span class="p">,</span> <span class="s1">&#39;_enable_surrogate&#39;</span><span class="p">,</span> <span class="s1">&#39;_parent&#39;</span><span class="p">,</span> <span class="s1">&#39;_surrogate&#39;</span><span class="p">]</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__dict__</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">e</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">x</span> <span class="k">if</span> <span class="n">e</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">excluded</span><span class="p">]</span>
+
+
+<span class="k">class</span> <span class="nc">_SparkProperty</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Utility class for representing a spark property with its documentation.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">propname</span><span class="p">,</span> <span class="n">default</span><span class="p">,</span> <span class="n">meaning</span><span class="p">,</span> <span class="n">active_value_dict</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">property_name</span> <span class="o">=</span> <span class="n">propname</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">default</span> <span class="o">=</span> <span class="n">default</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">meaning</span> <span class="o">=</span> <span class="n">meaning</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">active_value_dict</span> <span class="o">=</span> <span class="n">active_value_dict</span>
+
+    <span class="k">def</span> <span class="nf">__dir__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[]</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">property_name</span>
+
+    <span class="k">def</span> <span class="nf">_current_value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">propval</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">active_value_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">property_name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">propval</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s1">&#39;&lt;SET&gt;: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">propval</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s1">&#39;&lt;UNSET&gt;&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;SparkProperty </span><span class="si">{3}</span><span class="s2"> (</span><span class="si">{0!r}</span><span class="s2">, default=</span><span class="si">{1!r}</span><span class="s2">, meaning=</span><span class="si">{2!r}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">property_name</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">default</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">meaning</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_current_value</span><span class="p">()</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_repr_html_</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="kn">import</span> <span class="nn">cgi</span>
+        <span class="k">return</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        &lt;table&gt;&lt;tr&gt;</span>
+<span class="s2">            &lt;td&gt;</span><span class="si">{0}</span><span class="s2">&lt;/td&gt;</span>
+<span class="s2">            &lt;td&gt;</span><span class="si">{3}</span><span class="s2">&lt;/td&gt;</span>
+<span class="s2">            &lt;td&gt;</span><span class="si">{1}</span><span class="s2">&lt;/td&gt;</span>
+<span class="s2">            &lt;td&gt;</span><span class="si">{2}</span><span class="s2">&lt;/td&gt;</span>
+<span class="s2">        &lt;/tr&gt;&lt;/table&gt;</span>
+<span class="s2">        &quot;&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cgi</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">property_name</span><span class="p">),</span> <span class="n">cgi</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">default</span><span class="p">),</span> <span class="n">cgi</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">meaning</span><span class="p">),</span>
+                   <span class="n">cgi</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_current_value</span><span class="p">()))</span>
+
+
+<span class="k">def</span> <span class="nf">_tree</span><span class="p">():</span>
+    <span class="k">return</span> <span class="n">defaultdict</span><span class="p">(</span><span class="n">_tree</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_fetch_documentation</span><span class="p">(</span><span class="n">version</span><span class="p">,</span> <span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;https://spark.apache.org/docs&quot;</span><span class="p">):</span>
+    <span class="n">doc_urls</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s2">&quot;</span><span class="si">{base_url}</span><span class="s2">/</span><span class="si">{version}</span><span class="s2">/configuration.html&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;</span><span class="si">{base_url}</span><span class="s2">/</span><span class="si">{version}</span><span class="s2">/sql-programming-guide.html&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;</span><span class="si">{base_url}</span><span class="s2">/</span><span class="si">{version}</span><span class="s2">/monitoring.html&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;</span><span class="si">{base_url}</span><span class="s2">/</span><span class="si">{version}</span><span class="s2">/spark-standalone.html&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;</span><span class="si">{base_url}</span><span class="s2">/</span><span class="si">{version}</span><span class="s2">/running-on-mesos.html&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;</span><span class="si">{base_url}</span><span class="s2">/</span><span class="si">{version}</span><span class="s2">/running-on-yarn.html&quot;</span><span class="p">,</span>
+    <span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">url</span> <span class="ow">in</span> <span class="n">doc_urls</span><span class="p">:</span>
+        <span class="n">doc_url</span> <span class="o">=</span> <span class="n">url</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">version</span><span class="o">=</span><span class="n">version</span><span class="p">,</span> <span class="n">base_url</span><span class="o">=</span><span class="n">base_url</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Loading spark properties from </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">doc_url</span><span class="p">)</span>
+        <span class="n">dfs</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_html</span><span class="p">(</span><span class="n">doc_url</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">df</span> <span class="ow">in</span> <span class="n">dfs</span><span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;Property Name&quot;</span> <span class="ow">in</span> <span class="n">df</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="s1">&#39;Default&#39;</span> <span class="ow">in</span> <span class="n">df</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">pn</span><span class="p">,</span> <span class="n">default</span><span class="p">,</span> <span class="n">desc</span> <span class="ow">in</span> <span class="n">df</span><span class="p">[[</span><span class="s2">&quot;Property Name&quot;</span><span class="p">,</span> <span class="s2">&quot;Default&quot;</span><span class="p">,</span> <span class="s2">&quot;Meaning&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">itertuples</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+                    <span class="k">yield</span> <span class="n">pn</span><span class="p">,</span> <span class="n">default</span><span class="p">,</span> <span class="n">desc</span>
+
+
+<span class="k">def</span> <span class="nf">_save_documentation</span><span class="p">(</span><span class="n">version</span><span class="p">,</span> <span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;https://spark.apache.org/docs&quot;</span><span class="p">,</span> <span class="n">target_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Write the spark property documentation to a file</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">target_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">target_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">__file__</span><span class="p">)</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">target_dir</span><span class="p">,</span> <span class="s2">&quot;spark_properties_</span><span class="si">{}</span><span class="s2">.json&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">version</span><span class="p">)),</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
+        <span class="n">all_props</span> <span class="o">=</span> <span class="n">_fetch_documentation</span><span class="p">(</span><span class="n">version</span><span class="o">=</span><span class="n">version</span><span class="p">,</span> <span class="n">base_url</span><span class="o">=</span><span class="n">base_url</span><span class="p">)</span>
+        <span class="n">all_props</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">all_props</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">all_props_d</span> <span class="o">=</span> <span class="p">[{</span><span class="s2">&quot;property&quot;</span><span class="p">:</span> <span class="n">p</span><span class="p">,</span> <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="n">d</span><span class="p">,</span> <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="n">desc</span><span class="p">}</span> <span class="k">for</span> <span class="n">p</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">desc</span> <span class="ow">in</span> <span class="n">all_props</span><span class="p">]</span>
+        <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">all_props_d</span><span class="p">,</span> <span class="n">fp</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">_SparkConfHelper</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="s1">&#39;latest&#39;</span><span class="p">,</span> <span class="n">existing_conf</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">all_properties</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">if</span> <span class="n">existing_conf</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">existing_conf</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span>
+            <span class="n">conf</span> <span class="o">=</span> <span class="n">existing_conf</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">conf</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="c1"># Initializes a list of known properties for spark.  This is pretty high on magic</span>
+        <span class="n">allProps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_load_documentation</span><span class="p">(</span><span class="n">version</span><span class="o">=</span><span class="n">version</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_conf_dict</span> <span class="o">=</span> <span class="n">conf</span>
+
+        <span class="n">d</span> <span class="o">=</span> <span class="n">_tree</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">pn</span><span class="p">,</span> <span class="n">default</span><span class="p">,</span> <span class="n">meaning</span> <span class="ow">in</span> <span class="n">allProps</span><span class="p">:</span>
+            <span class="n">prop</span> <span class="o">=</span> <span class="n">_SparkProperty</span><span class="p">(</span><span class="n">pn</span><span class="p">,</span> <span class="n">default</span><span class="p">,</span> <span class="n">meaning</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_conf_dict</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">all_properties</span><span class="p">[</span><span class="n">pn</span><span class="p">]</span> <span class="o">=</span> <span class="n">prop</span>
+
+            <span class="n">parts</span> <span class="o">=</span> <span class="n">pn</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
+            <span class="n">node</span> <span class="o">=</span> <span class="n">d</span>
+            <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+                <span class="n">node</span> <span class="o">=</span> <span class="n">node</span><span class="p">[</span><span class="n">part</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+                <span class="n">node</span><span class="p">[</span><span class="n">parts</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="n">prop</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">continue</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spark</span> <span class="o">=</span> <span class="n">_AttributedDict</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">surrogate</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_conf_dict</span><span class="p">)</span><span class="o">.</span><span class="n">spark</span>
+
+    <span class="k">def</span> <span class="nf">_load_documentation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">version</span><span class="p">):</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">__file__</span><span class="p">),</span> <span class="s2">&quot;spark_properties_</span><span class="si">{version}</span><span class="s2">.json&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">version</span><span class="o">=</span><span class="n">version</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">fo</span><span class="p">:</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">fo</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+                    <span class="k">yield</span> <span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;property&quot;</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;default&quot;</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;description&quot;</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Fall back to fetching from Apache</span>
+            <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">_fetch_documentation</span><span class="p">(</span><span class="n">version</span><span class="o">=</span><span class="n">version</span><span class="p">):</span>
+                <span class="k">yield</span> <span class="n">r</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;ConfiguredProperties </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_conf_dict</span><span class="o">.</span><span class="n">__repr__</span><span class="p">())</span>
+
+    <span class="k">def</span> <span class="nf">_repr_pretty_</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">cycle</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">IPython.lib.pretty</span> <span class="k">import</span> <span class="n">_dict_pprinter_factory</span>
+        <span class="n">fn</span> <span class="o">=</span> <span class="n">_dict_pprinter_factory</span><span class="p">(</span><span class="s1">&#39;ConfiguredProperties {&#39;</span><span class="p">,</span> <span class="s1">&#39;}&#39;</span><span class="p">)</span>
+        <span class="n">fn</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_conf_dict</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">cycle</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_conf_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_conf_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set a particular spark property by the string key name.</span>
+
+<span class="sd">        This method allows chaining so that i can provide a similar feel to the standard Scala way of setting</span>
+<span class="sd">        multiple configurations</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        key : string</span>
+<span class="sd">        value : string</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        self</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_conf_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">set_if_unset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set a particular spark property by the string key name if it hasn&#39;t already been set.</span>
+
+<span class="sd">        This method allows chaining so that i can provide a similar feel to the standard Scala way of setting</span>
+<span class="sd">        multiple configurations</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        key : string</span>
+<span class="sd">        value : string</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        self</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_conf_dict</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+
+<div class="viewcode-block" id="SparkConfiguration"><a class="viewcode-back" href="../../../spylon.spark.html#spylon.spark.launcher.SparkConfiguration">[docs]</a><span class="k">class</span> <span class="nc">SparkConfiguration</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="n">_boolean_args</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;verbose&#39;</span><span class="p">}</span>
+    <span class="n">_spark_launcher_arg_names</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;master&#39;</span><span class="p">,</span> <span class="s1">&#39;deploy-mode&#39;</span><span class="p">,</span> <span class="s1">&#39;jars&#39;</span><span class="p">,</span> <span class="s1">&#39;packages&#39;</span><span class="p">,</span> <span class="s1">&#39;exclude-packages&#39;</span><span class="p">,</span> <span class="s1">&#39;repositories&#39;</span><span class="p">,</span> <span class="s1">&#39;py-files&#39;</span><span class="p">,</span> <span class="s1">&#39;files&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;properties-file&#39;</span><span class="p">,</span> <span class="s1">&#39;driver-memory&#39;</span><span class="p">,</span> <span class="s1">&#39;driver-java-options&#39;</span><span class="p">,</span> <span class="s1">&#39;driver-library-path&#39;</span><span class="p">,</span> <span class="s1">&#39;driver-class-path&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;driver-cores&#39;</span><span class="p">,</span> <span class="s1">&#39;executor-memory&#39;</span><span class="p">,</span> <span class="s1">&#39;proxy-user&#39;</span><span class="p">,</span> <span class="s1">&#39;verbose&#39;</span><span class="p">,</span> <span class="s1">&#39;executor-cores&#39;</span><span class="p">,</span>
+        <span class="c1"># Standalone and Mesos only</span>
+        <span class="s1">&#39;total-executor-cores&#39;</span><span class="p">,</span>
+        <span class="c1"># YARN only</span>
+        <span class="s1">&#39;driver-cores&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;queue&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;num-executors&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;archives&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;principal&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;keytab&#39;</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="n">_spark_launcher_arg_sep</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;driver-java-options&#39;</span><span class="p">:</span> <span class="s1">&#39; &#39;</span><span class="p">,</span>
+                               <span class="s1">&#39;driver-library-path&#39;</span><span class="p">:</span> <span class="s1">&#39;:&#39;</span><span class="p">,</span>
+                               <span class="s1">&#39;driver-class-path&#39;</span><span class="p">:</span> <span class="s1">&#39;:&#39;</span><span class="p">}</span>
+
+    <span class="n">_default_spark_conf</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">_default_spark_launcher_args</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="kn">import</span> <span class="nn">textwrap</span>
+        <span class="k">return</span> <span class="n">textwrap</span><span class="o">.</span><span class="n">dedent</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        SparkConfiguration:</span>
+<span class="s2">            launcher_arguments: </span><span class="si">{0}</span><span class="s2"></span>
+<span class="s2">            conf: </span><span class="si">{1!r}</span><span class="s2"></span>
+<span class="s2">        &quot;&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_spark_launcher_args</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_spark_conf_helper</span><span class="p">)</span>
+                               <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_repr_pretty_</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">cycle</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Pretty printer for the spark cnofiguration&quot;&quot;&quot;</span>
+        <span class="kn">from</span> <span class="nn">IPython.lib.pretty</span> <span class="k">import</span> <span class="n">RepresentationPrinter</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">RepresentationPrinter</span><span class="p">)</span>
+
+        <span class="n">p</span><span class="o">.</span><span class="n">begin_group</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;SparkConfiguration(&quot;</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">kv</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">do_comma</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+            <span class="n">p</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+            <span class="n">p</span><span class="o">.</span><span class="n">pretty</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">do_comma</span><span class="p">:</span>
+                <span class="n">p</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="s2">&quot;, &quot;</span><span class="p">)</span>
+            <span class="n">p</span><span class="o">.</span><span class="n">breakable</span><span class="p">()</span>
+
+        <span class="n">kv</span><span class="p">(</span><span class="s2">&quot;launcher_arguments: &quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_spark_launcher_args</span><span class="p">)</span>
+        <span class="n">kv</span><span class="p">(</span><span class="s2">&quot;conf: &quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_spark_conf_helper</span><span class="p">)</span>
+        <span class="n">kv</span><span class="p">(</span><span class="s2">&quot;spark_home: &quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">spark_home</span><span class="p">)</span>
+        <span class="n">kv</span><span class="p">(</span><span class="s2">&quot;python_path: &quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_python_path</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+
+        <span class="n">p</span><span class="o">.</span><span class="n">end_group</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;)&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">python_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">spark_conf</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">spark_launcher_args</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_spark_launcher_args</span> <span class="o">=</span> <span class="n">spark_launcher_args</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_default_spark_launcher_args</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_python_path</span> <span class="o">=</span> <span class="n">python_path</span> <span class="ow">or</span> <span class="s2">&quot;python&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_spark_home</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_spark_conf_helper</span> <span class="o">=</span> <span class="n">_SparkConfHelper</span><span class="p">(</span><span class="n">existing_conf</span><span class="o">=</span><span class="n">spark_conf</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_default_spark_conf</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__dir__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Since we have some parameters that are special we want to allow pulling them out for directory listing&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span>
+            <span class="nb">dir</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
+            <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__dict__</span><span class="p">)</span>
+            <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">_</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_spark_launcher_arg_names</span><span class="p">)</span>
+        <span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;SetAttr for setting spark-submit launcher arguments&quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="nb">str</span><span class="p">))</span>
+        <span class="n">spark_arg</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">SparkConfiguration</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__setattr__</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">spark_arg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_spark_launcher_arg_names</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_spark_launcher_args</span><span class="p">[</span><span class="n">spark_arg</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="k">def</span> <span class="nf">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="nb">str</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">SparkConfiguration</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__getattribute__</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="n">spark_arg</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">spark_arg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_spark_launcher_arg_names</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_spark_launcher_args</span><span class="p">[</span><span class="n">spark_arg</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_spark_conf</span><span class="o">.</span><span class="n">__setitem__</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_spark_conf</span><span class="o">.</span><span class="n">__getitem__</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_set_launcher_property</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">driver_arg_key</span><span class="p">,</span> <span class="n">spark_property_key</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Handler for a special property that exists in both the launcher arguments and the spark conf dictionary.</span>
+
+<span class="sd">        This will use the launcher argument if set falling back to the spark conf argument.  If neither are set this is</span>
+<span class="sd">        a noop (which means that the standard spark defaults will be used).</span>
+
+<span class="sd">        Since `spark.driver.memory` (eg) can be set erroneously by a user on the standard spark conf, we want to be able</span>
+<span class="sd">        to use that value if present. If we do not have this fall-back behavior then these settings are IGNORED when</span>
+<span class="sd">        starting up the spark driver JVM under client mode (standalone, local, yarn-client or mesos-client).</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        driver_arg_key : string</span>
+<span class="sd">            Eg: &quot;driver-memory&quot;</span>
+<span class="sd">        spark_property_key : string</span>
+<span class="sd">            Eg: &quot;spark.driver.memory&quot;</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_spark_launcher_args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">driver_arg_key</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">_conf_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">spark_property_key</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">value</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_spark_launcher_args</span><span class="p">[</span><span class="n">driver_arg_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">conf</span><span class="p">[</span><span class="n">spark_property_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="k">def</span> <span class="nf">_set_environment_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initializes the correct environment variables for spark&quot;&quot;&quot;</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># special case for driver JVM properties.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_launcher_property</span><span class="p">(</span><span class="s2">&quot;driver-memory&quot;</span><span class="p">,</span> <span class="s2">&quot;spark.driver.memory&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_launcher_property</span><span class="p">(</span><span class="s2">&quot;driver-library-path&quot;</span><span class="p">,</span> <span class="s2">&quot;spark.driver.extraLibraryPath&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_launcher_property</span><span class="p">(</span><span class="s2">&quot;driver-class-path&quot;</span><span class="p">,</span> <span class="s2">&quot;spark.driver.extraClassPath&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_launcher_property</span><span class="p">(</span><span class="s2">&quot;driver-java-options&quot;</span><span class="p">,</span> <span class="s2">&quot;spark.driver.extraJavaOptions&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_launcher_property</span><span class="p">(</span><span class="s2">&quot;executor-memory&quot;</span><span class="p">,</span> <span class="s2">&quot;spark.executor.memory&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_launcher_property</span><span class="p">(</span><span class="s2">&quot;executor-cores&quot;</span><span class="p">,</span> <span class="s2">&quot;spark.executor.cores&quot;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_spark_launcher_args</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">val</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">val</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">as_iterable</span><span class="p">(</span><span class="n">val</span><span class="p">))</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">val</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_boolean_args</span><span class="p">:</span>
+                    <span class="n">cmd</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;--</span><span class="si">{key}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">sep</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_spark_launcher_arg_sep</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="s1">&#39;,&#39;</span><span class="p">)</span>
+                    <span class="n">cmd</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;--</span><span class="si">{key}</span><span class="s1"> </span><span class="si">{val}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="o">=</span><span class="n">sep</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">val</span><span class="p">)))</span>
+
+        <span class="n">cmd</span> <span class="o">+=</span> <span class="p">[</span><span class="s1">&#39;pyspark-shell&#39;</span><span class="p">]</span>
+        <span class="n">cmd_line</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">cmd</span> <span class="k">if</span> <span class="n">x</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;PYSPARK_SUBMIT_ARGS&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cmd_line</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;spark-submit arguments: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">cmd_line</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_init_spark</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initializes spark so that pyspark is importable.  This also sets up the required environment variables</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">global</span> <span class="n">_SPARK_INITIALIZED</span>
+        <span class="n">spark_home</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">spark_home</span>
+        <span class="n">python_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_python_path</span>
+
+        <span class="k">if</span> <span class="n">use_findspark</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">_SPARK_INITIALIZED</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">spark_home</span> <span class="o">==</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;SPARK_HOME&quot;</span><span class="p">]:</span>
+                    <span class="c1"># matches with already initialized</span>
+                    <span class="k">pass</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># findspark adds two path to the search path.</span>
+                    <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                    <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                    <span class="n">findspark</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">spark_home</span><span class="o">=</span><span class="n">spark_home</span><span class="p">,</span> <span class="n">edit_rc</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">edit_profile</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">python_path</span><span class="o">=</span><span class="n">python_path</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">findspark</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">spark_home</span><span class="o">=</span><span class="n">spark_home</span><span class="p">,</span> <span class="n">edit_rc</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">edit_profile</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">python_path</span><span class="o">=</span><span class="n">python_path</span><span class="p">)</span>
+
+        <span class="n">_SPARK_INITIALIZED</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_environment_variables</span><span class="p">()</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">conf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_spark_conf_helper</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">launcher_args</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_spark_launcher_args</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">spark_home</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_spark_home</span>
+
+<div class="viewcode-block" id="SparkConfiguration.spark_context"><a class="viewcode-back" href="../../../spylon.spark.html#spylon.spark.launcher.SparkConfiguration.spark_context">[docs]</a>    <span class="k">def</span> <span class="nf">spark_context</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">application_name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create a spark context given the parameters configured in this class.</span>
+
+<span class="sd">        The caller is responsible for calling ``.close`` on the resulting spark context</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        application_name : string</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        sc : SparkContext</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># initialize the spark configuration</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_init_spark</span><span class="p">()</span>
+        <span class="kn">import</span> <span class="nn">pyspark</span>
+        <span class="kn">import</span> <span class="nn">pyspark.sql</span>
+
+        <span class="c1"># initialize conf</span>
+        <span class="n">spark_conf</span> <span class="o">=</span> <span class="n">pyspark</span><span class="o">.</span><span class="n">SparkConf</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_spark_conf_helper</span><span class="o">.</span><span class="n">_conf_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">spark_conf</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Starting SparkContext&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">pyspark</span><span class="o">.</span><span class="n">SparkContext</span><span class="p">(</span><span class="n">appName</span><span class="o">=</span><span class="n">application_name</span><span class="p">,</span> <span class="n">conf</span><span class="o">=</span><span class="n">spark_conf</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SparkConfiguration.sql_context"><a class="viewcode-back" href="../../../spylon.spark.html#spylon.spark.launcher.SparkConfiguration.sql_context">[docs]</a>    <span class="k">def</span> <span class="nf">sql_context</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">application_name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create a spark context given the parameters configured in this class.</span>
+
+<span class="sd">        The caller is responsible for calling ``.close`` on the resulting spark context</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        application_name : string</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        sc : SparkContext</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">sc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">spark_context</span><span class="p">(</span><span class="n">application_name</span><span class="p">)</span>
+        <span class="kn">import</span> <span class="nn">pyspark</span>
+        <span class="n">sqlContext</span> <span class="o">=</span> <span class="n">pyspark</span><span class="o">.</span><span class="n">SQLContext</span><span class="p">(</span><span class="n">sc</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">sc</span><span class="p">,</span> <span class="n">sqlContext</span><span class="p">)</span></div></div>
+
+
+<span class="n">default_configuration</span> <span class="o">=</span> <span class="n">SparkConfiguration</span><span class="p">()</span>
+
+
+<span class="nd">@contextmanager</span>
+<div class="viewcode-block" id="with_spark_context"><a class="viewcode-back" href="../../../spylon.spark.html#spylon.spark.launcher.with_spark_context">[docs]</a><span class="k">def</span> <span class="nf">with_spark_context</span><span class="p">(</span><span class="n">application_name</span><span class="p">,</span> <span class="n">conf</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Context manager for a spark context</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    application_name : string</span>
+<span class="sd">    conf : string, optional</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    sc : SparkContext</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    -------</span>
+<span class="sd">    Used within a context manager</span>
+<span class="sd">    &gt;&gt;&gt; with with_spark_context(&quot;MyApplication&quot;) as sc:</span>
+<span class="sd">    ...     # Your Code here</span>
+<span class="sd">    ...     pass</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">conf</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">conf</span> <span class="o">=</span> <span class="n">default_configuration</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">conf</span><span class="p">,</span> <span class="n">SparkConfiguration</span><span class="p">)</span>
+
+    <span class="n">sc</span> <span class="o">=</span> <span class="n">conf</span><span class="o">.</span><span class="n">spark_context</span><span class="p">(</span><span class="n">application_name</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">yield</span> <span class="n">sc</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="n">sc</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span></div>
+
+
+<span class="nd">@contextmanager</span>
+<div class="viewcode-block" id="with_sql_context"><a class="viewcode-back" href="../../../spylon.spark.html#spylon.spark.launcher.with_sql_context">[docs]</a><span class="k">def</span> <span class="nf">with_sql_context</span><span class="p">(</span><span class="n">application_name</span><span class="p">,</span> <span class="n">conf</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Context manager for a spark context</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    sc : SparkContext</span>
+<span class="sd">    sql_context: SQLContext</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    -------</span>
+<span class="sd">    Used within a context manager</span>
+<span class="sd">    &gt;&gt;&gt; with with_sql_context(&quot;MyApplication&quot;) as (sc, sql_context):</span>
+<span class="sd">    ...     import pyspark</span>
+<span class="sd">    ...     # Do stuff</span>
+<span class="sd">    ...     pass</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">conf</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">conf</span> <span class="o">=</span> <span class="n">default_configuration</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">conf</span><span class="p">,</span> <span class="n">SparkConfiguration</span><span class="p">)</span>
+
+    <span class="n">sc</span> <span class="o">=</span> <span class="n">conf</span><span class="o">.</span><span class="n">spark_context</span><span class="p">(</span><span class="n">application_name</span><span class="p">)</span>
+    <span class="kn">import</span> <span class="nn">pyspark.sql</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">yield</span> <span class="n">sc</span><span class="p">,</span> <span class="n">pyspark</span><span class="o">.</span><span class="n">sql</span><span class="o">.</span><span class="n">SQLContext</span><span class="p">(</span><span class="n">sc</span><span class="p">)</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="n">sc</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, MaxPoint Interactive.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'0.2.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

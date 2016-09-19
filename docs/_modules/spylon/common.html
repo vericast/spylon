@@ -1,0 +1,386 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>spylon.common &mdash; spylon 0.2.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="spylon 0.2.0 documentation" href="../../index.html"/>
+        <link rel="up" title="Module code" href="../index.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> spylon
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.2.4+24.g1750d32
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">spylon</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../spylon.html">spylon package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../spylon.simple.html">spylon.simple package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../spylon.spark.html">spylon.spark package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../index.html">spylon</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+      
+    <li>spylon.common</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for spylon.common</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright (c) 2016 MaxPoint Interactive, Inc.</span>
+<span class="c1">#</span>
+<span class="c1"># All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># Redistribution and use in source and binary forms, with or without modification, are permitted provided that the</span>
+<span class="c1"># following conditions are met:</span>
+<span class="c1">#</span>
+<span class="c1"># 1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following</span>
+<span class="c1">#    disclaimer.</span>
+<span class="c1">#</span>
+<span class="c1"># 2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following</span>
+<span class="c1">#    disclaimer in the documentation and/or other materials provided with the distribution.</span>
+<span class="c1">#</span>
+<span class="c1"># 3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote</span>
+<span class="c1">#    products derived from this software without specific prior written permission.</span>
+<span class="c1">#</span>
+<span class="c1"># THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND ANY EXPRESS OR IMPLIED WARRANTIES,</span>
+<span class="c1"># INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE</span>
+<span class="c1"># DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,</span>
+<span class="c1"># SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR</span>
+<span class="c1"># SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,</span>
+<span class="c1"># WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE</span>
+<span class="c1"># OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">absolute_import</span>
+<span class="kn">from</span> <span class="nn">abc</span> <span class="k">import</span> <span class="n">ABCMeta</span><span class="p">,</span> <span class="n">abstractmethod</span><span class="p">,</span> <span class="n">abstractproperty</span>
+<span class="kn">from</span> <span class="nn">six</span> <span class="k">import</span> <span class="n">add_metaclass</span><span class="p">,</span> <span class="n">string_types</span>
+
+
+<div class="viewcode-block" id="as_iterable"><a class="viewcode-back" href="../../spylon.html#spylon.common.as_iterable">[docs]</a><span class="k">def</span> <span class="nf">as_iterable</span><span class="p">(</span><span class="n">iterable_or_scalar</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Utility for converting an object to an iterable.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    iterable_or_scalar : anything</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    l : iterable</span>
+<span class="sd">        If `obj` was None, return the empty tuple.</span>
+<span class="sd">        If `obj` was not iterable returns a 1-tuple containing `obj`.</span>
+<span class="sd">        Otherwise return `obj`</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Although both string types and dictionaries are iterable in Python, we are treating them as not iterable in this</span>
+<span class="sd">    method.  Thus, as_iterable(dict()) returns (dict, ) and as_iterable(string) returns (string, )</span>
+
+<span class="sd">    Exammples</span>
+<span class="sd">    ---------</span>
+<span class="sd">    &gt;&gt;&gt; as_iterable(1)</span>
+<span class="sd">    (1,)</span>
+<span class="sd">    &gt;&gt;&gt; as_iterable([1, 2, 3])</span>
+<span class="sd">    [1, 2, 3]</span>
+<span class="sd">    &gt;&gt;&gt; as_iterable(&quot;my string&quot;)</span>
+<span class="sd">    (&quot;my string&quot;, )</span>
+<span class="sd">    &gt;&gt;&gt; as_iterable({&#39;a&#39;: 1})</span>
+<span class="sd">    ({&#39;a&#39;: 1}, )</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">iterable_or_scalar</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">()</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">iterable_or_scalar</span><span class="p">,</span> <span class="n">string_types</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">iterable_or_scalar</span><span class="p">,)</span>
+    <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">iterable_or_scalar</span><span class="p">,</span> <span class="s2">&quot;__iter__&quot;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">iterable_or_scalar</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">iterable_or_scalar</span><span class="p">,)</span></div>
+
+<span class="c1"># preserve backwards compatibility</span>
+<span class="n">_as_iterable</span> <span class="o">=</span> <span class="n">as_iterable</span>
+
+<span class="nd">@add_metaclass</span><span class="p">(</span><span class="n">ABCMeta</span><span class="p">)</span>
+<div class="viewcode-block" id="JVMHelpers"><a class="viewcode-back" href="../../spylon.html#spylon.common.JVMHelpers">[docs]</a><span class="k">class</span> <span class="nc">JVMHelpers</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;General purpose helpers for the jvm and scala.</span>
+
+<span class="sd">    This requires that you already have a live jvm somewhere via py4j</span>
+
+<span class="sd">    In order to creaete an instance of this you need to implement methods to provide a</span>
+
+<span class="sd">    * jvm : jvm</span>
+<span class="sd">    * gateway : py4j gateway bridge</span>
+<span class="sd">    * classloader : the java classloader needed to load your classes.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_scala_package_objects</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_scala_objects</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="nd">@abstractproperty</span>
+    <span class="k">def</span> <span class="nf">jvm</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Py4J jvm mirror&quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+
+    <span class="nd">@abstractproperty</span>
+    <span class="k">def</span> <span class="nf">gateway</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Py4J gateway&quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+
+    <span class="nd">@abstractproperty</span>
+    <span class="k">def</span> <span class="nf">classloader</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Java classloader to use to create scala instances&quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+
+<div class="viewcode-block" id="JVMHelpers.import_scala_package_object"><a class="viewcode-back" href="../../spylon.html#spylon.common.JVMHelpers.import_scala_package_object">[docs]</a>    <span class="k">def</span> <span class="nf">import_scala_package_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">package_name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Imports a scala package object by name.</span>
+
+<span class="sd">        This is done by using reflection on the underlying Java class that is created by Scaa.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; instance.import_scala_package_object(&quot;org.apache.spark.sql&quot;)</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">package_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scala_package_objects</span><span class="p">:</span>
+            <span class="n">jpackage</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">classloader</span><span class="o">.</span><span class="n">loadClass</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">.package$&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">package_name</span><span class="p">))</span>
+            <span class="n">j_emptyClassArray</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gateway</span><span class="o">.</span><span class="n">gw</span><span class="o">.</span><span class="n">new_array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gateway</span><span class="o">.</span><span class="n">jvm</span><span class="o">.</span><span class="n">Class</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="n">j_emptyObjectArray</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gateway</span><span class="o">.</span><span class="n">new_array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gateway</span><span class="o">.</span><span class="n">jvm</span><span class="o">.</span><span class="n">Object</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="n">jconst</span> <span class="o">=</span> <span class="n">jpackage</span><span class="o">.</span><span class="n">getDeclaredConstructor</span><span class="p">(</span><span class="n">j_emptyClassArray</span><span class="p">)</span>
+            <span class="n">jconst</span><span class="o">.</span><span class="n">setAccessible</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">instance</span> <span class="o">=</span> <span class="n">jconst</span><span class="o">.</span><span class="n">newInstance</span><span class="p">(</span><span class="n">j_emptyObjectArray</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_scala_package_objects</span><span class="p">[</span><span class="n">package_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">instance</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scala_package_objects</span><span class="p">[</span><span class="n">package_name</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="JVMHelpers.import_scala_object"><a class="viewcode-back" href="../../spylon.html#spylon.common.JVMHelpers.import_scala_object">[docs]</a>    <span class="k">def</span> <span class="nf">import_scala_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">object_name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Imports a scala object by name.</span>
+
+<span class="sd">        Scala objects are singletons so this will either import or retrive one from the cache.</span>
+
+<span class="sd">        Scala case classes are also both a Class and an Object so if you want to retrieve the Scala</span>
+<span class="sd">        thing that you can call ``obj.apply(..)``` on you want to use this.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">object_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scala_objects</span><span class="p">:</span>
+            <span class="n">jpackage</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">classloader</span><span class="o">.</span><span class="n">loadClass</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">$&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">object_name</span><span class="p">))</span>
+            <span class="n">j_emptyClassArray</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gateway</span><span class="o">.</span><span class="n">new_array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gateway</span><span class="o">.</span><span class="n">jvm</span><span class="o">.</span><span class="n">Class</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="n">j_emptyObjectArray</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gateway</span><span class="o">.</span><span class="n">new_array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gateway</span><span class="o">.</span><span class="n">jvm</span><span class="o">.</span><span class="n">Object</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="n">jconst</span> <span class="o">=</span> <span class="n">jpackage</span><span class="o">.</span><span class="n">getDeclaredConstructor</span><span class="p">(</span><span class="n">j_emptyClassArray</span><span class="p">)</span>
+            <span class="n">jconst</span><span class="o">.</span><span class="n">setAccessible</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">instance</span> <span class="o">=</span> <span class="n">jconst</span><span class="o">.</span><span class="n">newInstance</span><span class="p">(</span><span class="n">j_emptyObjectArray</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_scala_objects</span><span class="p">[</span><span class="n">object_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">instance</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scala_objects</span><span class="p">[</span><span class="n">object_name</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="JVMHelpers.to_scala_seq"><a class="viewcode-back" href="../../spylon.html#spylon.common.JVMHelpers.to_scala_seq">[docs]</a>    <span class="k">def</span> <span class="nf">to_scala_seq</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">list_like</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Converts a python list-like object to a scala.collection.immutable.Seq.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">l</span> <span class="o">=</span> <span class="n">as_iterable</span><span class="p">(</span><span class="n">list_like</span><span class="p">)</span>
+        <span class="n">converters</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">import_scala_object</span><span class="p">(</span><span class="s2">&quot;scala.collection.JavaConverters&quot;</span><span class="p">)</span>
+        <span class="c1"># Since py4j already converts a python list to a Java.util.List&lt;&gt; we can make use of the</span>
+        <span class="c1"># scala converters</span>
+        <span class="k">return</span> <span class="n">converters</span><span class="o">.</span><span class="n">asScalaBufferConverter</span><span class="p">(</span><span class="n">l</span><span class="p">)</span><span class="o">.</span><span class="n">asScala</span><span class="p">()</span><span class="o">.</span><span class="n">toSeq</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="JVMHelpers.to_scala_map"><a class="viewcode-back" href="../../spylon.html#spylon.common.JVMHelpers.to_scala_map">[docs]</a>    <span class="k">def</span> <span class="nf">to_scala_map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dict_like</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Converts a python dict to a scala.collection.immutable.Map</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">converters</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">import_scala_object</span><span class="p">(</span><span class="s2">&quot;scala.collection.JavaConverters&quot;</span><span class="p">)</span>
+        <span class="c1"># Since py4j already converts a python list to a Java.util.List&lt;&gt; we can make use of the</span>
+        <span class="c1"># scala converters</span>
+        <span class="k">return</span> <span class="n">converters</span><span class="o">.</span><span class="n">mapAsScalaMapConverter</span><span class="p">(</span><span class="n">dict_like</span><span class="p">)</span><span class="o">.</span><span class="n">asScala</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="JVMHelpers.to_scala_list"><a class="viewcode-back" href="../../spylon.html#spylon.common.JVMHelpers.to_scala_list">[docs]</a>    <span class="k">def</span> <span class="nf">to_scala_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">list_like</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Converts a python list-like to a scala.collection.List</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_scala_seq</span><span class="p">(</span><span class="n">list_like</span><span class="p">)</span><span class="o">.</span><span class="n">toList</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="JVMHelpers.get_classtag"><a class="viewcode-back" href="../../spylon.html#spylon.common.JVMHelpers.get_classtag">[docs]</a>    <span class="k">def</span> <span class="nf">get_classtag</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">java_class_name</span><span class="p">):</span>
+        <span class="n">jclassTagO</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">import_scala_object</span><span class="p">(</span><span class="s2">&quot;scala.reflect.ClassTag&quot;</span><span class="p">)</span>
+        <span class="n">klass</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">classloader</span><span class="o">.</span><span class="n">loadClass</span><span class="p">(</span><span class="n">java_class_name</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">jclassTagO</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">klass</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="JVMHelpers.to_scala_array"><a class="viewcode-back" href="../../spylon.html#spylon.common.JVMHelpers.to_scala_array">[docs]</a>    <span class="k">def</span> <span class="nf">to_scala_array</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">list_like</span><span class="p">,</span> <span class="n">java_class_name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Converts a python list-like to a a scala Array</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        list_like : list</span>
+<span class="sd">        java_class_name : str</span>
+<span class="sd">            Java class name to use for the conversion</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        &gt;&gt;&gt; c.to_scala_array([1,2,3,4], &quot;java.lang.Integer&quot;)</span>
+<span class="sd">        ...</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">jseq</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_scala_seq</span><span class="p">(</span><span class="n">list_like</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">jseq</span><span class="o">.</span><span class="n">toArray</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_classtag</span><span class="p">(</span><span class="n">java_class_name</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="JVMHelpers.to_scala_set"><a class="viewcode-back" href="../../spylon.html#spylon.common.JVMHelpers.to_scala_set">[docs]</a>    <span class="k">def</span> <span class="nf">to_scala_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">set_like</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Converts a python set-like to a scala.collection.Set</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">converters</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">import_scala_object</span><span class="p">(</span><span class="s2">&quot;scala.collection.JavaConverters&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">converters</span><span class="o">.</span><span class="n">asScalaSetConverter</span><span class="p">(</span><span class="n">set_like</span><span class="p">)</span><span class="o">.</span><span class="n">asScala</span><span class="p">()</span><span class="o">.</span><span class="n">toSet</span><span class="p">()</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, MaxPoint Interactive.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'0.2.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
