@@ -82,9 +82,9 @@ def _spark_progress_thread_worker(sc, timedelta_formatter=_pretty_time_delta, ba
 
     status = sc.statusTracker()
     while True:
-        # SparkContext has been stopped, terminate thread.
+        # SparkContext has been stopped, terminate loop.
         if sc._jsc is None:
-            return
+            break
         stage_ids = status.getActiveStageIds()
         progressbar_list = []
         # Only show first 3
@@ -117,6 +117,7 @@ def _spark_progress_thread_worker(sc, timedelta_formatter=_pretty_time_delta, ba
             last_status = new_status
         time.sleep(sleep_time)
 
+    # unset the progress bar global.
     _progressbar_thread_started = False
 
 
