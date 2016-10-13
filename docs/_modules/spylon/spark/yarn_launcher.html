@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.2.5+2.gc2b4d1c
+                0.2.5+5.gba54bdb
               </div>
             
           
@@ -159,6 +159,8 @@
 
 
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">absolute_import</span>
+
+<span class="kn">import</span> <span class="nn">copy</span>
 <span class="kn">import</span> <span class="nn">subprocess</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">sys</span>
@@ -221,7 +223,7 @@
     <span class="k">return</span> <span class="n">output_filename</span></div>
 
 
-<span class="c1">#TODO : move this into the SparkConfiguration object</span>
+<span class="c1"># TODO : move this into the SparkConfiguration object</span>
 <div class="viewcode-block" id="prepare_pyspark_yarn_interactive"><a class="viewcode-back" href="../../../spylon.spark.html#spylon.spark.yarn_launcher.prepare_pyspark_yarn_interactive">[docs]</a><span class="k">def</span> <span class="nf">prepare_pyspark_yarn_interactive</span><span class="p">(</span><span class="n">env_name</span><span class="p">,</span> <span class="n">env_archive</span><span class="p">,</span> <span class="n">spark_conf</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This ASSUMES that you have a compatible python environment running on the other side.</span>
