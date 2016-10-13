@@ -24,6 +24,8 @@
 
 
 from __future__ import print_function, absolute_import
+
+import copy
 import subprocess
 import os
 import sys
@@ -86,7 +88,7 @@ def archive_dir(env_dir):
     return output_filename
 
 
-#TODO : move this into the SparkConfiguration object
+# TODO : move this into the SparkConfiguration object
 def prepare_pyspark_yarn_interactive(env_name, env_archive, spark_conf):
     """
     This ASSUMES that you have a compatible python environment running on the other side.
