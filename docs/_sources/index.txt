@@ -1,7 +1,7 @@
 Spylon
 ======
 
-|Version_Status| |Travis| Conda Forge |Conda_Forge| |Docs|
+|Version_Status| |Travis| |Conda_Forge| |Docs|
 
 A set of compatibility routines for making it easier to interact with Scala from
 Python.
@@ -14,14 +14,14 @@ thrift) which increase system complexity.
 You don't have to.
 
 Using py4j and Spylon you can readily interact with Scala code for more
-performance critical sections of your whilst leaving the rest unmodified.
+performance critical sections of your code whilst leaving the rest unmodified.
 
 Alternatively you can use it as a bridge to allow building wrappers for a
 Scala/Java codebase.
 
 Installation
 ------------
-Spylon can be installed either from pip or conda-forge
+Spylon can be installed either from pip or conda-forge.
 
 Usage
 -----
