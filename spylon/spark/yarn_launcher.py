@@ -273,8 +273,10 @@ def launcher(deploy_mode, args, working_dir=".", cleanup=True):
             z.extractall(working_dir)
             archive_filenames = z.namelist()
 
+        abs_archive_filenames = [os.path.abspath(os.path.join(working_dir, f)) for f in archive_filenames]
+
         def cleanup():
-            for fn in [os.path.abspath(os.path.join(working_dir, f)) for f in archive_filenames]:
+            for fn in abs_archive_filenames:
                 os.unlink(fn)
 
         cleanup_functions.append(cleanup)
@@ -347,7 +349,11 @@ def launcher(deploy_mode, args, working_dir=".", cleanup=True):
     finally:
         if cleanup:
             for fn in cleanup_functions:
-                fn()
+                try:
+                    fn()
+                except:
+                    import traceback
+                    traceback.print_exc()
 
 
 def _fix_permissions(env_dir):
