@@ -345,8 +345,9 @@ def launcher(deploy_mode, args, working_dir=".", cleanup=True):
         elif deploy_mode == "cluster":
             run_pyspark_yarn_cluster(**args)
     finally:
-        for fn in cleanup_functions:
-            fn()
+        if cleanup:
+            for fn in cleanup_functions:
+                fn()
 
 
 def _fix_permissions(env_dir):
