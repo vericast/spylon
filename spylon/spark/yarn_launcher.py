@@ -35,6 +35,7 @@ import zipfile
 import logging
 import pprint
 import platform
+import shutil
 
 __author__ = 'mniekerk'
 
@@ -239,16 +240,18 @@ def run_pyspark_yarn_cluster(env_dir, env_name, env_archive, args):
     subprocess.check_call([spark_submit] + prepend_args + args, env=env)
 
 
-def launcher(deploy_mode, args, working_dir="."):
+def launcher(deploy_mode, args, working_dir=".", cleanup=True):
     """Initializes arguments and starts up pyspark with the correct deploy mode and environment.
 
     Parameters
     ----------
     deploy_mode : {"client", "cluster"}
     args : str
-        arguments to pass onwards to spark submit
-    working_dir : str
-        path to working directory to use for creating conda environments
+        Arguments to pass onwards to spark submit.
+    working_dir : str, optional
+        Path to working directory to use for creating conda environments.  Defaults to the current working directory.
+    cleanup : bool, optional
+        Clean up extracted / generated files.  This defaults to true since conda environments can be rather large.
 
     Returns
     -------
@@ -262,6 +265,26 @@ def launcher(deploy_mode, args, working_dir="."):
     i = spark_args.index("--conda-env")
     conda_env = spark_args[i+1]
     spark_args = spark_args[:i] + spark_args[i+2:]
+    cleanup_functions = []
+
+    def extract_local_archive(_env_name, _local_archive):
+        """Helper internal function for extracting a zipfile and ensure that a cleanup is queued."""
+        with zipfile.ZipFile(_local_archive) as z:
+            z.extractall(working_dir)
+            archive_filenames = z.namelist()
+
+        abs_archive_filenames = [os.path.abspath(os.path.join(working_dir, f)) for f in archive_filenames]
+
+        def cleanup():
+            for fn in abs_archive_filenames:
+                os.unlink(fn)
+
+        cleanup_functions.append(cleanup)
+        _env_dir = os.path.join(working_dir, _env_name)
+        # Because of a python deficiency (Issue15795), the execute bits aren't
+        # preserved when the zip file is unzipped. Need to add them back here.
+        _fix_permissions(_env_dir)
+        return _env_dir
 
     assert isinstance(conda_env, str)
     # "hadoop fs -ls" can return URLs with only a single "/" after the "hdfs:" scheme
@@ -276,12 +299,8 @@ def launcher(deploy_mode, args, working_dir="."):
             # TODO: Allow user to specify a local environment to use if around
 
             subprocess.check_call(["hadoop", "fs", "-get", conda_env, working_dir], stderr=subprocess.PIPE, stdout=subprocess.PIPE)
-            with zipfile.ZipFile(os.path.join(working_dir, filename)) as z:
-                z.extractall(working_dir)
-            env_dir = os.path.join(working_dir, env_name)
-            # Because of a python deficiency (Issue15795), the execute bits aren't
-            # preserved when the zip file is unzipped. Need to add them back here.
-            _fix_permissions(env_dir)
+            local_archive = os.path.join(working_dir, filename)
+            env_dir = extract_local_archive(env_name, local_archive)
         else:
             env_dir = ""
         env_archive = conda_env
@@ -289,16 +308,10 @@ def launcher(deploy_mode, args, working_dir="."):
     # We have a precreated conda environment around.
     elif conda_env.endswith(".zip"):
         log.info("Using conda environment from zip file")
-        with zipfile.ZipFile(conda_env) as z:
-            basename, _ = os.path.splitext(conda_env)
-            z.extractall(working_dir)
-
+        env_archive = conda_env
+        basename, _ = os.path.splitext(env_archive)
         env_name = os.path.basename(basename)
-        env_dir = os.path.join(working_dir, env_name)
-        env_archive = os.path.abspath(conda_env)
-        # Because of a python deficiency (Issue15795), the execute bits aren't
-        # preserved when the zip file is unzipped. Need to add them back here.
-        _fix_permissions(env_dir)
+        env_dir = extract_local_archive(env_name, env_archive)
 
     # The case where we have to CREATE the environment ourselves
     elif conda_env.endswith(".yaml"):
@@ -317,14 +330,30 @@ def launcher(deploy_mode, args, working_dir="."):
         # Archive the conda environment
         env_archive = archive_dir(env_dir)
 
+        abs_env_dir = os.path.abspath(env_dir)
+        abs_env_archive = os.path.abspath(env_archive)
+
+        cleanup_functions.extend([
+            lambda: shutil.rmtree(abs_env_dir),
+            lambda: os.unlink(abs_env_archive),
+        ])
     else:
         raise NotImplementedError()
 
     args = dict(env_dir=env_dir, env_name=env_name, env_archive=env_archive, args=spark_args)
-    if deploy_mode == "client":
-        run_pyspark_yarn_client(**args)
-    elif deploy_mode == "cluster":
-        run_pyspark_yarn_cluster(**args)
+    try:
+        if deploy_mode == "client":
+            run_pyspark_yarn_client(**args)
+        elif deploy_mode == "cluster":
+            run_pyspark_yarn_cluster(**args)
+    finally:
+        if cleanup:
+            for fn in cleanup_functions:
+                try:
+                    fn()
+                except:
+                    import traceback
+                    traceback.print_exc()
 
 
 def _fix_permissions(env_dir):
