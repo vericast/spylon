@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.2.6+5.g86a10f3
+                0.2.6+9.g745fb16
               </div>
             
           
@@ -85,8 +85,40 @@
             
             
                 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="modules.html">spylon</a></li>
-<li class="toctree-l1"><a class="reference internal" href="spylon.html">spylon package</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">spylon</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="spylon.html">spylon package</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="changelog.html">Changelog</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="spylon.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="spylon.simple.html">spylon.simple package</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">spylon.spark package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="spylon.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="spylon.html#module-spylon.common">spylon.common module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="spylon.html#module-spylon">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="spylon.html">spylon package</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="changelog.html">Changelog</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="spylon.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="spylon.simple.html">spylon.simple package</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">spylon.spark package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-spylon.spark.launcher">spylon.spark.launcher module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-spylon.spark.utils">spylon.spark.utils module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-spylon.spark.yarn_launcher">spylon.spark.yarn_launcher module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-spylon.spark">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="spylon.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spylon.html#module-spylon.common">spylon.common module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spylon.html#module-spylon">Module contents</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="spylon.simple.html">spylon.simple package</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">spylon.spark package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
@@ -405,7 +437,7 @@ keymap</p>
 
 <dl class="function">
 <dt id="spylon.spark.yarn_launcher.launcher">
-<code class="descclassname">spylon.spark.yarn_launcher.</code><code class="descname">launcher</code><span class="sig-paren">(</span><em>deploy_mode</em>, <em>args</em>, <em>working_dir='.'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spylon/spark/yarn_launcher.html#launcher"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spylon.spark.yarn_launcher.launcher" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">spylon.spark.yarn_launcher.</code><code class="descname">launcher</code><span class="sig-paren">(</span><em>deploy_mode</em>, <em>args</em>, <em>working_dir='.'</em>, <em>cleanup=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spylon/spark/yarn_launcher.html#launcher"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spylon.spark.yarn_launcher.launcher" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initializes arguments and starts up pyspark with the correct deploy mode and environment.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -413,8 +445,9 @@ keymap</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>deploy_mode</strong> (<em>{&quot;client&quot;, &quot;cluster&quot;}</em>) &#8211; </li>
-<li><strong>args</strong> (<em>str</em>) &#8211; arguments to pass onwards to spark submit</li>
-<li><strong>working_dir</strong> (<em>str</em>) &#8211; path to working directory to use for creating conda environments</li>
+<li><strong>args</strong> (<em>str</em>) &#8211; Arguments to pass onwards to spark submit.</li>
+<li><strong>working_dir</strong> (<em>str, optional</em>) &#8211; Path to working directory to use for creating conda environments.  Defaults to the current working directory.</li>
+<li><strong>cleanup</strong> (<em>bool, optional</em>) &#8211; Clean up extracted / generated files.  This defaults to true since conda environments can be rather large.</li>
 </ul>
 </td>
 </tr>
