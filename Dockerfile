@@ -2,6 +2,8 @@ FROM jupyter/pyspark-notebook:54838ed4acb1
 
 USER root
 
+RUN apt-get update && apt-get install --yes zip
+
 # test dependencies
 RUN conda install --yes pytest coverage
 
