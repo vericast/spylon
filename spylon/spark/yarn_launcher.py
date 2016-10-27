@@ -36,6 +36,7 @@ import logging
 import pprint
 import platform
 import shutil
+import posixpath
 
 __author__ = 'mniekerk'
 
@@ -267,25 +268,6 @@ def launcher(deploy_mode, args, working_dir=".", cleanup=True):
     spark_args = spark_args[:i] + spark_args[i+2:]
     cleanup_functions = []
 
-    def extract_local_archive(_env_name, _local_archive):
-        """Helper internal function for extracting a zipfile and ensure that a cleanup is queued."""
-        with zipfile.ZipFile(_local_archive) as z:
-            z.extractall(working_dir)
-            archive_filenames = z.namelist()
-
-        abs_archive_filenames = [os.path.abspath(os.path.join(working_dir, f)) for f in archive_filenames]
-
-        def cleanup():
-            for fn in abs_archive_filenames:
-                os.unlink(fn)
-
-        cleanup_functions.append(cleanup)
-        _env_dir = os.path.join(working_dir, _env_name)
-        # Because of a python deficiency (Issue15795), the execute bits aren't
-        # preserved when the zip file is unzipped. Need to add them back here.
-        _fix_permissions(_env_dir)
-        return _env_dir
-
     assert isinstance(conda_env, str)
     # "hadoop fs -ls" can return URLs with only a single "/" after the "hdfs:" scheme
     if conda_env.startswith("hdfs:/"):
@@ -300,7 +282,7 @@ def launcher(deploy_mode, args, working_dir=".", cleanup=True):
 
             subprocess.check_call(["hadoop", "fs", "-get", conda_env, working_dir], stderr=subprocess.PIPE, stdout=subprocess.PIPE)
             local_archive = os.path.join(working_dir, filename)
-            env_dir = extract_local_archive(env_name, local_archive)
+            env_dir = _extract_local_archive(working_dir, cleanup_functions, env_name, local_archive)
         else:
             env_dir = ""
         env_archive = conda_env
@@ -311,7 +293,7 @@ def launcher(deploy_mode, args, working_dir=".", cleanup=True):
         env_archive = conda_env
         basename, _ = os.path.splitext(env_archive)
         env_name = os.path.basename(basename)
-        env_dir = extract_local_archive(env_name, env_archive)
+        env_dir = _extract_local_archive(working_dir, cleanup_functions, env_name, env_archive)
 
     # The case where we have to CREATE the environment ourselves
     elif conda_env.endswith(".yaml"):
@@ -354,6 +336,38 @@ def launcher(deploy_mode, args, working_dir=".", cleanup=True):
                 except:
                     import traceback
                     traceback.print_exc()
+
+
+def _extract_local_archive(working_dir, cleanup_functions, env_name, local_archive):
+    """Helper internal function for extracting a zipfile and ensure that a cleanup is queued.
+
+    Parameters
+    ----------
+    working_dir : str
+    cleanup_functions : List[() -> NoneType]
+    env_name : str
+    local_archive : str
+    """
+    with zipfile.ZipFile(local_archive) as z:
+        z.extractall(working_dir)
+        archive_filenames = z.namelist()
+
+    root_elements = {m.split(posixpath.sep, 1)[0] for m in archive_filenames}
+    abs_archive_filenames = [os.path.abspath(os.path.join(working_dir, f)) for f in root_elements]
+
+    def cleanup():
+        for fn in abs_archive_filenames:
+            if os.path.isdir(fn):
+                shutil.rmtree(fn)
+            else:
+                os.unlink(fn)
+
+    cleanup_functions.append(cleanup)
+    env_dir = os.path.join(working_dir, env_name)
+    # Because of a python deficiency (Issue15795), the execute bits aren't
+    # preserved when the zip file is unzipped. Need to add them back here.
+    _fix_permissions(env_dir)
+    return env_dir
 
 
 def _fix_permissions(env_dir):
