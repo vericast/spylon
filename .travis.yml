@@ -19,6 +19,8 @@ before_install:
 script:
   - docker build --rm -t spylon-integration .
   - docker run -v `pwd`:/repo -it --rm spylon-integration
+  # Do the hackiest thing I've ever seen in a .travis file!
+  - sed 's|/repo-copy|'"$PWD"'|g' .coverage
   # Build and deploy docs
   - docker run -it --name spylon-docs spylon-integration make -C docs html
   # Building the docs messes with our source tree.

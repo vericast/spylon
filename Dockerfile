@@ -13,11 +13,9 @@ RUN conda install --yes -c conda-forge findspark pandas pyyaml
 # sphinx doc build dependencies
 RUN conda install --yes -c conda-forge sphinx numpydoc sphinx_rtd_theme
 
-COPY . /repo
+COPY . /repo-copy
 
-WORKDIR /repo
-
-RUN python setup.py install
+WORKDIR /repo-copy
 
 RUN pip install py4j==0.9
 
