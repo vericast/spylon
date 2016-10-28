@@ -17,6 +17,10 @@ COPY . /repo-copy
 
 WORKDIR /repo-copy
 
+# Need to install the python package so that the docs building works.
+# docs/conf.py has an `import spylon` line
+RUN pip install .
+
 RUN pip install py4j==0.9
 
 CMD coverage run run_tests.py && coverage report -m && cp .coverage /repo
