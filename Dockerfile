@@ -21,4 +21,4 @@ RUN python setup.py install
 
 RUN pip install py4j==0.9
 
-CMD coverage run -m pytest tests -vrsx --capture=sys --color=yes && coverage report -m
+CMD coverage run run_tests.py && coverage report -m && cp .coverage /repo
