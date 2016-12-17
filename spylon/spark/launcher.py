@@ -587,7 +587,7 @@ def with_spark_context(application_name, conf=None):
     sc : SparkContext
 
     Examples
-    -------
+    --------
     Used within a context manager
     >>> with with_spark_context("MyApplication") as sc:
     ...     # Your Code here
