@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.2.7+4.g77524eb
+                0.2.8+4.gd6f9ce3
               </div>
             
           
@@ -85,40 +85,8 @@
             
             
                 <ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="modules.html">spylon</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="spylon.html">spylon package</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="changelog.html">Changelog</a></li>
-<li class="toctree-l3 current"><a class="reference internal" href="spylon.html#subpackages">Subpackages</a><ul class="current">
-<li class="toctree-l4"><a class="reference internal" href="spylon.simple.html">spylon.simple package</a></li>
-<li class="toctree-l4 current"><a class="current reference internal" href="#">spylon.spark package</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="spylon.html#submodules">Submodules</a></li>
-<li class="toctree-l3"><a class="reference internal" href="spylon.html#module-spylon.common">spylon.common module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="spylon.html#module-spylon">Module contents</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1 current"><a class="reference internal" href="spylon.html">spylon package</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="changelog.html">Changelog</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="spylon.html#subpackages">Subpackages</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="spylon.simple.html">spylon.simple package</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">spylon.spark package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-spylon.spark.launcher">spylon.spark.launcher module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-spylon.spark.utils">spylon.spark.utils module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-spylon.spark.yarn_launcher">spylon.spark.yarn_launcher module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-spylon.spark">Module contents</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="spylon.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="spylon.html#module-spylon.common">spylon.common module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="spylon.html#module-spylon">Module contents</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">spylon</a></li>
+<li class="toctree-l1"><a class="reference internal" href="spylon.html">spylon package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="spylon.simple.html">spylon.simple package</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">spylon.spark package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
@@ -166,7 +134,7 @@
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="_sources/spylon.spark.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/spylon.spark.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -213,11 +181,9 @@ pyspark.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>application_name</strong> (<em>string</em>) &#8211; </td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>application_name</strong> : string</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>sc</strong></td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">SparkContext</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>sc</strong> : SparkContext</td>
 </tr>
 </tbody>
 </table>
@@ -237,11 +203,9 @@ pyspark.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>application_name</strong> (<em>string</em>) &#8211; </td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>application_name</strong> : string</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>sc</strong></td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">SparkContext</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>sc</strong> : SparkContext</td>
 </tr>
 </tbody>
 </table>
@@ -280,16 +244,11 @@ keymap</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>application_name</strong> (<em>string</em>) &#8211; </li>
-<li><strong>conf</strong> (<em>string, optional</em>) &#8211; </li>
-</ul>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>application_name</strong> : string</p>
+<p><strong>conf</strong> : string, optional</p>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>sc</strong></p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">SparkContext</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><strong>sc</strong> : SparkContext</p>
 </td>
 </tr>
 </tbody>
@@ -309,10 +268,8 @@ keymap</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><ul class="simple">
-<li><strong>sc</strong> (<em>SparkContext</em>)</li>
-<li><strong>sql_context</strong> (<em>SQLContext</em>)</li>
-</ul>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>sc</strong> : SparkContext</p>
+<p class="last">sql_context: SQLContext</p>
 </td>
 </tr>
 </tbody>
@@ -338,7 +295,11 @@ keymap</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sc</strong> (<em>SparkContext</em>) &#8211; A pyspark context that you&#8217;d like to use as the main jvm reflection point.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>sc</strong> : SparkContext</p>
+<blockquote class="last">
+<div><p>A pyspark context that you&#8217;d like to use as the main jvm reflection point.</p>
+</div></blockquote>
+</td>
 </tr>
 </tbody>
 </table>
@@ -399,11 +360,9 @@ keymap</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>env_dir</strong> (<em>str</em>) &#8211; </td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>env_dir</strong> : str</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">str</td>
 </tr>
 </tbody>
 </table>
@@ -417,18 +376,19 @@ keymap</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>sandbox_dir</strong> (<em>str</em>) &#8211; </li>
-<li><strong>env_name</strong> (<em>str</em>) &#8211; </li>
-<li><strong>dependencies</strong> (<em>list</em>) &#8211; List of conda specs</li>
-<li><strong>options</strong> &#8211; List of additional options to pass to conda.  Things like [&#8220;-c&#8221;, &#8220;conda-forge&#8221;]</li>
-</ul>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>sandbox_dir</strong> : str</p>
+<p><strong>env_name</strong> : str</p>
+<p><strong>dependencies</strong> : list</p>
+<blockquote>
+<div><p>List of conda specs</p>
+</div></blockquote>
+<p><strong>options</strong></p>
+<blockquote>
+<div><p>List of additional options to pass to conda.  Things like [&#8220;-c&#8221;, &#8220;conda-forge&#8221;]</p>
+</div></blockquote>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"></p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(env_dir, env_name)</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">(env_dir, env_name)</p>
 </td>
 </tr>
 </tbody>
@@ -443,18 +403,22 @@ keymap</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>deploy_mode</strong> (<em>{&quot;client&quot;, &quot;cluster&quot;}</em>) &#8211; </li>
-<li><strong>args</strong> (<em>str</em>) &#8211; Arguments to pass onwards to spark submit.</li>
-<li><strong>working_dir</strong> (<em>str, optional</em>) &#8211; Path to working directory to use for creating conda environments.  Defaults to the current working directory.</li>
-<li><strong>cleanup</strong> (<em>bool, optional</em>) &#8211; Clean up extracted / generated files.  This defaults to true since conda environments can be rather large.</li>
-</ul>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>deploy_mode</strong> : {&#8220;client&#8221;, &#8220;cluster&#8221;}</p>
+<p><strong>args</strong> : str</p>
+<blockquote>
+<div><p>Arguments to pass onwards to spark submit.</p>
+</div></blockquote>
+<p><strong>working_dir</strong> : str, optional</p>
+<blockquote>
+<div><p>Path to working directory to use for creating conda environments.  Defaults to the current working directory.</p>
+</div></blockquote>
+<p><strong>cleanup</strong> : bool, optional</p>
+<blockquote>
+<div><p>Clean up extracted / generated files.  This defaults to true since conda environments can be rather large.</p>
+</div></blockquote>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"></p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">This call will spawn a child process and block until that is complete.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">This call will spawn a child process and block until that is complete.</p>
 </td>
 </tr>
 </tbody>
@@ -471,11 +435,15 @@ environmental variables into your current environment</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>env_name</strong> (<em>str</em>) &#8211; </li>
-<li><strong>env_archive</strong> (<em>str</em>) &#8211; </li>
-<li><strong>spark_conf</strong> (<a class="reference internal" href="#spylon.spark.launcher.SparkConfiguration" title="spylon.spark.launcher.SparkConfiguration"><em>SparkConfiguration</em></a>) &#8211; </li>
-</ul>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>env_name</strong> : str</p>
+<p><strong>env_archive</strong> : str</p>
+<p><strong>spark_conf</strong> : SparkConfiguration</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">SparkConfiguration</p>
+<blockquote class="last">
+<div><p>Copy of <cite>spark_conf</cite> input with added Yarn requirements.</p>
+</div></blockquote>
 </td>
 </tr>
 </tbody>
@@ -504,16 +472,6 @@ environmental variables into your current environment</p>
 <span class="gp">... </span><span class="n">rdd</span><span class="o">.</span><span class="n">mapPartitions</span><span class="p">(</span><span class="n">pandas_test</span><span class="p">)</span><span class="o">.</span><span class="n">collect</span><span class="p">()</span>
 </pre></div>
 </div>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Copy of <cite>spark_conf</cite> input with added Yarn requirements.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#spylon.spark.launcher.SparkConfiguration" title="spylon.spark.launcher.SparkConfiguration">SparkConfiguration</a></td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 <dl class="function">
@@ -537,18 +495,13 @@ environment.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>env_dir</strong> (<em>str</em>) &#8211; </li>
-<li><strong>env_name</strong> (<em>str</em>) &#8211; </li>
-<li><strong>env_archive</strong> (<em>str</em>) &#8211; </li>
-<li><strong>args</strong> (<em>list</em>) &#8211; </li>
-</ul>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>env_dir</strong> : str</p>
+<p><strong>env_name</strong> : str</p>
+<p><strong>env_archive</strong> : str</p>
+<p><strong>args</strong> : list</p>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"></p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">This call will spawn a child process and block until that is complete.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">This call will spawn a child process and block until that is complete.</p>
 </td>
 </tr>
 </tbody>
@@ -563,18 +516,13 @@ environment.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>env_dir</strong> (<em>str</em>) &#8211; </li>
-<li><strong>env_name</strong> (<em>str</em>) &#8211; </li>
-<li><strong>env_archive</strong> (<em>str</em>) &#8211; </li>
-<li><strong>args</strong> (<em>list</em>) &#8211; </li>
-</ul>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>env_dir</strong> : str</p>
+<p><strong>env_name</strong> : str</p>
+<p><strong>env_archive</strong> : str</p>
+<p><strong>args</strong> : list</p>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"></p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">This call will spawn a child process and block until that is complete.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">This call will spawn a child process and block until that is complete.</p>
 </td>
 </tr>
 </tbody>

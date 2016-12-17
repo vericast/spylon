@@ -5,12 +5,12 @@ docs/_modules/spylon/simple.html
 docs/_modules/spylon/spark/launcher.html
 docs/_modules/spylon/spark/utils.html
 docs/_modules/spylon/spark/yarn_launcher.html
-docs/_sources/changelog.txt
-docs/_sources/index.txt
-docs/_sources/modules.txt
-docs/_sources/spylon.simple.txt
-docs/_sources/spylon.spark.txt
-docs/_sources/spylon.txt
+docs/_sources/changelog.rst.txt
+docs/_sources/index.rst.txt
+docs/_sources/modules.rst.txt
+docs/_sources/spylon.rst.txt
+docs/_sources/spylon.simple.rst.txt
+docs/_sources/spylon.spark.rst.txt
 docs/_static/ajax-loader.gif
 docs/_static/basic.css
 docs/_static/comment-bright.png
@@ -32,7 +32,7 @@ docs/_static/fonts/fontawesome-webfont.eot
 docs/_static/fonts/fontawesome-webfont.svg
 docs/_static/fonts/fontawesome-webfont.ttf
 docs/_static/fonts/fontawesome-webfont.woff
-docs/_static/jquery-1.11.1.js
+docs/_static/jquery-3.1.0.js
 docs/_static/jquery.js
 docs/_static/js/modernizr.min.js
 docs/_static/js/theme.js

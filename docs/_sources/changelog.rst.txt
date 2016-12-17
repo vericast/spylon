@@ -1,7 +1,11 @@
 Changelog
 =========
 
-0.2.6
+0.2.8
+-----
+ - Bugfix release.
+
+0.2.7
 -----
  - Cleanup of downloaded / extracted artifacts when using spylon.spark.yarn_launcher.
 

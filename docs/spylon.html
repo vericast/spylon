@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                0.2.7+4.g77524eb
+                0.2.8+4.gd6f9ce3
               </div>
             
           
@@ -86,21 +86,7 @@
             
             
                 <ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="modules.html">spylon</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">spylon package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html">Changelog</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#subpackages">Subpackages</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="spylon.simple.html">spylon.simple package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="spylon.spark.html">spylon.spark package</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-spylon.common">spylon.common module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-spylon">Module contents</a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">spylon</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">spylon package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="changelog.html">Changelog</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#subpackages">Subpackages</a><ul>
@@ -151,7 +137,7 @@
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="_sources/spylon.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/spylon.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -166,8 +152,9 @@
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id1">0.2.6</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id2">0.2.5</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id1">0.2.8</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id2">0.2.7</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id3">0.2.5</a></li>
 </ul>
 </li>
 </ul>
@@ -259,13 +246,14 @@ thing that you can call <code class="docutils literal"><span class="pre">obj.app
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>list_like</strong> (<em>list</em>) &#8211; </li>
-<li><strong>java_class_name</strong> (<em>str</em>) &#8211; Java class name to use for the conversion</li>
-<li><strong>Examples</strong> &#8211; </li>
-<li><strong>c.to_scala_array([1,2,3,4], &quot;java.lang.Integer&quot;)</strong> (<em>&gt;&gt;&gt;</em>) &#8211; </li>
-<li><strong>..</strong> &#8211; </li>
-</ul>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>list_like</strong> : list</p>
+<p><strong>java_class_name</strong> : str</p>
+<blockquote>
+<div><p>Java class name to use for the conversion</p>
+</div></blockquote>
+<p><strong>Examples</strong></p>
+<p><strong>&gt;&gt;&gt; c.to_scala_array([1,2,3,4], &#8220;java.lang.Integer&#8221;)</strong></p>
+<p class="last"><strong>...</strong></p>
 </td>
 </tr>
 </tbody>
@@ -306,13 +294,16 @@ thing that you can call <code class="docutils literal"><span class="pre">obj.app
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>iterable_or_scalar</strong> (<em>anything</em>) &#8211; </td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>iterable_or_scalar</strong> : anything</p>
+</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>l</strong> &#8211; If <cite>obj</cite> was None, return the empty tuple.
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>l</strong> : iterable</p>
+<blockquote class="last">
+<div><p>If <cite>obj</cite> was None, return the empty tuple.
 If <cite>obj</cite> was not iterable returns a 1-tuple containing <cite>obj</cite>.
-Otherwise return <cite>obj</cite></td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">iterable</td>
+Otherwise return <cite>obj</cite></p>
+</div></blockquote>
+</td>
 </tr>
 </tbody>
 </table>
