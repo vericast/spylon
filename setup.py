@@ -25,23 +25,24 @@
 from distutils.core import setup
 from setuptools import find_packages
 from os.path import exists
-import os
 import versioneer
 
-
-setup(name='spylon',
-      version=versioneer.get_version(),
-      cmdclass=versioneer.get_cmdclass(),
-      packages=find_packages(),
-      package_data={"spylon.spark": ["*.json"]},
-      description='Utilities to work with Scala/Java code with py4j',
-      long_description=(open('readme.rst').read() if exists('readme.rst') else ''),
-      maintainer='MaxPoint Interactive',
-      maintainer_email='marius.vanniekerk@maxpoint.com',
-      author='MaxPoint Interactive',
-      author_email='marius.vanniekerk@maxpoint.com',
-      url='https://github.com/maxpoint/spylon',
-      license='BSD 3-clause',
-      )
-
-
+setup(
+    name='spylon',
+    version=versioneer.get_version(),
+    cmdclass=versioneer.get_cmdclass(),
+    packages=find_packages(),
+    package_data={"spylon.spark": ["*.json"]},
+    description='Utilities to work with Scala/Java code with py4j',
+    long_description=(open('readme.rst').read() if exists('readme.rst') else ''),
+    maintainer='MaxPoint Interactive',
+    maintainer_email='marius.vanniekerk@maxpoint.com',
+    author='MaxPoint Interactive',
+    author_email='marius.vanniekerk@maxpoint.com',
+    url='https://github.com/maxpoint/spylon',
+    license='BSD 3-clause',
+    requires=['six'],
+    extras_require={
+        'spark': ['findspark', 'pyyaml'],
+    },
+)
