@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.2.8+4.gd6f9ce3
+                0.2.8+7.g0f918ce
               </div>
             
           
@@ -175,7 +175,6 @@
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">from</span> <span class="nn">contextlib</span> <span class="k">import</span> <span class="n">contextmanager</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">from</span> <span class="nn">six</span> <span class="k">import</span> <span class="n">iteritems</span>
 <span class="kn">from</span> <span class="nn">spylon.common</span> <span class="k">import</span> <span class="n">as_iterable</span>
@@ -355,6 +354,7 @@
 
 
 <span class="k">def</span> <span class="nf">_fetch_documentation</span><span class="p">(</span><span class="n">version</span><span class="p">,</span> <span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;https://spark.apache.org/docs&quot;</span><span class="p">):</span>
+    <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
     <span class="n">doc_urls</span> <span class="o">=</span> <span class="p">[</span>
         <span class="s2">&quot;</span><span class="si">{base_url}</span><span class="s2">/</span><span class="si">{version}</span><span class="s2">/configuration.html&quot;</span><span class="p">,</span>
         <span class="s2">&quot;</span><span class="si">{base_url}</span><span class="s2">/</span><span class="si">{version}</span><span class="s2">/sql-programming-guide.html&quot;</span><span class="p">,</span>
@@ -702,7 +702,12 @@
         <span class="n">sc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">spark_context</span><span class="p">(</span><span class="n">application_name</span><span class="p">)</span>
         <span class="kn">import</span> <span class="nn">pyspark</span>
         <span class="n">sqlContext</span> <span class="o">=</span> <span class="n">pyspark</span><span class="o">.</span><span class="n">SQLContext</span><span class="p">(</span><span class="n">sc</span><span class="p">)</span>
-        <span class="k">return</span> <span class="p">(</span><span class="n">sc</span><span class="p">,</span> <span class="n">sqlContext</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="p">(</span><span class="n">sc</span><span class="p">,</span> <span class="n">sqlContext</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SparkConfiguration.spark_session"><a class="viewcode-back" href="../../../spylon.spark.html#spylon.spark.launcher.SparkConfiguration.spark_session">[docs]</a>    <span class="k">def</span> <span class="nf">spark_session</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">application_name</span><span class="p">):</span>
+        <span class="n">sc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">spark_context</span><span class="p">(</span><span class="n">application_name</span><span class="p">)</span>
+        <span class="kn">from</span> <span class="nn">pyspark.sql</span> <span class="k">import</span> <span class="n">SparkSession</span>
+        <span class="k">return</span> <span class="n">SparkSession</span><span class="p">(</span><span class="n">sc</span><span class="p">)</span></div></div>
 
 
 <span class="n">default_configuration</span> <span class="o">=</span> <span class="n">SparkConfiguration</span><span class="p">()</span>

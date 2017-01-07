@@ -23,6 +23,12 @@ Installation
 ------------
 Spylon can be installed either from pip or conda-forge.
 
+When installing from pip and the desire is to use it with Apache Spark, you should run
+
+```
+pip install spylon[spark]
+```
+
 Usage
 -----
 The simplest way to use spylon is to use it to help with writing PySpark jobs.
