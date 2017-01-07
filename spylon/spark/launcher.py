@@ -40,7 +40,6 @@ from collections import defaultdict
 import os
 import sys
 from contextlib import contextmanager
-import pandas as pd
 import json
 from six import iteritems
 from spylon.common import as_iterable
@@ -220,6 +219,7 @@ def _tree():
 
 
 def _fetch_documentation(version, base_url="https://spark.apache.org/docs"):
+    import pandas as pd
     doc_urls = [
         "{base_url}/{version}/configuration.html",
         "{base_url}/{version}/sql-programming-guide.html",
@@ -568,6 +568,11 @@ class SparkConfiguration(object):
         import pyspark
         sqlContext = pyspark.SQLContext(sc)
         return (sc, sqlContext)
+
+    def spark_session(self, application_name):
+        sc = self.spark_context(application_name)
+        from pyspark.sql import SparkSession
+        return SparkSession(sc)
 
 
 default_configuration = SparkConfiguration()
