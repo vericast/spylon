@@ -26,4 +26,4 @@ script:
   # remove the container that we built
   - docker rm spylon-docs
   # On pushes push the docs to gh-pages
-  - doctr deploy
+  - doctr deploy docs
