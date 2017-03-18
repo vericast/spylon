@@ -13,6 +13,8 @@
 
   
   
+  
+  
 
   
 
@@ -44,6 +46,7 @@
 
 <body class="wy-body-for-nav" role="document">
 
+   
   <div class="wy-grid-for-nav">
 
     
@@ -63,7 +66,7 @@
             
             
               <div class="version">
-                0.2.8+7.g0f918ce
+                0.2.9+2.gdc4b110
               </div>
             
           
@@ -84,9 +87,44 @@
           
             
             
-                <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="modules.html">spylon</a></li>
-<li class="toctree-l1"><a class="reference internal" href="spylon.html">spylon package</a></li>
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">spylon</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="spylon.html">spylon package</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="changelog.html">Changelog</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="spylon.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="spylon.simple.html">spylon.simple package</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">spylon.spark package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="spylon.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="spylon.html#module-spylon.common">spylon.common module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="spylon.html#module-spylon">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="spylon.html">spylon package</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="changelog.html">Changelog</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="spylon.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="spylon.simple.html">spylon.simple package</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">spylon.spark package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-spylon.spark.launcher">spylon.spark.launcher module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-spylon.spark.utils">spylon.spark.utils module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-spylon.spark.yarn_launcher">spylon.spark.yarn_launcher module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-spylon.spark">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="spylon.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spylon.html#module-spylon.common">spylon.common module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spylon.html#module-spylon">Module contents</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="spylon.simple.html">spylon.simple package</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">spylon.spark package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
@@ -108,8 +146,10 @@
 
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="index.html">spylon</a>
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">spylon</a>
+        
       </nav>
 
 
@@ -118,27 +158,44 @@
         <div class="rst-content">
           
 
- 
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 <div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-    <li><a href="index.html">Docs</a> &raquo;</li>
-      
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
           <li><a href="modules.html">spylon</a> &raquo;</li>
-      
+        
           <li><a href="spylon.html">spylon package</a> &raquo;</li>
-      
-    <li>spylon.spark package</li>
+        
+      <li>spylon.spark package</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
         
-          
+            
             <a href="_sources/spylon.spark.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
@@ -542,13 +599,16 @@ environment.</p>
 
 
            </div>
+           <div class="articleComments">
+            
+           </div>
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
       
-        <a href="spylon.simple.html" class="btn btn-neutral" title="spylon.simple package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="spylon.simple.html" class="btn btn-neutral" title="spylon.simple package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -582,7 +642,8 @@ environment.</p>
             VERSION:'0.2.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="_static/jquery.js"></script>
