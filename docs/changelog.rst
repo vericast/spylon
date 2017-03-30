@@ -1,6 +1,16 @@
 Changelog
 =========
 
+0.2.10
+------
+
+ - Daemonize the progress thread to avoid hanging the process [PR-33](https://github.com/maxpoint/spylon/pull/33)
+
+0.2.9
+-----
+
+ - Improve pip installation experience [PR-29](https://github.com/maxpoint/spylon/pull/29)
+
 0.2.8
 -----
  - Bugfix release.
