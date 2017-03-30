@@ -170,5 +170,8 @@ def start_spark_progress_bar_thread(sc, **kwargs):
         raise RuntimeError("Spark progress thread already running")
 
     t = threading.Thread(target=_spark_progress_thread_worker, args=[sc], kwargs=kwargs)
+    # All the process to exit when the main thread ends. Don't hold things up
+    # just because the progress thread is running.
+    t.daemon = True
     t.start()
     _progressbar_thread_started = True
