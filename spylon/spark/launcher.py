@@ -434,16 +434,11 @@ class SparkConfiguration(object):
     def __getattr__(self, key):
         assert (isinstance(key, str))
         if key.startswith("_"):
-            return super(SparkConfiguration, self).__getattribute__(key)
+            return super(SparkConfiguration, self).__getattr__(key)
         spark_arg = key.replace('_', '-')
         if spark_arg in self._spark_launcher_arg_names:
-            return self._spark_launcher_args[spark_arg]
-    def __setitem__(self, key, val):
-        log.debug('key=%s, value=%s', key, value)
-        return self._spark_conf.__setitem__(key, val)
+            return self._spark_launcher_args.get(spark_arg)
 
-    def __getitem__(self, key):
-        return self._spark_conf.__getitem__(key)
     def _set_launcher_property(self, driver_arg_key, spark_property_key):
         """Handler for a special property that exists in both the launcher arguments and the spark conf dictionary.
 
