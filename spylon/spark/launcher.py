@@ -45,7 +45,13 @@ from six import iteritems
 from spylon.common import as_iterable
 
 log = logging.getLogger("spylon.spark.launcher")
+formatter = logging.Formatter('[%(asctime)s] p%(process)s {%(pathname)s:%(lineno)d} %(levelname)s - %(message)s','%m-%d %H:%M:%S')
+handler = logging.StreamHandler()
 
+handler.setFormatter(formatter)
+log.addHandler(handler)
+handler.setLevel(logging.DEBUG)
+log.setLevel(logging.DEBUG)
 
 try:
     import pyspark
@@ -416,6 +422,7 @@ class SparkConfiguration(object):
 
     def __setattr__(self, key, value):
         """SetAttr for setting spark-submit launcher arguments"""
+        log.debug('key=%s, value=%s', key, value)
         assert (isinstance(key, str))
         spark_arg = key.replace('_', '-')
         if key.startswith("_"):
@@ -427,16 +434,10 @@ class SparkConfiguration(object):
     def __getattr__(self, key):
         assert (isinstance(key, str))
         if key.startswith("_"):
-            return super(SparkConfiguration, self).__getattribute__(key)
+            return super(SparkConfiguration, self).__getattr__(key)
         spark_arg = key.replace('_', '-')
         if spark_arg in self._spark_launcher_arg_names:
-            return self._spark_launcher_args[spark_arg]
-
-    def __setitem__(self, key, val):
-        return self._spark_conf.__setitem__(key, val)
-
-    def __getitem__(self, key):
-        return self._spark_conf.__getitem__(key)
+            return self._spark_launcher_args.get(spark_arg)
 
     def _set_launcher_property(self, driver_arg_key, spark_property_key):
         """Handler for a special property that exists in both the launcher arguments and the spark conf dictionary.
@@ -460,7 +461,6 @@ class SparkConfiguration(object):
         if value:
             self._spark_launcher_args[driver_arg_key] = value
             self.conf[spark_property_key] = value
-
     def _set_environment_variables(self):
         """Initializes the correct environment variables for spark"""
         cmd = []
