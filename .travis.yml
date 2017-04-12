@@ -3,7 +3,10 @@ language: python
 python:
   - 2.7
   - 3.5
-  - 3.6
+    # pyspark is not available for python 3.6 yet
+    # https://issues.apache.org/jira/browse/SPARK-19019
+    # Has been merged into 2.2.0 and 2.1.1, but there is no 2.1.1/2.2.0 releases yet
+    #  - 3.6
 
 sudo: true
 
@@ -18,6 +21,7 @@ install:
   - wget https://raw.githubusercontent.com/ericdill/ci/master/install-miniconda.sh -O install-miniconda.sh
   - source install-miniconda.sh
   - conda info -a
+  - conda search pandas
   - conda create -n testenv python=$TRAVIS_PYTHON_VERSION --file requirements.txt --file requirements-test.txt
 
 script:
@@ -25,16 +29,18 @@ script:
   - python run_tests.py
   - echo $TRAVIS_BRANCH
   # Always make the docs.
-  - if [[ $TRAVIS_PYTHON_VERSION = "3.6" ]]; then
-      conda install sphinx numpydoc sphinx_rtd_theme
-      pip install .
-      cd docs
-      make html
+  - if [[ $TRAVIS_PYTHON_VERSION = "3.5" ]]; then
+      conda install sphinx numpydoc sphinx_rtd_theme;
+      pip install .;
+      cd docs;
+      make html;
     fi;
   # Only deploy them once.
-  - if [[ $TRAVIS_PYTHON_VERSION = "3.6" && $TRAVIS_BRANCH = "master" ]]; then
-      pip install doctr
-      doctr deploy _build/html
+  # TRAVIS_PULL_REQUEST is set to the pull request number if the current job is a pull request
+  # build, or false if it’s not. https://docs.travis-ci.com/user/environment-variables/
+  - if [[ $TRAVIS_PYTHON_VERSION = "3.5" && $TRAVIS_BRANCH = "master" && $TRAVIS_PULL_REQUEST = "false" ]]; then
+      pip install doctr;
+      doctr deploy _build/html;
     fi;
 
 after_success:
