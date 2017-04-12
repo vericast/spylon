@@ -3,3 +3,4 @@ pyyaml
 pyspark
 six
 ipython
+psutil # to fix a warning
