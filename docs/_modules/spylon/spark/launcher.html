@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.2.10
+                0.2.10+2.gd54c285
               </div>
             
           
@@ -590,7 +590,7 @@
             <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">SparkConfiguration</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__getattribute__</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
         <span class="n">spark_arg</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">spark_arg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_spark_launcher_arg_names</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_spark_launcher_args</span><span class="p">[</span><span class="n">spark_arg</span><span class="p">]</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_spark_launcher_args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">spark_arg</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_spark_conf</span><span class="o">.</span><span class="n">__setitem__</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
