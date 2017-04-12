@@ -1,9 +1,15 @@
 from __future__ import print_function, absolute_import
 import spylon.spark.launcher as sparklauncher
 import os
+import sys
 import pytest
 
 __author__ = 'mniekerk'
+
+@pytest.mark.xfail(sys.version_info[0] >= 3, "setattr fails on python 3")
+def test_set_spark_property():
+    c = sparklauncher.SparkConfiguration()
+    c.driver_memory = "4g"
 
 
 def test_sparkconf_hasattr():
