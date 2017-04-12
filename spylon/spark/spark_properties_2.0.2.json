@@ -35,31 +35,6 @@
     "default": "None"
   },
   {
-    "property": "spark.blacklist.enabled",
-    "description": "If set to \"true\", prevent Spark from scheduling tasks on executors that have been blacklisted  due to too many task failures. The blacklisting algorithm can be further controlled by the  other \"spark.blacklist\" configuration options.",
-    "default": "false"
-  },
-  {
-    "property": "spark.blacklist.stage.maxFailedExecutorsPerNode",
-    "description": "(Experimental) How many different executors are marked as blacklisted for a given stage, before  the entire node is marked as failed for the stage.",
-    "default": "2"
-  },
-  {
-    "property": "spark.blacklist.stage.maxFailedTasksPerExecutor",
-    "description": "(Experimental) How many different tasks must fail on one executor, within one stage, before the  executor is blacklisted for that stage.",
-    "default": "2"
-  },
-  {
-    "property": "spark.blacklist.task.maxTaskAttemptsPerExecutor",
-    "description": "(Experimental) For a given task, how many times it can be retried on one executor before the  executor is blacklisted for that task.",
-    "default": "1"
-  },
-  {
-    "property": "spark.blacklist.task.maxTaskAttemptsPerNode",
-    "description": "(Experimental) For a given task, how many times it can be retried on one node, before the entire  node is blacklisted for that task.",
-    "default": "2"
-  },
-  {
     "property": "spark.blockManager.port",
     "description": "Port for all block managers to listen on. These exist on both the driver and the executors.",
     "default": "(random)"
@@ -77,7 +52,7 @@
   {
     "property": "spark.core.connection.ack.wait.timeout",
     "description": "How long for the connection to wait for ack to occur before timing  out and giving up. To avoid unwilling timeout caused by long pause like GC,  you can set larger value.",
-    "default": "spark.network.timeout"
+    "default": "60s"
   },
   {
     "property": "spark.core.connection.auth.wait.timeout",
@@ -135,18 +110,13 @@
     "default": "None"
   },
   {
-    "property": "spark.driver.bindAddress",
-    "description": "Hostname or IP address where to bind listening sockets. This config overrides the SPARK_LOCAL_IP  environment variable (see below).  It also allows a different address from the local one to be advertised to executors or external systems.  This is useful, for example, when running containers with bridged networking. For this to properly work,  the different ports used by the driver (RPC, block manager and UI) need to be forwarded from the  container's host.",
-    "default": "(value of spark.driver.host)"
-  },
-  {
-    "property": "spark.driver.blockManager.port",
-    "description": "Driver-specific port for the block manager to listen on, for cases where it cannot use the same  configuration as executors.",
-    "default": "(value of spark.blockManager.port)"
+    "property": "spark.driver.cores",
+    "description": "Number of cores to use for the driver process, only in cluster mode.",
+    "default": "1"
   },
   {
     "property": "spark.driver.cores",
-    "description": "Number of cores to use for the driver process, only in cluster mode.",
+    "description": "Number of cores used by the driver in YARN cluster mode.  Since the driver is run in the same JVM as the YARN Application Master in cluster mode, this also controls the cores used by the YARN Application Master.  In client mode, use spark.yarn.am.cores to control the number of cores used by the YARN Application Master instead.",
     "default": "1"
   },
   {
@@ -166,12 +136,17 @@
   },
   {
     "property": "spark.driver.host",
-    "description": "Hostname or IP address for the driver.  This is used for communicating with the executors and the standalone Master.",
+    "description": "Hostname or IP address for the driver to listen on.  This is used for communicating with the executors and the standalone Master.",
     "default": "(local hostname)"
   },
   {
     "property": "spark.driver.maxResultSize",
     "description": "Limit of total size of serialized results of all partitions for each Spark action (e.g. collect).  Should be at least 1M, or 0 for unlimited. Jobs will be aborted if the total size  is above this limit.  Having a high limit may cause out-of-memory errors in driver (depends on spark.driver.memory  and memory overhead of objects in JVM). Setting a proper limit can protect the driver from  out-of-memory errors.",
+    "default": "1g"
+  },
+  {
+    "property": "spark.driver.memory",
+    "description": "Amount of memory to use for the driver process, i.e. where SparkContext is initialized.  (e.g. 1g, 2g).  Note: In client mode, this config must not be set through the SparkConf  directly in your application, because the driver JVM has already started at that point.  Instead, please set this through the --driver-memory command line option  or in your default properties file.",
     "default": "1g"
   },
   {
@@ -250,6 +225,11 @@
     "default": "1 in YARN mode, all the available cores on the worker in  standalone and Mesos coarse-grained modes."
   },
   {
+    "property": "spark.executor.cores",
+    "description": "The number of cores to use on each executor. For YARN and standalone mode only.",
+    "default": "1 in YARN mode, all the available cores on the worker in standalone mode."
+  },
+  {
     "property": "spark.executor.extraClassPath",
     "description": "Extra classpath entries to prepend to the classpath of executors. This exists primarily for  backwards-compatibility with older versions of Spark. Users typically should not need to set  this option.",
     "default": "(none)"
@@ -266,7 +246,7 @@
   },
   {
     "property": "spark.executor.heartbeatInterval",
-    "description": "Interval between each executor's heartbeats to the driver. Heartbeats let  the driver know that the executor is still alive and update it with metrics for in-progress  tasks. spark.executor.heartbeatInterval should be significantly less than  spark.network.timeout",
+    "description": "Interval between each executor's heartbeats to the driver. Heartbeats let  the driver know that the executor is still alive and update it with metrics for in-progress  tasks.",
     "default": "10s"
   },
   {
@@ -305,6 +285,11 @@
     "default": "1g"
   },
   {
+    "property": "spark.executor.memory",
+    "description": "Amount of memory to use per executor process (e.g. 2g, 8g).",
+    "default": "1g"
+  },
+  {
     "property": "spark.executor.userClassPathFirst",
     "description": "(Experimental) Same functionality as spark.driver.userClassPathFirst, but  applied to executor instances.",
     "default": "false"
@@ -328,16 +313,6 @@
     "property": "spark.files.fetchTimeout",
     "description": "Communication timeout to use when fetching files added through SparkContext.addFile() from  the driver.",
     "default": "60s"
-  },
-  {
-    "property": "spark.files.maxPartitionBytes",
-    "description": "The maximum number of bytes to pack into a single partition when reading files.",
-    "default": "134217728 (128 MB)"
-  },
-  {
-    "property": "spark.files.openCostInBytes",
-    "description": "The estimated cost to open a file, measured by the number of bytes could be scanned in the same  time. This is used when putting multiple files into a partition. It is better to over estimate,  then the partitions with small files will be faster than partitions with bigger files.",
-    "default": "4194304 (4 MB)"
   },
   {
     "property": "spark.files.overwrite",
@@ -445,21 +420,6 @@
     "default": "32k"
   },
   {
-    "property": "spark.io.encryption.enabled",
-    "description": "Enable IO encryption. Currently supported by all modes except Mesos. It's recommended that RPC encryption  be enabled when using this feature.",
-    "default": "false"
-  },
-  {
-    "property": "spark.io.encryption.keySizeBits",
-    "description": "IO encryption key size in bits. Supported values are 128, 192 and 256.",
-    "default": "128"
-  },
-  {
-    "property": "spark.io.encryption.keygen.algorithm",
-    "description": "The algorithm to use when generating the IO encryption key. The supported algorithms are  described in the KeyGenerator section of the Java Cryptography Architecture Standard Algorithm  Name Documentation.",
-    "default": "HmacSHA1"
-  },
-  {
     "property": "spark.jars",
     "description": "Comma-separated list of local jars to include on the driver and executor classpaths.",
     "default": NaN
@@ -487,7 +447,7 @@
   {
     "property": "spark.kryo.referenceTracking",
     "description": "Whether to track references to the same object when serializing data with Kryo, which is  necessary if your object graphs have loops and useful for efficiency if they contain multiple  copies of the same object. Can be disabled to improve performance if you know this is not the  case.",
-    "default": "true"
+    "default": "true (false when using Spark SQL Thrift Server)"
   },
   {
     "property": "spark.kryo.registrationRequired",
@@ -498,11 +458,6 @@
     "property": "spark.kryo.registrator",
     "description": "If you use Kryo serialization, give a comma-separated list of classes that register your custom classes with Kryo. This  property is useful if you need to register your classes in a custom way, e.g. to specify a custom  field serializer. Otherwise spark.kryo.classesToRegister is simpler. It should be  set to classes that extend  KryoRegistrator.  See the tuning guide for more details.",
     "default": "(none)"
-  },
-  {
-    "property": "spark.kryo.unsafe",
-    "description": "Whether to use unsafe based Kryo serializer. Can be  substantially faster by using Unsafe Based IO.",
-    "default": "false"
   },
   {
     "property": "spark.kryoserializer.buffer",
@@ -585,21 +540,6 @@
     "default": "(none)"
   },
   {
-    "property": "spark.mesos.containerizer",
-    "description": "This only affects docker containers, and must be one of \"docker\"  or \"mesos\". Mesos supports two types of  containerizers for docker: the \"docker\" containerizer, and the preferred  \"mesos\" containerizer. Read more here: http://mesos.apache.org/documentation/latest/container-image/",
-    "default": "docker"
-  },
-  {
-    "property": "spark.mesos.dispatcher.driverDefault.[PropertyName]",
-    "description": "Set default properties for drivers submitted through the  dispatcher. For example,  spark.mesos.dispatcher.driverProperty.spark.executor.memory=32g  results in the executors for all drivers submitted in cluster mode  to run in 32g containers.",
-    "default": "(none)"
-  },
-  {
-    "property": "spark.mesos.dispatcher.historyServer.url",
-    "description": "Set the URL of the history  server. The dispatcher will then link each driver to its entry  in the history server.",
-    "default": "(none)"
-  },
-  {
     "property": "spark.mesos.dispatcher.webui.url",
     "description": "Set the Spark Mesos dispatcher webui_url for interacting with the framework.  If unset it will point to Spark's internal web UI.",
     "default": "(none)"
@@ -608,16 +548,6 @@
     "property": "spark.mesos.driver.webui.url",
     "description": "Set the Spark Mesos driver webui_url for interacting with the framework.  If unset it will point to Spark's internal web UI.",
     "default": "(none)"
-  },
-  {
-    "property": "spark.mesos.driverEnv.[EnvironmentVariableName]",
-    "description": "This only affects drivers submitted in cluster mode. Add the  environment variable specified by EnvironmentVariableName to the  driver process. The user can specify multiple of these to set  multiple environment variables.",
-    "default": "(none)"
-  },
-  {
-    "property": "spark.mesos.executor.docker.forcePullImage",
-    "description": "Force Mesos agents to pull the image specified in spark.mesos.executor.docker.image.  By default Mesos agents will not pull images they already have cached.",
-    "default": "false"
   },
   {
     "property": "spark.mesos.executor.docker.image",
@@ -647,16 +577,6 @@
   {
     "property": "spark.mesos.extra.cores",
     "description": "Set the extra number of cores for an executor to advertise. This  does not result in more cores allocated. It instead means that an  executor will \"pretend\" it has more cores, so that the driver will  send it more tasks. Use this to increase parallelism. This  setting is only used for Mesos coarse-grained mode.",
-    "default": "0"
-  },
-  {
-    "property": "spark.mesos.fetcherCache.enable",
-    "description": "If set to `true`, all URIs (example: `spark.executor.uri`, `spark.mesos.uris`) will be cached by the [Mesos fetcher cache](http://mesos.apache.org/documentation/latest/fetcher/)",
-    "default": "false"
-  },
-  {
-    "property": "spark.mesos.gpus.max",
-    "description": "Set the maximum number GPU resources to acquire for this job. Note that executors will still launch when no GPU resources are found  since this configuration is just a upper limit and not a guaranteed amount.",
     "default": "0"
   },
   {
@@ -710,16 +630,6 @@
     "default": "16"
   },
   {
-    "property": "spark.pyspark.driver.python",
-    "description": "Python binary executable to use for PySpark in driver.  (default is spark.pyspark.python)",
-    "default": NaN
-  },
-  {
-    "property": "spark.pyspark.python",
-    "description": "Python binary executable to use for PySpark in both driver and executors.",
-    "default": NaN
-  },
-  {
     "property": "spark.python.profile",
     "description": "Enable profiling in Python worker, the profile result will show up by sc.show_profiles(),  or it will be displayed before the driver exiting. It also can be dumped into disk by  sc.dump_profiles(path). If some of the profile results had been displayed manually,  they will not be displayed automatically before driver exiting.  By default the pyspark.profiler.BasicProfiler will be used, but this can be overridden by  passing a profiler class in as a parameter to the SparkContext constructor.",
     "default": "false"
@@ -740,11 +650,6 @@
     "default": "true"
   },
   {
-    "property": "spark.r.backendConnectionTimeout",
-    "description": "Connection timeout set by R process on its connection to RBackend in seconds.",
-    "default": "6000"
-  },
-  {
     "property": "spark.r.command",
     "description": "Executable for executing R scripts in cluster modes for both driver and workers.",
     "default": "Rscript"
@@ -755,19 +660,9 @@
     "default": "spark.r.command"
   },
   {
-    "property": "spark.r.heartBeatInterval",
-    "description": "Interval for heartbeats sent from SparkR backend to R process to prevent connection timeout.",
-    "default": "100"
-  },
-  {
     "property": "spark.r.numRBackendThreads",
     "description": "Number of threads used by RBackend to handle RPC calls from SparkR package.",
     "default": "2"
-  },
-  {
-    "property": "spark.r.shell.command",
-    "description": "Executable for executing sparkR shell in client modes for driver. Ignored in cluster modes. It is the same as environment variable SPARKR_DRIVER_R, but take precedence over it.  spark.r.shell.command is used for sparkR shell while spark.r.driver.command is used for running R script.",
-    "default": "R"
   },
   {
     "property": "spark.rdd.compress",
@@ -787,7 +682,7 @@
   {
     "property": "spark.rpc.askTimeout",
     "description": "Duration for an RPC ask operation to wait before timing out.",
-    "default": "spark.network.timeout"
+    "default": "120s"
   },
   {
     "property": "spark.rpc.lookupTimeout",
@@ -832,7 +727,7 @@
   {
     "property": "spark.serializer",
     "description": "Class to use for serializing objects that will be sent over the network or need to be cached  in serialized form. The default of Java serialization works with any Serializable Java object  but is quite slow, so we recommend using  org.apache.spark.serializer.KryoSerializer and configuring Kryo serialization  when speed is necessary. Can be any subclass of  org.apache.spark.Serializer.",
-    "default": "org.apache.spark.serializer.JavaSerializer"
+    "default": "org.apache.spark.serializer.JavaSerializer (org.apache.spark.serializer.  KryoSerializer when using Spark SQL Thrift Server)"
   },
   {
     "property": "spark.serializer.objectStreamReset",
@@ -878,11 +773,6 @@
     "property": "spark.shuffle.service.enabled",
     "description": "Enables the external shuffle service. This service preserves the shuffle files written by  executors so the executors can be safely removed. This must be enabled if  spark.dynamicAllocation.enabled is \"true\". The external shuffle service  must be set up in order to enable it. See  dynamic allocation  configuration and setup documentation for more information.",
     "default": "false"
-  },
-  {
-    "property": "spark.shuffle.service.index.cache.entries",
-    "description": "Max number of entries to keep in the index cache of the shuffle service.",
-    "default": "1024"
   },
   {
     "property": "spark.shuffle.service.port",
@@ -951,7 +841,7 @@
   },
   {
     "property": "spark.sql.hive.metastore.jars",
-    "description": "Location of the jars that should be used to instantiate the HiveMetastoreClient. This  property can be one of three options:  builtin  Use Hive 1.2.1, which is bundled with the Spark assembly when -Phive is  enabled. When this option is chosen, spark.sql.hive.metastore.version must be  either 1.2.1 or not defined.  maven  Use Hive jars of specified version downloaded from Maven repositories. This configuration  is not generally recommended for production deployments.  A classpath in the standard format for the JVM. This classpath must include all of Hive  and its dependencies, including the correct version of Hadoop. These jars only need to be  present on the driver, but if you are running in yarn cluster mode then you must ensure  they are packaged with your application.",
+    "description": "Location of the jars that should be used to instantiate the HiveMetastoreClient. This  property can be one of three options:  builtin  Use Hive 1.2.1, which is bundled with the Spark assembly when -Phive is  enabled. When this option is chosen, spark.sql.hive.metastore.version must be  either 1.2.1 or not defined.  maven  Use Hive jars of specified version downloaded from Maven repositories. This configuration  is not generally recommended for production deployments.  A classpath in the standard format for the JVM. This classpath must include all of Hive  and its dependencies, including the correct version of Hadoop. These jars only need to be  present on the driver, but if you are running in yarn cluster mode then you must ensure  they are packaged with you application.",
     "default": "builtin"
   },
   {
@@ -972,11 +862,6 @@
   {
     "property": "spark.sql.inMemoryColumnarStorage.compressed",
     "description": "When set to true Spark SQL will automatically select a compression codec for each column based  on statistics of the data.",
-    "default": "true"
-  },
-  {
-    "property": "spark.sql.optimizer.metadataOnly",
-    "description": "When true, enable the metadata-only query optimization that use the table's metadata to  produce the partition columns instead of table scans. It applies when all the columns scanned  are partition columns and the query has an aggregate operator that satisfies distinct  semantics.",
     "default": "true"
   },
   {
@@ -1021,7 +906,7 @@
   },
   {
     "property": "spark.ssl.enabled",
-    "description": "Whether to enable SSL connections on all supported protocols.  When spark.ssl.enabled is configured, spark.ssl.protocol  is required.  All the SSL settings like spark.ssl.xxx where xxx is a  particular configuration property, denote the global configuration for all the supported  protocols. In order to override the global configuration for the particular protocol,  the properties must be overwritten in the protocol-specific namespace.  Use spark.ssl.YYY.XXX settings to overwrite the global configuration for  particular protocol denoted by YYY. Example values for YYY  include fs, ui, standalone, and  historyServer. See SSL  Configuration for details on hierarchical SSL configuration for services.",
+    "description": "Whether to enable SSL connections on all supported protocols.  All the SSL settings like spark.ssl.xxx where xxx is a  particular configuration property, denote the global configuration for all the supported  protocols. In order to override the global configuration for the particular protocol,  the properties must be overwritten in the protocol-specific namespace.  Use spark.ssl.YYY.XXX settings to overwrite the global configuration for  particular protocol denoted by YYY. Example values for YYY  include fs, ui, standalone, and  historyServer. See SSL  Configuration for details on hierarchical SSL configuration for services.",
     "default": "false"
   },
   {
@@ -1175,18 +1060,13 @@
     "default": "4"
   },
   {
-    "property": "spark.ui.enabled",
-    "description": "Whether to run the web UI for the Spark application.",
-    "default": "true"
-  },
-  {
     "property": "spark.ui.filters",
     "description": "Comma separated list of filter class names to apply to the Spark web UI. The filter should be a  standard javax servlet Filter. Parameters to each filter can also be specified by setting a  java system property of: spark.<class name of filter>.params='param1=value1,param2=value2'  For example: -Dspark.ui.filters=com.test.filter1 -Dspark.com.test.filter1.params='param1=foo,param2=testing'",
     "default": "None"
   },
   {
     "property": "spark.ui.killEnabled",
-    "description": "Allows jobs and stages to be killed from the web UI.",
+    "description": "Allows stages and corresponding jobs to be killed from the web ui.",
     "default": "true"
   },
   {
@@ -1213,16 +1093,6 @@
     "property": "spark.ui.retainedTasks",
     "description": "How many tasks the Spark UI and status APIs remember before garbage  collecting.",
     "default": "100000"
-  },
-  {
-    "property": "spark.ui.reverseProxy",
-    "description": "Enable running Spark Master as reverse proxy for worker and application UIs. In this mode, Spark master will reverse proxy the worker and application UIs to enable access without requiring direct access to their hosts. Use it with caution, as worker and application UI will not be accessible directly, you will only be able to access them through spark master/proxy public URL. This setting affects all the workers and application UIs running in the cluster and must be set on all the workers, drivers and masters.",
-    "default": "false"
-  },
-  {
-    "property": "spark.ui.reverseProxyUrl",
-    "description": "This is the URL where your proxy is running. This URL is for proxy which is running in front of Spark Master. This is useful when running proxy for authentication e.g. OAuth proxy. Make sure this is a complete URL including scheme (http/https) and port to reach your proxy.",
-    "default": NaN
   },
   {
     "property": "spark.ui.view.acls",
@@ -1425,16 +1295,6 @@
     "default": "default"
   },
   {
-    "property": "spark.yarn.rolledLog.excludePattern",
-    "description": "Java Regex to filter the log files which match the defined exclude pattern  and those log files will not be aggregated in a rolling fashion. If the log file  name matches both the include and the exclude pattern, this file will be excluded eventually.",
-    "default": "(none)"
-  },
-  {
-    "property": "spark.yarn.rolledLog.includePattern",
-    "description": "Java Regex to filter the log files which match the defined include pattern  and those log files will be aggregated in a rolling fashion.  This will be used with YARN's rolling log aggregation, to enable this feature in YARN side  yarn.nodemanager.log-aggregation.roll-monitoring-interval-seconds should be  configured in yarn-site.xml.  This feature can only be used with Hadoop 2.6.1+. The Spark log4j appender needs be changed to use  FileAppender or another appender that can handle the files being removed while its running. Based  on the file name configured in the log4j configuration (like spark.log), the user should set the  regex (spark*) to include all the log files that need to be aggregated.",
-    "default": "(none)"
-  },
-  {
     "property": "spark.yarn.scheduler.heartbeat.interval-ms",
     "description": "The interval in ms in which the Spark application master heartbeats into the YARN ResourceManager.  The value is capped at half the value of YARN's configuration for the expiry interval, i.e.  yarn.am.liveness-monitor.expiry-interval-ms.",
     "default": "3000"
@@ -1445,14 +1305,9 @@
     "default": "200ms"
   },
   {
-    "property": "spark.yarn.security.credentials.${service}.enabled",
-    "description": "Controls whether to obtain credentials for services when security is enabled.  By default, credentials for all supported services are retrieved when those services are  configured, but it's possible to disable that behavior if it somehow conflicts with the  application being run. For further details please see  [Running in a Secure Cluster](running-on-yarn.html#running-in-a-secure-cluster)",
+    "property": "spark.yarn.security.tokens.${service}.enabled",
+    "description": "Controls whether to retrieve delegation tokens for non-HDFS services when security is enabled.  By default, delegation tokens for all supported services are retrieved when those services are  configured, but it's possible to disable that behavior if it somehow conflicts with the  application being run.  Currently supported services are: hive, hbase",
     "default": "true"
-  },
-  {
-    "property": "spark.yarn.shuffle.stopOnFailure",
-    "description": "Whether to stop the NodeManager when there's a failure in the Spark Shuffle Service's  initialization. This prevents application failures caused by running containers on  NodeManagers where the Spark Shuffle Service is not running.",
-    "default": false
   },
   {
     "property": "spark.yarn.stagingDir",
