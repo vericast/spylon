@@ -58,3 +58,12 @@ def test_spark_driver_memory():
     c.conf.spark.driver.memory = "5g"
     c._set_environment_variables()
     assert '--driver-memory 5g' in os.environ['PYSPARK_SUBMIT_ARGS']
+
+
+@pytest.mark.xfail(True, reason="Config parameter priority not sorted out yet")
+def test_config_priority():
+    c = sparklauncher.SparkConfiguration()
+    c.driver_memory = "4g"
+    c.conf.spark.driver.memory = "5g"
+    c._set_environment_variables()
+    assert '--driver-memory 5g' in os.environ['PYSPARK_SUBMIT_ARGS']
