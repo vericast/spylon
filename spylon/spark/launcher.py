@@ -218,40 +218,6 @@ def _tree():
     return defaultdict(_tree)
 
 
-def _fetch_documentation(version, base_url="https://spark.apache.org/docs"):
-    import pandas as pd
-    doc_urls = [
-        "{base_url}/{version}/configuration.html",
-        "{base_url}/{version}/sql-programming-guide.html",
-        "{base_url}/{version}/monitoring.html",
-        "{base_url}/{version}/spark-standalone.html",
-        "{base_url}/{version}/running-on-mesos.html",
-        "{base_url}/{version}/running-on-yarn.html",
-    ]
-
-    for url in doc_urls:
-        doc_url = url.format(version=version, base_url=base_url)
-        print(url)
-        log.debug("Loading spark properties from %s", doc_url)
-        dfs = pd.read_html(doc_url, header=0)
-        for df in dfs:
-            if ("Property Name" in df) and ('Default' in df):
-                for pn, default, desc in df[["Property Name", "Default", "Meaning"]].itertuples(index=False):
-                    yield pn, default, desc
-
-
-def _save_documentation(version, base_url="https://spark.apache.org/docs", target_dir=None):
-    """Write the spark property documentation to a file
-    """
-    if target_dir is None:
-        target_dir = os.path.dirname(__file__)
-    with open(os.path.join(target_dir, "spark_properties_{}.json".format(version)), 'w') as fp:
-        all_props = _fetch_documentation(version=version, base_url=base_url)
-        all_props = sorted(all_props, key=lambda x: x[0])
-        all_props_d = [{"property": p, "default": d, "description": desc} for p, d, desc in all_props]
-        json.dump(all_props_d, fp, indent=2)
-
-
 class _SparkConfHelper(object):
 
     def __init__(self, version='latest', existing_conf=None):
