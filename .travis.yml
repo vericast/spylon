@@ -16,8 +16,10 @@ env:
 before_install:
   - pip install doctr
 
-script:
+install:
   - docker build --rm -t spylon-integration .
+
+script:
   - docker run -it --rm spylon-integration
   # Build and deploy docs
   - docker run -it --name spylon-docs spylon-integration make -C docs html
