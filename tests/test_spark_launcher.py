@@ -5,7 +5,6 @@ import sys
 import pytest
 
 
-@pytest.mark.skip(True, reason="Test state leakage not fixed yet")
 @pytest.mark.xfail(sys.version_info[0] >= 3, reason="setattr fails on python 3")
 def test_set_spark_property():
     c = sparklauncher.SparkConfiguration()
