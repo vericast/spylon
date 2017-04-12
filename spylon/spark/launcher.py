@@ -313,6 +313,7 @@ class _SparkConfHelper(object):
         return self
 
 
+# This needs to be split into "launcher config" and "runtime config".
 class SparkConfiguration(object):
     _boolean_args = {'verbose'}
     _spark_launcher_arg_names = {
