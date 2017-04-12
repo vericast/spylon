@@ -430,7 +430,7 @@ class SparkConfiguration(object):
             return super(SparkConfiguration, self).__getattribute__(key)
         spark_arg = key.replace('_', '-')
         if spark_arg in self._spark_launcher_arg_names:
-            return self._spark_launcher_args[spark_arg]
+            return self._spark_launcher_args.get(spark_arg)
 
     def __setitem__(self, key, val):
         return self._spark_conf.__setitem__(key, val)
