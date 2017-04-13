@@ -241,13 +241,68 @@ def run_pyspark_yarn_cluster(env_dir, env_name, env_archive, args):
     subprocess.check_call([spark_submit] + prepend_args + args, env=env)
 
 
+def _conda_from_hdfs(conda_env, deploy_mode, working_dir, cleanup_functions):
+    log.info("Using conda environment from hdfs location")
+    # conda environment is on hdfs
+    filename = os.path.basename(conda_env)
+    env_name, _ = os.path.splitext(filename)
+
+    # When running in client mode download it from HDFS first.
+    if deploy_mode == "client":
+        # TODO: Allow user to specify a local environment to use if around
+
+        subprocess.check_call(["hadoop", "fs", "-get", conda_env, working_dir], stderr=subprocess.PIPE, stdout=subprocess.PIPE)
+        local_archive = os.path.join(working_dir, filename)
+        env_dir = _extract_local_archive(working_dir, cleanup_functions, env_name, local_archive)
+    else:
+        env_dir = ""
+    env_archive = conda_env
+
+    return env_name, env_dir, env_archive
+
+
+def _conda_from_zip(conda_env, deploy_mode, working_dir, cleanup_functions):
+    log.info("Using conda environment from zip file")
+    env_archive = conda_env
+    basename, _ = os.path.splitext(env_archive)
+    env_name = os.path.basename(basename)
+    env_dir = _extract_local_archive(working_dir, cleanup_functions, env_name, env_archive)
+    return env_name, env_dir, env_archive
+
+
+def _conda_from_yaml(conda_env, deploy_mode, working_dir, cleanup_functions):
+    log.info("Building conda environment from yaml specification")
+    with open(conda_env) as fo:
+        env = yaml.load(fo)
+
+    conda_create_args = env.get("conda-args", "")
+    conda_create_args = shlex.split(conda_create_args)
+    deps = env["dependencies"]
+    env_name = env.get("name", "envname")
+
+    # Create the conda environment
+    env_dir, env_name = create_conda_env(working_dir, env_name, deps, conda_create_args)
+
+    # Archive the conda environment
+    env_archive = archive_dir(env_dir)
+
+    abs_env_dir = os.path.abspath(env_dir)
+    abs_env_archive = os.path.abspath(env_archive)
+
+    cleanup_functions.extend([
+        lambda: shutil.rmtree(abs_env_dir),
+        lambda: os.unlink(abs_env_archive),
+    ])
+    return env_name, env_dir, env_archive
+
+
 def launcher(deploy_mode, args, working_dir=".", cleanup=True):
     """Initializes arguments and starts up pyspark with the correct deploy mode and environment.
 
     Parameters
     ----------
     deploy_mode : {"client", "cluster"}
-    args : str
+    args : list
         Arguments to pass onwards to spark submit.
     working_dir : str, optional
         Path to working directory to use for creating conda environments.  Defaults to the current working directory.
@@ -258,84 +313,53 @@ def launcher(deploy_mode, args, working_dir=".", cleanup=True):
     -------
     This call will spawn a child process and block until that is complete.
     """
-    # Splits the list of arguments to Spark arguments and non-spark arguments.
-    spark_args = args
-
+    spark_args = args.copy()
     # Scan through the arguments to find --conda
     # TODO: make this optional,  if not specified ignore all the python stuff
+    # Is this double dash in front of conda env correct?
     i = spark_args.index("--conda-env")
-    conda_env = spark_args[i+1]
-    spark_args = spark_args[:i] + spark_args[i+2:]
+    # pop off the '--conda-env' portion and just drop it on the floor
+    spark_args.pop(i)
+    # Now pop off the actual conda env var passed to the launcher
+    conda_env = spark_args.pop(i)
     cleanup_functions = []
-
+    # What else could this possibly be other than a string here?
     assert isinstance(conda_env, str)
-    # "hadoop fs -ls" can return URLs with only a single "/" after the "hdfs:" scheme
+    func_kwargs = {'conda_env': conda_env,
+                   'deploy_mode': deploy_mode,
+                   'working_dir': working_dir,
+                   'cleanup_functions': cleanup_functions}
     if conda_env.startswith("hdfs:/"):
-        log.info("Using conda environment from hdfs location")
-        # conda environment is on hdfs
-        filename = os.path.basename(conda_env)
-        env_name, _ = os.path.splitext(filename)
-
-        # When running in client mode download it from HDFS first.
-        if deploy_mode == "client":
-            # TODO: Allow user to specify a local environment to use if around
-
-            subprocess.check_call(["hadoop", "fs", "-get", conda_env, working_dir], stderr=subprocess.PIPE, stdout=subprocess.PIPE)
-            local_archive = os.path.join(working_dir, filename)
-            env_dir = _extract_local_archive(working_dir, cleanup_functions, env_name, local_archive)
-        else:
-            env_dir = ""
-        env_archive = conda_env
-
-    # We have a precreated conda environment around.
+        # "hadoop fs -ls" can return URLs with only a single "/" after the "hdfs:" scheme
+        env_name, env_dir, env_archive = _conda_from_hdfs(**func_kwargs)
     elif conda_env.endswith(".zip"):
-        log.info("Using conda environment from zip file")
-        env_archive = conda_env
-        basename, _ = os.path.splitext(env_archive)
-        env_name = os.path.basename(basename)
-        env_dir = _extract_local_archive(working_dir, cleanup_functions, env_name, env_archive)
-
-    # The case where we have to CREATE the environment ourselves
+        # We have a precreated conda environment around.
+        env_name, env_dir, conda_env = _conda_from_zip(**func_kwargs)
     elif conda_env.endswith(".yaml"):
-        log.info("Building conda environment from yaml specification")
-        with open(conda_env) as fo:
-            env = yaml.load(fo)
-
-        conda_create_args = env.get("conda-args", "")
-        conda_create_args = shlex.split(conda_create_args)
-        deps = env["dependencies"]
-        env_name = env.get("name", "envname")
-
-        # Create the conda environment
-        env_dir, env_name = create_conda_env(working_dir, env_name, deps, conda_create_args)
-
-        # Archive the conda environment
-        env_archive = archive_dir(env_dir)
-
-        abs_env_dir = os.path.abspath(env_dir)
-        abs_env_archive = os.path.abspath(env_archive)
-
-        cleanup_functions.extend([
-            lambda: shutil.rmtree(abs_env_dir),
-            lambda: os.unlink(abs_env_archive),
-        ])
+        # The case where we have to CREATE the environment ourselves
+        env_name, env_dir, env_archive = _conda_from_yaml(**func_kwargs)
     else:
-        raise NotImplementedError()
+        raise NotImplementedError("Can only run launcher if your conda env is on hdfs (starts "
+                                  "with 'hdfs:/', is already a zip (ends with '.zip'), or is "
+                                  "coming from a yaml specification (ends with '.yaml' and "
+                                  "conforms to the conda environment.yaml spec)")
+    del func_kwargs
 
-    args = dict(env_dir=env_dir, env_name=env_name, env_archive=env_archive, args=spark_args)
+    func_kwargs = dict(env_dir=env_dir, env_name=env_name, env_archive=env_archive, args=spark_args)
+    funcs = {'client': run_pyspark_yarn_client, 'cluster': run_pyspark_yarn_cluster}
     try:
-        if deploy_mode == "client":
-            run_pyspark_yarn_client(**args)
-        elif deploy_mode == "cluster":
-            run_pyspark_yarn_cluster(**args)
+        funcs[deploy_mode](**func_kwargs)
     finally:
-        if cleanup:
-            for fn in cleanup_functions:
-                try:
-                    fn()
-                except:
-                    import traceback
-                    traceback.print_exc()
+        if not cleanup:
+            return
+        # iterate over and call all cleanup functions
+        for function in cleanup_functions:
+            try:
+                function()
+            except:
+                # Why are we catching this and just printing the traceback?
+                import traceback
+                traceback.print_exc()
 
 
 def _extract_local_archive(working_dir, cleanup_functions, env_name, local_archive):
