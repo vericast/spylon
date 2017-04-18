@@ -367,8 +367,12 @@ class SparkConfiguration(object):
         p.end_group(1, ')')
 
     def __init__(self, python_path=None, spark_conf=None, spark_launcher_args=None):
-        self._spark_launcher_args = spark_launcher_args or self._default_spark_launcher_args
-        self._python_path = python_path or "python"
+        if spark_launcher_args is None:
+            spark_launcher_args = SparkConfiguration._default_spark_launcher_args.copy()
+        self._spark_launcher_args = spark_launcher_args
+        if python_path is None:
+            python_path = "python"
+        self._python_path = python_path
         self._spark_home = None
         self._spark_conf_helper = _SparkConfHelper(existing_conf=spark_conf or self._default_spark_conf)
 
@@ -386,7 +390,8 @@ class SparkConfiguration(object):
         spark_arg = key.replace('_', '-')
         if key.startswith("_"):
             return super(SparkConfiguration, self).__setattr__(key, value)
-
+        if spark_arg not in self._spark_launcher_arg_names:
+            raise AttributeError('%s object has no attribute %s' % (self.__class__.__name__, key))
         if spark_arg in self._spark_launcher_arg_names:
             self._spark_launcher_args[spark_arg] = value
 
@@ -395,8 +400,9 @@ class SparkConfiguration(object):
         if key.startswith("_"):
             return super(SparkConfiguration, self).__getattribute__(key)
         spark_arg = key.replace('_', '-')
-        if spark_arg in self._spark_launcher_arg_names:
-            return self._spark_launcher_args.get(spark_arg)
+        if spark_arg not in self._spark_launcher_arg_names:
+            raise AttributeError('%s object has no attribute %s' % (self.__class__.__name__, key))
+        return self._spark_launcher_args.get(spark_arg)
 
     def __setitem__(self, key, val):
         return self._spark_conf.__setitem__(key, val)
