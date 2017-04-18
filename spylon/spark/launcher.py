@@ -390,7 +390,8 @@ class SparkConfiguration(object):
         spark_arg = key.replace('_', '-')
         if key.startswith("_"):
             return super(SparkConfiguration, self).__setattr__(key, value)
-
+        if spark_arg not in self._spark_launcher_arg_names:
+            raise AttributeError('%s object has no attribute %s' % (self.__class__.__name__, key))
         if spark_arg in self._spark_launcher_arg_names:
             self._spark_launcher_args[spark_arg] = value
 
@@ -399,9 +400,8 @@ class SparkConfiguration(object):
         if key.startswith("_"):
             return super(SparkConfiguration, self).__getattribute__(key)
         spark_arg = key.replace('_', '-')
-        attr_err = '%s object has no attribute %s' % (self.__class__.__name__, key)
         if spark_arg not in self._spark_launcher_arg_names:
-            raise AttributeError(attr_err)
+            raise AttributeError('%s object has no attribute %s' % (self.__class__.__name__, key))
         return self._spark_launcher_args.get(spark_arg)
 
     def __setitem__(self, key, val):

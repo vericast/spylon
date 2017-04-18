@@ -1,6 +1,7 @@
 from __future__ import print_function, absolute_import
 import spylon.spark.launcher as sparklauncher
 import os
+import pytest
 
 __author__ = 'mniekerk'
 
@@ -13,7 +14,14 @@ def test_sparkconf_hasattr():
     assert c.driver_memory is None
     c.driver_memory = "4g"
     assert c.driver_memory == "4g"
-
+    with pytest.raises(AttributeError):
+        # make sure that attempting to access unknown variables raises an attribute error
+        getattr(c, 'foo')
+    with pytest.raises(AttributeError):
+        # make sure that attempting to set unknown variables raises an attribute error
+        c.foo = "bar"
+        
+                
 def test_spark_property():
     c = sparklauncher.SparkConfiguration()
     c.conf.spark.executor.cores = 5
