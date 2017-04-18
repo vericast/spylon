@@ -8,6 +8,8 @@ __author__ = 'mniekerk'
 def test_sparkconf_hasattr():
     c = sparklauncher.SparkConfiguration()
     assert hasattr(c, "foo") is False
+    assert hasattr(c, "driver_memory") is True
+    assert hasattr(c, "driver-memory") is True
 
 def test_spark_property():
     c = sparklauncher.SparkConfiguration()

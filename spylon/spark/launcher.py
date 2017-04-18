@@ -402,10 +402,7 @@ class SparkConfiguration(object):
         attr_err = '%s object has no attribute %s' % (self.__class__.__name__, key)
         if spark_arg not in self._spark_launcher_arg_names:
             raise AttributeError(attr_err)
-        try:
-            return self._spark_launcher_args[spark_arg]
-        except KeyError:
-            raise AttributeError(attr_err)
+        return self._spark_launcher_args.get(spark_arg)
 
     def __setitem__(self, key, val):
         return self._spark_conf.__setitem__(key, val)
