@@ -10,6 +10,9 @@ def test_sparkconf_hasattr():
     assert hasattr(c, "foo") is False
     assert hasattr(c, "driver_memory") is True
     assert hasattr(c, "driver-memory") is True
+    assert c.driver_memory is None
+    c.driver_memory = "4g"
+    assert c.driver_memory == "4g"
 
 def test_spark_property():
     c = sparklauncher.SparkConfiguration()
