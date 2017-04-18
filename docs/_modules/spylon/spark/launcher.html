@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.2.11+2.gbc53513
+                0.2.11+8.g33246ed
               </div>
             
           
@@ -527,8 +527,12 @@
         <span class="n">p</span><span class="o">.</span><span class="n">end_group</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;)&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">python_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">spark_conf</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">spark_launcher_args</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_spark_launcher_args</span> <span class="o">=</span> <span class="n">spark_launcher_args</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_default_spark_launcher_args</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_python_path</span> <span class="o">=</span> <span class="n">python_path</span> <span class="ow">or</span> <span class="s2">&quot;python&quot;</span>
+        <span class="k">if</span> <span class="n">spark_launcher_args</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">spark_launcher_args</span> <span class="o">=</span> <span class="n">SparkConfiguration</span><span class="o">.</span><span class="n">_default_spark_launcher_args</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_spark_launcher_args</span> <span class="o">=</span> <span class="n">spark_launcher_args</span>
+        <span class="k">if</span> <span class="n">python_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">python_path</span> <span class="o">=</span> <span class="s2">&quot;python&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_python_path</span> <span class="o">=</span> <span class="n">python_path</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_spark_home</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_spark_conf_helper</span> <span class="o">=</span> <span class="n">_SparkConfHelper</span><span class="p">(</span><span class="n">existing_conf</span><span class="o">=</span><span class="n">spark_conf</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_default_spark_conf</span><span class="p">)</span>
 
@@ -546,7 +550,8 @@
         <span class="n">spark_arg</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">):</span>
             <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">SparkConfiguration</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__setattr__</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
-
+        <span class="k">if</span> <span class="n">spark_arg</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_spark_launcher_arg_names</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> object has no attribute </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="n">key</span><span class="p">))</span>
         <span class="k">if</span> <span class="n">spark_arg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_spark_launcher_arg_names</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_spark_launcher_args</span><span class="p">[</span><span class="n">spark_arg</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
 
@@ -555,8 +560,9 @@
         <span class="k">if</span> <span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">):</span>
             <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">SparkConfiguration</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__getattribute__</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
         <span class="n">spark_arg</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">spark_arg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_spark_launcher_arg_names</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_spark_launcher_args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">spark_arg</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">spark_arg</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_spark_launcher_arg_names</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> object has no attribute </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="n">key</span><span class="p">))</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_spark_launcher_args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">spark_arg</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_spark_conf</span><span class="o">.</span><span class="n">__setitem__</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
