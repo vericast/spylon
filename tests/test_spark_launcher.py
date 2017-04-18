@@ -5,6 +5,10 @@ import os
 __author__ = 'mniekerk'
 
 
+def test_sparkconf_hasattr():
+    c = sparklauncher.SparkConfiguration()
+    assert hasattr(c, "foo") is False
+
 def test_spark_property():
     c = sparklauncher.SparkConfiguration()
     c.conf.spark.executor.cores = 5
