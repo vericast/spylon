@@ -1,6 +1,20 @@
 Changelog
 =========
 
+0.2.12
+------
+
+ - [PR-43](https://github.com/maxpoint/spylon/pull/43) Fix broken getattr
+   introduced in [PR-39](https://github.com/maxpoint/spylon/pull/39) and add
+   better testing around the SparkConfiguration getattr/setattr
+ - [PR-40](https://github.com/maxpoint/spylon/pull/40) Update json spark
+   properties for 1.6.0, 1.6.1, 2.0.2, 2.1.0 and latest. Pull code out of
+   spark/launcher.py and shove it into update_spark_params.py
+
+0.2.11
+------
+ - [PR-39](https://github.com/maxpoint/spylon/pull/39) Fix getattr bug
+
 0.2.10
 ------
 

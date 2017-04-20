@@ -67,7 +67,7 @@
             
             
               <div class="version">
-                0.2.11+8.g33246ed
+                0.2.12
               </div>
             
           
@@ -92,31 +92,16 @@
             
             
               <ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="modules.html">spylon</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="spylon.html">spylon package</a><ul class="current">
-<li class="toctree-l3 current"><a class="current reference internal" href="#">Changelog</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#id1">0.2.10</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id2">0.2.9</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id3">0.2.8</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id4">0.2.7</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id5">0.2.5</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="spylon.html#subpackages">Subpackages</a></li>
-<li class="toctree-l3"><a class="reference internal" href="spylon.html#submodules">Submodules</a></li>
-<li class="toctree-l3"><a class="reference internal" href="spylon.html#module-spylon.common">spylon.common module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="spylon.html#module-spylon">Module contents</a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">spylon</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="spylon.html">spylon package</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Changelog</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#id1">0.2.10</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id2">0.2.9</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id3">0.2.8</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id4">0.2.7</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id5">0.2.5</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id1">0.2.12</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id2">0.2.11</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id3">0.2.10</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id4">0.2.9</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id5">0.2.8</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id6">0.2.7</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id7">0.2.5</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="spylon.html#subpackages">Subpackages</a></li>
@@ -197,39 +182,60 @@
   <div class="section" id="changelog">
 <h1>Changelog<a class="headerlink" href="#changelog" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="id1">
-<h2>0.2.10<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<h2>0.2.12<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><ul class="simple">
+<li>[PR-43](<a class="reference external" href="https://github.com/maxpoint/spylon/pull/43">https://github.com/maxpoint/spylon/pull/43</a>) Fix broken getattr
+introduced in [PR-39](<a class="reference external" href="https://github.com/maxpoint/spylon/pull/39">https://github.com/maxpoint/spylon/pull/39</a>) and add
+better testing around the SparkConfiguration getattr/setattr</li>
+<li>[PR-40](<a class="reference external" href="https://github.com/maxpoint/spylon/pull/40">https://github.com/maxpoint/spylon/pull/40</a>) Update json spark
+properties for 1.6.0, 1.6.1, 2.0.2, 2.1.0 and latest. Pull code out of
+spark/launcher.py and shove it into update_spark_params.py</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="id2">
+<h2>0.2.11<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><ul class="simple">
+<li>[PR-39](<a class="reference external" href="https://github.com/maxpoint/spylon/pull/39">https://github.com/maxpoint/spylon/pull/39</a>) Fix getattr bug</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="id3">
+<h2>0.2.10<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div><ul class="simple">
 <li>Daemonize the progress thread to avoid hanging the process [PR-33](<a class="reference external" href="https://github.com/maxpoint/spylon/pull/33">https://github.com/maxpoint/spylon/pull/33</a>)</li>
 </ul>
 </div></blockquote>
 </div>
-<div class="section" id="id2">
-<h2>0.2.9<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id4">
+<h2>0.2.9<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div><ul class="simple">
 <li>Improve pip installation experience [PR-29](<a class="reference external" href="https://github.com/maxpoint/spylon/pull/29">https://github.com/maxpoint/spylon/pull/29</a>)</li>
 </ul>
 </div></blockquote>
 </div>
-<div class="section" id="id3">
-<h2>0.2.8<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id5">
+<h2>0.2.8<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div><ul class="simple">
 <li>Bugfix release.</li>
 </ul>
 </div></blockquote>
 </div>
-<div class="section" id="id4">
-<h2>0.2.7<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id6">
+<h2>0.2.7<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div><ul class="simple">
 <li>Cleanup of downloaded / extracted artifacts when using spylon.spark.yarn_launcher.</li>
 </ul>
 </div></blockquote>
 </div>
-<div class="section" id="id5">
-<h2>0.2.5<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id7">
+<h2>0.2.5<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div><ul class="simple">
 <li>Bugfix to ensure that various driver side settings will be correctly set for the spark-submit launcher arguments
