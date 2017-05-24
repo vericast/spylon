@@ -13,7 +13,7 @@ install:
   - wget https://raw.githubusercontent.com/ericdill/ci/master/install-miniconda.sh -O install-miniconda.sh
   - source install-miniconda.sh
   - conda info -a
-  - conda create -n testenv python=$TRAVIS_PYTHON_VERSION --file requirements.txt --file requirements-test.txt --file requirements-doc.txt
+  - conda create -n testenv python=$TRAVIS_PYTHON_VERSION --file requirements.txt --file requirements-test.txt --file requirements-docs.txt
 
 script:
   - source activate testenv
