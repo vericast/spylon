@@ -1,0 +1,3 @@
+pyyaml
+six
+psutil # to fix a warning

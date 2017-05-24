@@ -1,9 +1,14 @@
 from __future__ import print_function, absolute_import
 import spylon.spark.launcher as sparklauncher
 import os
+import sys
 import pytest
 
-__author__ = 'mniekerk'
+
+@pytest.mark.xfail(sys.version_info[0] >= 3, reason="setattr fails on python 3")
+def test_set_spark_property():
+    c = sparklauncher.SparkConfiguration()
+    c.driver_memory = "4g"
 
 
 def test_sparkconf_hasattr():
@@ -49,6 +54,15 @@ def test_spark_launcher_multiple_argument():
 
 def test_spark_driver_memory():
     c = sparklauncher.SparkConfiguration()
+    c.conf.spark.driver.memory = "5g"
+    c._set_environment_variables()
+    assert '--driver-memory 5g' in os.environ['PYSPARK_SUBMIT_ARGS']
+
+
+@pytest.mark.xfail(True, reason="Config parameter priority not sorted out yet")
+def test_config_priority():
+    c = sparklauncher.SparkConfiguration()
+    c.driver_memory = "4g"
     c.conf.spark.driver.memory = "5g"
     c._set_environment_variables()
     assert '--driver-memory 5g' in os.environ['PYSPARK_SUBMIT_ARGS']

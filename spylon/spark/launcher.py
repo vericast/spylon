@@ -313,6 +313,7 @@ class _SparkConfHelper(object):
         return self
 
 
+# This needs to be split into "launcher config" and "runtime config".
 class SparkConfiguration(object):
     _boolean_args = {'verbose'}
     _spark_launcher_arg_names = {
@@ -367,12 +368,8 @@ class SparkConfiguration(object):
         p.end_group(1, ')')
 
     def __init__(self, python_path=None, spark_conf=None, spark_launcher_args=None):
-        if spark_launcher_args is None:
-            spark_launcher_args = SparkConfiguration._default_spark_launcher_args.copy()
-        self._spark_launcher_args = spark_launcher_args
-        if python_path is None:
-            python_path = "python"
-        self._python_path = python_path
+        self._spark_launcher_args = spark_launcher_args or self._default_spark_launcher_args.copy()
+        self._python_path = python_path or "python"
         self._spark_home = None
         self._spark_conf_helper = _SparkConfHelper(existing_conf=spark_conf or self._default_spark_conf)
 
