@@ -357,9 +357,7 @@ def launcher(deploy_mode, args, working_dir=".", cleanup=True):
             try:
                 function()
             except:
-                # Why are we catching this and just printing the traceback?
-                import traceback
-                traceback.print_exc()
+                log.exception("Cleanup function %s failed", function)
 
 
 def _extract_local_archive(working_dir, cleanup_functions, env_name, local_archive):

@@ -3,15 +3,9 @@ language: python
 python:
   - 2.7
   - 3.5
-    # pyspark is not available for python 3.6 yet
-    # https://issues.apache.org/jira/browse/SPARK-19019
-    # Has been merged into 2.2.0 and 2.1.1, but there is no 2.1.1/2.2.0 releases yet
-    #  - 3.6
+  - 3.6
 
 sudo: true
-
-services:
-  - docker
 
 env:
   global:
@@ -21,7 +15,6 @@ install:
   - wget https://raw.githubusercontent.com/ericdill/ci/master/install-miniconda.sh -O install-miniconda.sh
   - source install-miniconda.sh
   - conda info -a
-  - conda search pandas
   - conda create -n testenv python=$TRAVIS_PYTHON_VERSION --file requirements.txt --file requirements-test.txt
 
 script:
