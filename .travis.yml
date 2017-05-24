@@ -5,8 +5,6 @@ python:
   - 3.5
   - 3.6
 
-sudo: true
-
 env:
   global:
     - secure: "VtgqCL9r27bg9pNeFEFGDtbneDicMLtbRctKeKwUV4dp3FTSvIOogsU7hRIS6UO5oPUtysEvXPqp1aEHhOZZpnK95b6D1fyE49bMsCGEuzGPeMR6tDARSZRJcwGZb1/Ne74kxP8GjlO6GvDhpkvgR3EHUUIB3B1Y6SQLcRvOJetYoP3d5Acdb7W2gux0UKdBygXn5MwMMq6WVJNqpeQ4ISZSctBxn+XL/ccSpw5pykal3O1cp1PrlFkLana79aZuv4D/UjOZuwVf5MLOXHzxDQqULX7iO14iyia0CgMakiSb7oP0hhojpUA36J4jhOb9aOaxcV5C8vewdL8k/20a4EhVDxLNXcNePm/zYlyv9jUW3TnrCmXd0SterJ8a6OeWFXKnPJIOQrYMpXM5d7ZPsN0hbMVS5E9fRJPwk/Nkpv2R0XHiJOHfG2wV+vH23Mhs8NyJHqlSwq4Hpe7rlrquNRj84xZMCEugTGYyKlN1h0Gy8uwUD5C1XAqMeWYxsW6RiE3n+wMYBKBdHaRStSniczK6UZdS9OB2OuzEVZLgvfAi2wiRndTnIIvmGWHh/yNh31oeixa/syoJ/wjR5XYX5KboPb1epRtPvdgpb82uPVNuTzGEQn3kwm2nhLNOTD61Zgi533WJAOBPDuY+lN56jNytc7vbCFN0hoPlV/qX7pU="
@@ -15,25 +13,21 @@ install:
   - wget https://raw.githubusercontent.com/ericdill/ci/master/install-miniconda.sh -O install-miniconda.sh
   - source install-miniconda.sh
   - conda info -a
-  - conda create -n testenv python=$TRAVIS_PYTHON_VERSION --file requirements.txt --file requirements-test.txt
+  - conda create -n testenv python=$TRAVIS_PYTHON_VERSION --file requirements.txt --file requirements-test.txt --file requirements-docs.txt
 
 script:
   - source activate testenv
   - python run_tests.py
   - echo $TRAVIS_BRANCH
   # Always make the docs.
-  - if [[ $TRAVIS_PYTHON_VERSION = "3.5" ]]; then
-      conda install sphinx numpydoc sphinx_rtd_theme;
-      pip install .;
-      cd docs;
-      make html;
-    fi;
-  # Only deploy them once.
+  - pip install .
+  - pushd docs && make html && popd
+  # Only deploy the docs when we are on master
   # TRAVIS_PULL_REQUEST is set to the pull request number if the current job is a pull request
   # build, or false if it’s not. https://docs.travis-ci.com/user/environment-variables/
   - if [[ $TRAVIS_PYTHON_VERSION = "3.5" && $TRAVIS_BRANCH = "master" && $TRAVIS_PULL_REQUEST = "false" ]]; then
       pip install doctr;
-      doctr deploy _build/html;
+      doctr deploy docs/_build/html;
     fi;
 
 after_success:
