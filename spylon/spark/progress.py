@@ -251,4 +251,4 @@ def stop():
 
 
 # Deprecated: Retain old name for backwards compatibility for the time being
-start_spark_progress_bar_thread = start
+start_spark_progress_bar_thread = get_or_start
