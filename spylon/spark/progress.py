@@ -202,7 +202,7 @@ class ProgressPrinter(threading.Thread):
 _printer_singleton = None
 
 
-def start(sc, timedelta_formatter=_pretty_time_delta, bar_width=20, sleep_time=0.5):
+def get_or_start(sc, timedelta_formatter=_pretty_time_delta, bar_width=20, sleep_time=0.5):
     """Creates a :class:`ProgressPrinter` that polls the SparkContext for information
     about active stage progress and prints that information to stderr.
 
@@ -212,21 +212,26 @@ def start(sc, timedelta_formatter=_pretty_time_delta, bar_width=20, sleep_time=0
     This function creates a singleton printer instance and returns that instance
     no matter what arguments are passed to this function again until :func:`stop`
     is called to shutdown the singleton. If you want more control over the printer
-    lifecycle (e.g., pausing, resuming), create an instance of :class:`ProgressPrinter`
-    directly and use its methods.
+    lifecycle, create an instance of :class:`ProgressPrinter` directly and use its
+    methods.
 
     Parameters
     ----------
-    sc: :class:`pyspark.context.SparkContext`
-        Spark context to use.
+    sc: :class:`pyspark.context.SparkContext`, optional
+        SparkContext to use to create a new thread
     timedelta_formatter : callable, optional
         Converts a timedelta to a string.
     bar_width : int, optional
         Width of the progressbar to print out.
     sleep_time : float, optional
         Frequency in seconds with which to poll Apache Spark for task stage information.
+
+    Returns
+    -------
+    :class:`ProgressPrinter`
     """
     global _printer_singleton
+
     if _printer_singleton is None:
         _printer_singleton = ProgressPrinter(sc, timedelta_formatter, bar_width, sleep_time)
         _printer_singleton.start()
