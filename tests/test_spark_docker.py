@@ -41,7 +41,8 @@ def test_progressbar(capsys, sc):
             return x
         return f
 
-    sparkprog.start_spark_progress_bar_thread(sc, sleep_time=0.05)
+    pp = sparkprog.start(sc, sleep_time=0.05)
+    assert pp
 
     rdd = sc.parallelize(range(2), 2).map(delayed(1))
     reduced = rdd.map(lambda x: (x, 1)).reduceByKey(lambda x, y: x + y)
@@ -52,6 +53,18 @@ def test_progressbar(capsys, sc):
     # is far outside the scope of the problem here. Especially because getting this test 'right'
     # is highly dependent upon multiprocessing working as expected *all the time*.
     assert err != ""
+
+    sparkprog.stop()
+    # Give the thread time to shutdown
+    time.sleep(1)
+
+    rdd = sc.parallelize(range(4), 2).map(delayed(1))
+    reduced = rdd.map(lambda x: (x, 1)).reduceByKey(lambda x, y: x + y)
+    reduced.map(delayed(1)).collect()
+
+    out, err = capsys.readouterr()
+    # We should not see any progress after pausing the thread.
+    assert err == ""
 
 
 @pytest.fixture(
