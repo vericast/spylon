@@ -41,30 +41,36 @@ def test_progressbar(capsys, sc):
             return x
         return f
 
+    # Create and start a managed progress printer
     pp = sparkprog.start(sc, sleep_time=0.05)
+    # Make sure we get an instance of it back
     assert pp
 
+    # Run something simple, and make sure we get a result
     rdd = sc.parallelize(range(2), 2).map(delayed(1))
     reduced = rdd.map(lambda x: (x, 1)).reduceByKey(lambda x, y: x + y)
-    reduced.map(delayed(1)).collect()
+    assert reduced.map(delayed(1)).collect()
 
     out, err = capsys.readouterr()
-    # All we care about is that *something* is getting logged. What exactly is getting logged
-    # is far outside the scope of the problem here. Especially because getting this test 'right'
-    # is highly dependent upon multiprocessing working as expected *all the time*.
-    assert err != ""
+    # Spark spews messages on stderr other than progress when things go wrong.
+    # Make sure we're seeing *something* that looks like progress information
+    # at least.
+    assert "[Stage 0:" in err
 
     sparkprog.stop()
     # Give the thread time to shutdown
     time.sleep(1)
+    # Read whatever was left on the streams
+    out, err = capsys.readouterr()
 
+    # Now run something again
     rdd = sc.parallelize(range(4), 2).map(delayed(1))
     reduced = rdd.map(lambda x: (x, 1)).reduceByKey(lambda x, y: x + y)
-    reduced.map(delayed(1)).collect()
+    assert reduced.map(delayed(1)).collect()
 
     out, err = capsys.readouterr()
-    # We should not see any progress after pausing the thread.
-    assert err == ""
+    # We should not see anything after the progress thread is paused.
+    assert err == ''
 
 
 @pytest.fixture(
