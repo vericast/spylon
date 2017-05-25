@@ -152,7 +152,8 @@ class ProgressPrinter(threading.Thread):
     def run(self):
         """Run the progress printing loop."""
         last_status = ''
-        start_times = defaultdict(datetime.datetime.now)
+        # lambda is used to avoid http://bugs.python.org/issue30473 in py36
+        start_times = defaultdict(lambda: datetime.datetime.now())
         max_stage_id = -1
 
         status = self.sc.statusTracker()
