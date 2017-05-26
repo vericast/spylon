@@ -26,4 +26,5 @@ from __future__ import print_function, absolute_import
 
 from .launcher import SparkConfiguration, with_spark_context, with_sql_context
 from .yarn_launcher import prepare_pyspark_yarn_interactive
+# Deprecated: import spylon.progress directly
 from .progress import start_spark_progress_bar_thread

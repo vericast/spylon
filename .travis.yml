@@ -21,7 +21,7 @@ script:
   - echo $TRAVIS_BRANCH
   # Always make the docs.
   - pip install .
-  - pushd docs && make html && popd
+  - make -C docs html
   # Only deploy the docs when we are on master
   # TRAVIS_PULL_REQUEST is set to the pull request number if the current job is a pull request
   # build, or false if it’s not. https://docs.travis-ci.com/user/environment-variables/
