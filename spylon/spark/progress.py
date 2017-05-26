@@ -202,7 +202,7 @@ class ProgressPrinter(threading.Thread):
 _printer_singleton = None
 
 
-def get_or_start(sc, timedelta_formatter=_pretty_time_delta, bar_width=20, sleep_time=0.5):
+def start(sc, timedelta_formatter=_pretty_time_delta, bar_width=20, sleep_time=0.5):
     """Creates a :class:`ProgressPrinter` that polls the SparkContext for information
     about active stage progress and prints that information to stderr.
 
@@ -251,4 +251,4 @@ def stop():
 
 
 # Deprecated: Retain old name for backwards compatibility for the time being
-start_spark_progress_bar_thread = get_or_start
+start_spark_progress_bar_thread = start
