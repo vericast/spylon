@@ -203,6 +203,8 @@ class _SparkProperty(object):
 
     def _repr_html_(self):
         import cgi
+        properties = [cgi.escape(str(x)) for x in 
+            (self.property_name, self.default, self.meaning, self._current_value())]
         return """
         <table><tr>
             <td>{0}</td>
@@ -210,8 +212,7 @@ class _SparkProperty(object):
             <td>{1}</td>
             <td>{2}</td>
         </tr></table>
-        """.format(cgi.escape(self.property_name), cgi.escape(self.default), cgi.escape(self.meaning),
-                   cgi.escape(self._current_value()))
+        """.format(*properties)
 
 
 def _tree():
