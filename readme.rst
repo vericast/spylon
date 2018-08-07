@@ -56,4 +56,4 @@ example of some use cases for Spylon.
 .. |Travis| image:: https://travis-ci.org/maxpoint/spylon.svg
    :target: https://travis-ci.org/maxpoint/spylon
 .. |Docs| image:: https://img.shields.io/badge/docs-github-brightgreen.svg
-   :target: https://maxpoint.github.io/spylon/
+   :target: https://valassis-digital-media.github.io/spylon/docs/
