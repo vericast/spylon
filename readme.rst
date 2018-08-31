@@ -1,9 +1,7 @@
-[![Project Status: Unsupported – The project has reached a stable, usable state but the author(s) have ceased all work on it. A new maintainer may be desired.](https://www.repostatus.org/badges/latest/unsupported.svg)](https://www.repostatus.org/#unsupported)
-
 Spylon
 ======
 
-|Version_Status| |Travis| |Conda_Forge| |Docs|
+|Repo_Status| |Version_Status| |Travis| |Conda_Forge| |Docs|
 
 A set of compatibility routines for making it easier to interact with Scala from
 Python.
@@ -59,3 +57,6 @@ example of some use cases for Spylon.
    :target: https://travis-ci.org/maxpoint/spylon
 .. |Docs| image:: https://img.shields.io/badge/docs-github-brightgreen.svg
    :target: https://valassis-digital-media.github.io/spylon/docs/
+.. |Repo_Status| image:: https://www.repostatus.org/badges/latest/unsupported.svg
+   :alt: Project Status: Unsupported – The project has reached a stable, usable state but the author(s) have ceased all work on it. A new maintainer may be desired.
+   :target: https://www.repostatus.org/#unsupported
